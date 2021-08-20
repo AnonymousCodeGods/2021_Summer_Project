@@ -1,0 +1,127 @@
+<template>
+  <div>
+    <el-card style="width: 800px; margin: auto">
+      <div slot="header" class="clearfix">
+        <span style="font-size: larger">{{que.title}}</span>
+      </div>
+      <div v-for="item in que.QList"
+           :key="item.id" style="margin: 15px">
+        <div v-if="item.type===0">
+          <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
+            {{item.id+1}}.{{item.title}}
+          </div>
+          <div style="margin-left: 10%;margin-right: 10%">
+            <el-radio-group
+                v-model="item.selection">
+              <el-radio
+                  v-for="subItem in item.options"
+                  :key="subItem.id"
+                  :label="subItem.id">
+                {{subItem.text}}
+              </el-radio>
+            </el-radio-group>
+          </div>
+        </div>
+        <div v-if="item.type===1">
+          <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
+            {{item.id+1}}.{{item.title}}
+          </div>
+          <div style="margin-left: 10%;margin-right: 10%">
+            <el-checkbox-group
+                v-model="item.selections">
+              <el-checkbox v-for="subItem in item.options"
+                           :key="subItem.id"
+                           :label="subItem.id">
+                {{subItem.text}}
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+        <div v-if="item.type===2">
+          <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
+            {{item.id+1}}.{{item.title}}
+          </div>
+          <div style="margin: 7px 10%;">
+            <el-input v-model="item.input"/>
+          </div>
+        </div>
+        <div v-if="item.type===3">
+          <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
+            {{item.id+1}}.{{item.title}}
+          </div>
+          <div>
+            <el-rate
+                v-model="item.rating"
+                :colors="colors">
+            </el-rate>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 30px">
+        <el-button type="primary" style="width: 15%">提交</el-button>
+        <el-button type="danger" style="width: 15%">取消</el-button>
+      </div>
+    </el-card>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: 'NewQue',
+    data: function(){
+      return {
+        que:{
+          id:0,
+          title:"holo",
+          QList:[{
+            id:0,
+            type:0,
+            title:"什么是hello",
+            options:[{
+              id:0,
+              text:"你好"
+            },{
+              id:1,
+              text:"hello"
+            },{
+              id:2,
+              text:"hi"
+            }],
+            selection:-1
+          },{
+            id:1,
+            type:1,
+            title:"到底什么是hello",
+            options:[{
+              id:0,
+              text:"你好"
+            },{
+              id:1,
+              text:"hello"
+            },{
+              id:2,
+              text:"hi"
+            }],
+            selections:[
+
+            ]
+          },{
+            id:2,
+            type:2,
+            title:"到底到底什么是hello",
+            input:""
+          },{
+            id:3,
+            type:3,
+            title:"到底到底到底什么是hello",
+            rating:0
+          }]
+        },
+        colors: ['#99A9BF', '#F7BA2A', '#FF9900']
+      }
+    },
+    methods: {
+
+    }
+  }
+</script>
