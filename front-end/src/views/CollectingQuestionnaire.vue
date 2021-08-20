@@ -12,26 +12,29 @@
           </div>
           <div style="margin-left: 10%;margin-right: 10%">
             <el-radio-group
-                v-model="item.selection">
+                v-model="item.selection" style="width: 100%">
               <el-radio
                   v-for="subItem in item.options"
                   :key="subItem.id"
-                  :label="subItem.id">
+                  :label="subItem.id"
+                  style="width: 100%;margin: 5px;display: flex;align-items: flex-start;">
                 {{subItem.text}}
               </el-radio>
             </el-radio-group>
           </div>
         </div>
         <div v-if="item.type===1">
-          <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
+          <div style="margin-left: 10%;margin-bottom:13px;text-align: start;">
             {{item.id+1}}.{{item.title}}
           </div>
           <div style="margin-left: 10%;margin-right: 10%">
             <el-checkbox-group
-                v-model="item.selections">
-              <el-checkbox v-for="subItem in item.options"
-                           :key="subItem.id"
-                           :label="subItem.id">
+                v-model="item.selections" style="width: 100%">
+              <el-checkbox
+                  v-for="subItem in item.options"
+                  :key="subItem.id"
+                  :label="subItem.id"
+                  style="width: 100%;margin: 5px;display: flex;align-items: flex-start;">
                 {{subItem.text}}
               </el-checkbox>
             </el-checkbox-group>
@@ -49,7 +52,7 @@
           <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
             {{item.id+1}}.{{item.title}}
           </div>
-          <div>
+          <div style="margin-left: 10%;margin-right: 10%;display: flex;align-items: flex-start;">
             <el-rate
                 v-model="item.rating"
                 :colors="colors">
