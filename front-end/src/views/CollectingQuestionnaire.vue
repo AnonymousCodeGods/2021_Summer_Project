@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card style="width: 800px; margin: auto">
+    <el-card style="width: 800px; margin: auto"  v-loading.fullscreen.lock="fullscreenLoading">
       <div slot="header" class="clearfix">
         <span style="font-size: larger">{{que.title}}</span>
       </div>
