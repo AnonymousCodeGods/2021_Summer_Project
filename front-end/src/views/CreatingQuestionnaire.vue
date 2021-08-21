@@ -10,7 +10,9 @@
         <span style="font-size: larger">{{que.title}}</span>
       </div>
       <el-card v-for="item in que.QList"
-           :key="item.id" style="margin: 15px">
+               :key="item.id" style="margin: 15px"
+               shadow="hover">
+        <el-button style="float: right;margin-right: 12px" type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
         <div v-if="item.type===0" class="queLabel">
           <span style="line-height: 30px;">
             <el-tag size="small">单选</el-tag>
@@ -46,14 +48,14 @@
           </div>
         </div>
         <div v-if="item.type===2" class="queLabel">
-          <div>
+          <div style="margin-top: 10px">
             <el-tag size="small" type="info">填空</el-tag>
             {{item.qid+1}}.{{item.title}}
             <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
           </div>
         </div>
         <div v-if="item.type===3" class="queLabel">
-          <div>
+          <div style="margin-top: 10px">
             <el-tag size="small" type="warning">评分</el-tag>
             {{item.qid+1}}.{{item.title}}
             <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
@@ -61,8 +63,23 @@
         </div>
       </el-card>
       <div style="margin-top: 30px">
-        <el-button type="" style="width: 15%" icon="el-icon-download"></el-button>
-        <el-button type="primary" style="width: 15%" icon="el-icon-upload2"></el-button>
+        <el-button plain type="primary" style="width: 15%" icon="el-icon-download"></el-button>
+        <el-popover
+            style="margin: 20px"
+            placement="top"
+            width="150"
+            v-model="addQuestionVisible">
+          <div >
+            <el-button plain type="primary" v-on:click="addSingleChoice">单选</el-button>
+            <el-button plain type="success" style="margin-left: 10px" v-on:click="addMultiChoice">多选</el-button>
+          </div>
+          <div style="margin-top: 10px">
+            <el-button plain type="info" v-on:click="addSpaceFilling">填空</el-button>
+            <el-button plain type="warning" style="margin-left: 10px" v-on:click="addRating">评分</el-button>
+          </div>
+          <el-button plain type="success" style="width: 15%" icon="el-icon-plus" v-on:click="addQuestionDialog=true" slot="reference"></el-button>
+        </el-popover>
+        <el-button plain type="danger" style="width: 15%" icon="el-icon-upload2"></el-button>
       </div>
     </el-card>
   </div>
@@ -92,7 +109,6 @@ export default {
             oid: 2,
             content: "hi"
           }],
-          selection: -1
         }, {
           qid: 1,
           type: 1,
@@ -107,24 +123,22 @@ export default {
             oid: 2,
             content: "hi"
           }],
-          selections: []
         }, {
           qid: 2,
           type: 2,
           title: "到底到底什么是hello",
-          input: ""
         }, {
           qid: 3,
           type: 3,
           title: "到底到底到底什么是hello",
-          rating: 0
         }]
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       fullscreenLoading: false,
       titleEditDialog: false,
       editingTitleQuestion:null,
-      editingTitle:''
+      editingTitle:'',
+      addQuestionVisible: true
     }
   },
   methods: {
@@ -149,6 +163,51 @@ export default {
         oid: question.option.length,
         content: ""
       })
+    },
+    addSingleChoice() {
+      this.addQuestionVisible = false;
+      let i = this.que.QList.length
+      this.que.QList.push({
+        qid: i,
+        type: 0,
+        title: "请输入题干",
+        option: []
+      })
+    },
+    addMultiChoice() {
+      this.addQuestionVisible = false;
+      let i = this.que.QList.length
+      this.que.QList.push({
+        qid: i,
+        type: 1,
+        title: "请输入题干",
+        option: []
+      })
+    },
+    addSpaceFilling() {
+      this.addQuestionVisible = false;
+      let i = this.que.QList.length
+      this.que.QList.push({
+        qid: i,
+        type: 2,
+        title: "请输入题干",
+      })
+    },
+    addRating() {
+      this.addQuestionVisible = false;
+      let i = this.que.QList.length
+      this.que.QList.push({
+        qid: i,
+        type: 3,
+        title: "请输入题干",
+      })
+    },
+    deleteQuestion(question) {
+      let num = this.que.QList.indexOf(question)
+      this.que.QList.splice(num,1)
+      for(let i = num; i < this.que.QList.length; i++) {
+        this.que.QList[i].qid--
+      }
     }
   }
 }
