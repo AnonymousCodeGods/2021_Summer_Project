@@ -11,7 +11,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.prototype.$axios = axios
 Vue.use(VueCookies)
-axios.defaults.baseURL="http://10.191.201.82:8000/";
+axios.defaults.baseURL="http://172.16.1.26:8000/";
 
 new Vue({
   axios,
