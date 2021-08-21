@@ -1,0 +1,160 @@
+<template>
+  <div>
+    <el-dialog :visible="titleEditDialog" :show-close="false">
+      <div slot="title">编辑题目</div>
+      <el-input type="textarea" v-model="editingTitle" style="margin-bottom: 30px;width: 80%"/>
+      <el-button v-on:click="doneTitleEdit" style="width: 60%" type="success" icon="el-icon-check"></el-button>
+    </el-dialog>
+    <el-card style="width: 800px; margin: auto"  v-loading.fullscreen.lock="fullscreenLoading">
+      <div slot="header" class="clearfix">
+        <span style="font-size: larger">{{que.title}}</span>
+      </div>
+      <el-card v-for="item in que.QList"
+           :key="item.id" style="margin: 15px">
+        <div v-if="item.type===0" class="queLabel">
+          <span style="line-height: 30px">
+            <el-tag size="mini">单选</el-tag>
+            {{item.qid+1}}.{{item.title}}
+            <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+          </span>
+          <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
+            <el-input v-for="subItem in item.option"
+                      :key="subItem.oid"
+                      v-model="subItem.content"
+                      maxlength="28"
+                      style="width: 100%;margin-bottom: 10px">
+              <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
+            </el-input>
+            <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
+          </div>
+        </div>
+        <div v-if="item.type===1" class="queLabel">
+          <span style="line-height: 30px">
+            <el-tag size="mini" type="success">多选</el-tag>
+            {{item.qid+1}}.{{item.title}}
+            <el-link icon="el-icon-edit" :underline="false"  v-on:click="initialTitleEdit(item)"></el-link>
+          </span>
+          <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
+            <el-input v-for="subItem in item.option"
+                      :key="subItem.oid"
+                      v-model="subItem.content"
+                      maxlength="28"
+                      style="width: 100%;margin-bottom: 10px">
+              <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
+            </el-input>
+            <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
+          </div>
+        </div>
+        <div v-if="item.type===2" class="queLabel">
+          <div>
+            <el-tag size="mini" type="info">填空</el-tag>
+            {{item.qid+1}}.{{item.title}}
+            <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+          </div>
+        </div>
+        <div v-if="item.type===3" class="queLabel">
+          <div>
+            <el-tag size="mini" type="warning">评分</el-tag>
+            {{item.qid+1}}.{{item.title}}
+            <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+          </div>
+        </div>
+      </el-card>
+      <div style="margin-top: 30px">
+        <el-button type="" style="width: 15%" icon="el-icon-download"></el-button>
+        <el-button type="primary" style="width: 15%" icon="el-icon-upload2"></el-button>
+      </div>
+    </el-card>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'NewQue',
+  data: function(){
+    return {
+      que: {
+        qnid: '123123',
+        title: "holo",
+        QList: [{
+          qid: 0,
+          type: 0,
+          title: "主要用于课堂测试等场景，发布者应该可以设置每道题目的评分和答案，也可以设置问" +
+              "卷整体的限时时间，超时将自动回收。针对填写者，问卷题目应该可以乱序展示，在填写者" +
+              "提交后，问卷应该可以对客观题目进行自动评分，并使填写者可以查看答案。",
+          option: [{
+            oid: 0,
+            content: "你好"
+          }, {
+            oid: 1,
+            content: "hello"
+          }, {
+            oid: 2,
+            content: "hi"
+          }],
+          selection: -1
+        }, {
+          qid: 1,
+          type: 1,
+          title: "到底什么是hello",
+          option: [{
+            oid: 0,
+            content: "你好"
+          }, {
+            oid: 1,
+            content: "hello"
+          }, {
+            oid: 2,
+            content: "hi"
+          }],
+          selections: []
+        }, {
+          qid: 2,
+          type: 2,
+          title: "到底到底什么是hello",
+          input: ""
+        }, {
+          qid: 3,
+          type: 3,
+          title: "到底到底到底什么是hello",
+          rating: 0
+        }]
+      },
+      colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
+      fullscreenLoading: false,
+      titleEditDialog: false,
+      editingTitleQuestion:null,
+      editingTitle:''
+    }
+  },
+  methods: {
+    initialTitleEdit(question){
+      this.editingTitle=question.title
+      this.editingTitleQuestion=question
+      this.titleEditDialog=true
+    },
+    doneTitleEdit(){
+      this.editingTitleQuestion.title=this.editingTitle
+      this.titleEditDialog=false
+    },
+    deleteOption(question,option){
+      question.option.splice(question.option.indexOf(option),1)
+    },
+    addOption(question){
+      question.option.push({
+        oid: question.option.length,
+        content: ""
+      })
+    }
+  }
+}
+</script>
+
+<style>
+.queLabel {
+  margin-left: 10%;
+  margin-bottom: 8px;
+  margin-right: 10%;
+  text-align: start;
+}
+</style>

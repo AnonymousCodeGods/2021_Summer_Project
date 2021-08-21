@@ -22,6 +22,11 @@ const routes = [
     path: '/collectingQuestionnaire' ,
     name: 'CollectingQuestionnaire' ,
     component: () => import('../views/CollectingQuestionnaire')
+  },
+  {
+    path: '/creatingQuestionnaire' ,
+    name: 'CreatingQuestionnaire' ,
+    component: () => import('../views/CreatingQuestionnaire')
   }
 ]
 
