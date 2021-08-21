@@ -22,6 +22,16 @@ const routes = [
     path: '/collectingQuestionnaire' ,
     name: 'CollectingQuestionnaire' ,
     component: () => import('../views/CollectingQuestionnaire')
+  },
+  {
+    path: '/bin' ,
+    name: 'Bin' ,
+    component: () => import('../views/Bin')
+  },
+  {
+    path: '/quelist' ,
+    name: 'Quelist' ,
+    component: () => import('../views/QueList')
   }
 ]
 

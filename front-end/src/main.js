@@ -19,3 +19,12 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+Vue.component('que',{
+    data: function () {
+      return {
+        count: 0
+      }
+    },
+    template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+})

@@ -2,17 +2,20 @@
   <div class="bin">
       <el-table
           :data="tableData"
-          style="width:85%; margin: auto"
+          style="width:1250px; margin: auto"
           border
           stripe
           :default-sort = "{prop: 'date', order: 'descending'}"
       >
         <el-table-column
             align="center"
-            prop="date"
             label="发布日期"
             sortable
             min-width="25">
+          <template slot-scope="scope">
+            <i class="el-icon-time"></i>
+            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+          </template>
         </el-table-column>
         <el-table-column
             align="center"
@@ -31,11 +34,9 @@
             prop="clear"
             label="清空问卷"
             min-width="15">
-
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="clearR(scope.row)" v-show="scope.row.isempty">清空问卷</el-button>
+            <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="clearR(scope.$index,scope.row)" v-if="scope.row.count!==0">清空问卷</el-button>
           </template>
-
         </el-table-column>
         <el-table-column
             align="center"
@@ -71,25 +72,22 @@
 </template>
 
 <script>
-
 export default {
+  name: 'bin',
   data: function () {
     return {
       tableData: [{
         date: '2021-05-02',
         name: '时间统计',
-        count: '0',
-        isempty: parseInt(this.count)!==0
+        count: 0,
       }, {
         date: '2021-05-04',
         name: '作业统计',
-        count: '7',
-        isempty: parseInt(this.count)!==0
+        count: 7,
       }, {
         date: '2021-05-04',
         name: '作业统计',
-        count: '7',
-        isempty: parseInt(this.count)!==0
+        count: 7,
       }]
     }
   },
@@ -110,13 +108,14 @@ export default {
       });
       this.tableData.splice(this.tableData.indexOf(row), 1);
     },
-    clearR(row) {
+    clearR(index,row) {
       this.$notify({
         message: '问卷已清空',
         type: 'info',
         position: 'bottom-left'
       });
-      this.tableData.indexOf(row);
+      this.tableData[index].count=0;
+      this.$set(this.tableData, index, row);
     }
   }
 }
