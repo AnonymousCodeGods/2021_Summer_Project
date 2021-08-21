@@ -62,7 +62,6 @@
       </div>
       <div style="margin-top: 30px">
         <el-button type="primary" style="width: 15%">提交</el-button>
-        <el-button type="danger" style="width: 15%">取消</el-button>
       </div>
     </el-card>
   </div>
