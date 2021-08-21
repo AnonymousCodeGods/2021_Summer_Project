@@ -12,8 +12,8 @@
       <el-card v-for="item in que.QList"
            :key="item.id" style="margin: 15px">
         <div v-if="item.type===0" class="queLabel">
-          <span style="line-height: 30px">
-            <el-tag size="mini">单选</el-tag>
+          <span style="line-height: 30px;">
+            <el-tag size="small">单选</el-tag>
             {{item.qid+1}}.{{item.title}}
             <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
           </span>
@@ -29,8 +29,8 @@
           </div>
         </div>
         <div v-if="item.type===1" class="queLabel">
-          <span style="line-height: 30px">
-            <el-tag size="mini" type="success">多选</el-tag>
+          <span style="line-height: 30px;">
+            <el-tag size="small" type="success">多选</el-tag>
             {{item.qid+1}}.{{item.title}}
             <el-link icon="el-icon-edit" :underline="false"  v-on:click="initialTitleEdit(item)"></el-link>
           </span>
@@ -47,14 +47,14 @@
         </div>
         <div v-if="item.type===2" class="queLabel">
           <div>
-            <el-tag size="mini" type="info">填空</el-tag>
+            <el-tag size="small" type="info">填空</el-tag>
             {{item.qid+1}}.{{item.title}}
             <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
           </div>
         </div>
         <div v-if="item.type===3" class="queLabel">
           <div>
-            <el-tag size="mini" type="warning">评分</el-tag>
+            <el-tag size="small" type="warning">评分</el-tag>
             {{item.qid+1}}.{{item.title}}
             <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
           </div>
@@ -138,7 +138,11 @@ export default {
       this.titleEditDialog=false
     },
     deleteOption(question,option){
-      question.option.splice(question.option.indexOf(option),1)
+      let num = question.option.indexOf(option)
+      question.option.splice(num,1)
+      for(let i = num; i < question.option.length; i++) {
+        question.option[i].oid--
+      }
     },
     addOption(question){
       question.option.push({
