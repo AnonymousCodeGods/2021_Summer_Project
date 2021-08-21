@@ -18,86 +18,18 @@
 
       <a style="position:absolute;top:25%;height: 80%;left: 90%">{{ username }}</a>
     </div>
+
     <div class="body">
-      <a
-          style="
-        position: absolute;
-        font-size: 17px;
-        font-weight: bold;
-        top: 7%;
-        left: 29%;
-        color: black;
-      "
-      >已删除问卷</a>
-
-      <div class="bin" style="position: absolute;left: 27%;width: 70%;top: 12%">
-        <el-table
-            :data="tableData"
-            style="width:1000px; margin-left: fill"
-            border
-            stripe
-            :default-sort = "{prop: 'date', order: 'descending'}"
-        >
-          <el-table-column
-              align="center"
-              label="发布日期"
-              sortable
-              min-width="6">
-            <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span style="margin-left: 10px">{{ scope.row.date }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-              align="center"
-              prop="name"
-              label="问卷名"
-              min-width="6">
-          </el-table-column>
-          <el-table-column
-              align="center"
-              prop="count"
-              label="答卷数"
-              min-width="4">
-          </el-table-column>
-          <el-table-column
-              align="center"
-              prop="clear"
-              label="清空问卷"
-              min-width="4">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="clearR(scope.$index,scope.row)" v-if="scope.row.count!==0">清空问卷</el-button>
-            </template>
-          </el-table-column>
-          <el-table-column
-              align="center"
-              prop="recover"
-              label="恢复"
-              min-width="4">
-            <template slot-scope="scope">
-              <el-button type="success" size="mini" icon="el-icon-refresh-right" @click="recoverR(scope.row)">恢复</el-button>
-            </template>
-
-          </el-table-column>
-          <el-table-column
-              align="center"
-              prop="delete"
-              label="删除"
-              min-width="5">
-            <el-popconfirm style="margin: auto"
-                           title="确定要删除问卷吗？"
-                           confirm-button-type="danger"
-                           cancel-button-type="infomation"
-                           icon="el-icon-info"
-                           slot-scope="scope"
-                           @confirm="deleteR(scope.row)">
-              <el-tooltip slot="reference" effect="dark" content="删除该问卷" placement="top" >
-                <el-button type="danger" size="mini" icon="el-icon-delete" >删除</el-button>
-              </el-tooltip>
-            </el-popconfirm>
-          </el-table-column>
-        </el-table>
-
+      <div style="position: absolute;left: 29%;width: 60%;top: 7%">
+        <el-descriptions  title="个人信息" direction="vertical" :column="4" border>
+          <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
+          <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
+          <el-descriptions-item label="居住地" :span="2">苏州市</el-descriptions-item>
+          <el-descriptions-item label="备注">
+            <el-tag size="small">学校</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
+        </el-descriptions>
       </div>
 
 
@@ -124,102 +56,83 @@
       </button>
       <button
           type="button"
-          class="button button--join button--round-x button--text-thick button--beforeinverted button--size"
+          class="button button--join button--round-x button--text-thick button--inverted button--size"
           style="
         position: absolute;
         left: 5%; top: 210px;
         width: 200px;
         height: 60px;
       "
+          @click="toBin"
       >
         回收站
       </button>
       <button
           type="button"
-          class="button button--join button--round-x button--text-thick button--inverted button--size"
+          class="button button--join button--round-x button--text-thick button--beforeinverted button--size"
           style="
         position: absolute;
         left: 5%; top: 270px;
         width: 200px;
         height: 60px;
       "
-          @click="toInfo"
       >
         个人信息
       </button>
     </div>
-
-
   </div>
-
 </template>
 
 <script>
 export default {
-  name: 'bin',
-  data: function () {
+  name: 'Info',
+  props: {
+    msg: String
+  },
+  data() {
     return {
-      tableData: [{
-        date: '2021-05-02',
-        name: '时间统计',
-        count: 0,
-      }, {
-        date: '2021-05-04',
-        name: '作业统计',
-        count: 7,
-      }, {
-        date: '2021-05-04',
-        name: '作业统计',
-        count: 7,
-      }],
+      sort: '发布时间',
+      state: '状态',
+      value: '正序',
+      input: '',
       username: 'quiz'
     }
   },
   methods: {
-    deleteR(row) {
-      this.$notify({
-        message: '问卷已删除',
-        type: 'warning',
-        position: 'bottom-left'
-      });
-      this.tableData.splice(this.tableData.indexOf(row), 1);
+    sorted(command) {
+      // this.$message('click on item ' + command);
+      this.sort = command;
     },
-    recoverR(row) {
-      this.$notify({
-        message: '问卷已恢复',
-        type: 'success',
-        position: 'bottom-left'
-      });
-      this.tableData.splice(this.tableData.indexOf(row), 1);
+    stated(command) {
+      // this.$message('click on item ' + command);
+      this.state = command;
     },
-    clearR(index,row) {
-      this.$notify({
-        message: '问卷已清空',
-        type: 'info',
-        position: 'bottom-left'
-      });
-      this.tableData[index].count=0;
-      this.$set(this.tableData, index, row);
-    },
-    toInfo:function (){
-      this.$router.push("/info");
+    handleCommand(command) {
+      // this.$message('click on item ' + command);
+      this.value = command;
     },
     toHome:function (){
       this.$router.push("/");
+    },
+    toBin:function (){
+      this.$router.push("/bin");
     }
   }
 }
 </script>
 
-<style>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="less" scoped>
 .head {
   position: absolute;
+  min-width: 1000px;
+  min-height: 50px;
   top: 0;
   left: 0;
   height: 8%;
   width: 100%;
   background-color: #ffffff;
-//border:2px solid #000000;
+  //border:2px solid #000000;
 }
 
 .body {
@@ -241,11 +154,20 @@ export default {
   height: 50%;
 }
 
-.demo-type{
+.demo-type {
   position: absolute;
   left: 86%;
   top: 10%;
   height: 40%;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: #6a6a6a;
+}
+
+.el-icon-arrow-down {
+  font-size: 6px;
 }
 
 .button {
@@ -274,7 +196,6 @@ export default {
 /* Sizes */
 .button--size {
   font-size: 14px;
-
 }
 
 .button--size-x {
@@ -342,12 +263,12 @@ export default {
   color: #fcfcfd;
 }
 
-/*  加入按钮*/
-   .button--join.button--inverted {
-     background: #adadad;
-     border: 1px solid #adadad;
-     color: #000000;
-   }
+// 加入按钮
+.button--join.button--inverted {
+  background: #adadad;
+  border: 1px solid #adadad;
+  color: #000000;
+}
 
 .button--join::before {
   content: "";
