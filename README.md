@@ -8,3 +8,22 @@ please notice the following requirements:
 * when there is an update on the main branch, please merge the update to your local machine.
 
 # Commands
+
+```yaml
+
+local_commands:
+  #create branch:
+  git checkout -b local_branch_name
+  #update changes to local branch:
+  git add --all
+  git commit -m "changes you made"
+  git push origin remote_branch_name
+  #warning: local_branch_name and remote_branch should be the same.
+  #merge master branch to specific local branch:
+    #on local main:
+    git pull
+    git checkout local_branch_name
+    #on local branch which you want to merge in:
+    git merge main
+
+```
