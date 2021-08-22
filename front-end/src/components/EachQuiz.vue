@@ -2,7 +2,7 @@
   <div class="quiz">
     <a style="float: left;padding-left: 40px;padding-top: 20px;width: 300px">{{ type }}</a>
     <a class="bas" style="float: left;padding-left: 50px;padding-top: 20px">ID：{{ id }}</a>
-    <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px;">状态：{{ state }}</a>
+    <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px;">状态：{{ state==='1'?'已发布':'未发布' }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">创建日期：{{ date }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">回收量：{{ num }}</a>
     <!--分割线-->
@@ -10,7 +10,7 @@
     <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;cursor:pointer;" @click="del">删除</a>
     <img src="../assets/del.png" style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
     <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="pub" v-if="state==='0'">发布</a>
-    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;color: #a5a5a5" @click="pub" v-else>已发布</a>
+    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="start" v-else>暂停</a>
     <img src="../assets/open.png"
          style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
     <a class="fun" style="float: right;padding-right: 190px;padding-top: 58px" @click="edit"
@@ -39,7 +39,6 @@ export default {
     state: String,
     date: String,
     num: String,
-
   },
   methods: {
     mouseOver($event) {
@@ -52,13 +51,16 @@ export default {
 
     },
     pub() {
-
+      this.state='1';
+    },
+    start(){
+      this.state='0';
     },
     edit() {
 
     },
     toResult() {
-        this.$router.push("/result");
+
     },
     exported() {
 

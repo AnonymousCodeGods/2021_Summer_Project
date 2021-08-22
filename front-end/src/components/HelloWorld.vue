@@ -14,57 +14,57 @@
       </button>
 
       <!-- menu菜单 -->
-      <button
-          type="button"
-          class="button button--login button--round-x button--text-thick button--beforeinverted button--size"
-          style="
+    <button
+      type="button"
+      class="button button--login button--round-x button--text-thick button--beforeinverted button--size"
+      style="
         position: absolute;
         left: 5%; top: 20%;
         width: 4%;
         height: 7%;
       "
-      >
-        我的帐户
-      </button>
-      <button
-          type="button"
-          class="button button--login button--round-x button--text-thick button--inverted button--size"
-          style="
+    >
+      我的帐户
+    </button>
+    <button
+      type="button"
+      class="button button--login button--round-x button--text-thick button--inverted button--size"
+      style="
         position: absolute;
         left: 5%; top: 27%;
         width: 4%;
         height: 7%;
       "
-          @click="toFutureFlight"
-      >
-        未出发的航班
-      </button>
-      <button
-          type="button"
-          class="button button--login button--round-x button--text-thick button--inverted button--size"
-          style="
+      @click="toFutureFlight"
+    >
+      未出发的航班
+    </button>
+    <button
+      type="button"
+      class="button button--login button--round-x button--text-thick button--inverted button--size"
+      style="
         position: absolute;
         left: 5%; top: 34%;
         width: 4%;
         height: 7%;
       "
-          @click="toHistoryFlight"
-      >
-        以往的航班
-      </button>
-      <button
-          type="button"
-          class="button button--login button--round-x button--text-thick button--inverted button--size"
-          style="
+      @click="toHistoryFlight"
+    >
+      以往的航班
+    </button>
+    <button
+      type="button"
+      class="button button--login button--round-x button--text-thick button--inverted button--size"
+      style="
         position: absolute;
         left: 5%; top: 41%;
         width: 4%;
         height: 7%;
       "
-          @click="toUpdate"
-      >
-        更新个人信息
-      </button>
+      @click="toUpdate"
+    >
+      更新个人信息
+    </button>
 
     </div>
   </div>

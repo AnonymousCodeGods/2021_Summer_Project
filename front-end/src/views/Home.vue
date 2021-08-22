@@ -16,7 +16,7 @@
         <!--        </div>-->
       </div>
 
-      <el-dropdown style="position:absolute;top:25%;height: 80%;left: 90%" @command="logout">
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 90%" @command="logout">
       <span class="el-dropdown-link">
         {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
@@ -78,8 +78,8 @@
       <button
           type="button"
           class="button button--login button--round-s button--text-thick button--inverted button--size"
-          style="position:absolute;left: 5%; top: 4%;width: 180px; height: 50px"
-          @click="addNew"
+          style="position:absolute;left: 5%; top: 7%;width: 200px; height: 60px"
+          @click="createQuiz"
       >创建问卷
       </button>
 
@@ -89,9 +89,9 @@
           class="button button--join button--round-x button--text-thick button--beforeinverted button--size"
           style="
         position: absolute;
-        left: 5%; top: 130px;
-        width: 180px;
-        height: 50px;
+        left: 5%; top: 150px;
+        width: 200px;
+        height: 60px;
       "
       >
         全部问卷
@@ -101,11 +101,11 @@
           class="button button--join button--round-x button--text-thick button--inverted button--size"
           style="
         position: absolute;
-        left: 5%; top: 180px;
-        width: 180px;
-        height: 50px;
+        left: 5%; top: 210px;
+        width: 200px;
+        height: 60px;
       "
-          @click="toBin"
+          @click="bin"
       >
         回收站
       </button>
@@ -114,9 +114,9 @@
           class="button button--join button--round-x button--text-thick button--inverted button--size"
           style="
         position: absolute;
-        left: 5%; top: 230px;
-        width: 180px;
-        height: 50px;
+        left: 5%; top: 270px;
+        width: 200px;
+        height: 60px;
       "
           @click="toInfo"
       >
@@ -150,7 +150,9 @@
           </el-pagination>
         </div>
       </div>
+
     </div>
+
   </div>
 </template>
 
@@ -168,10 +170,10 @@ export default {
   created() {
     const formData = new FormData();
     formData.append("date", "3")
-    // this.$http.post('/aptest/get_q', JSON.stringify(formData))
-    //     .then(result => {
-    //       console.log(result)
-    //     })
+    this.$http.post('/aptest/get_q', JSON.stringify(formData))
+        .then(result => {
+          console.log(result)
+        })
     this.allList = [{type: "1", date: "2021-8-21", id: "1234567", num: "123", state: '0'},
       {type: "数分测验", date: "2021-8-21", id: "1234567", num: "1", state: "1"},
       {type: "情感调查", date: "2021-8-21", id: "1234567", num: "12", state: "1"},
@@ -225,6 +227,9 @@ export default {
           this.list.push(this.myList[val * 3 - 3 + i]);
       }
     },
+    bin(){
+      this.$router.push("/bin");
+    },
     sorted(command) {
       // this.$message('click on item ' + command);
       this.sort = command;
@@ -276,7 +281,6 @@ export default {
     handleCommand(command) {
       // this.$message('click on item ' + command);
       this.value = command;
-
       if (command === "倒序" && this.order === 0) {
         this.order = 1;
         // this.allList.reverse();
@@ -310,9 +314,6 @@ export default {
     toInfo: function () {
       this.$router.push("/info");
     },
-    toBin: function () {
-      this.$router.push("/bin");
-    },
     logout(command) {
       console.log(command);
       this.$router.push("/login");
@@ -323,7 +324,10 @@ export default {
     },
     addNew() {
 
-    }
+    },
+    createQuiz(){
+      this.$router.push("/create");
+    },
   }
 }
 </script>
@@ -407,7 +411,7 @@ export default {
 
 /* Sizes */
 .button--size {
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .button--size-x {

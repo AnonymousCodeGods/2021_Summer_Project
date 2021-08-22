@@ -16,12 +16,19 @@
         <!--        </div>-->
       </div>
 
-      <a style="position:absolute;top:25%;height: 80%;left: 90%">{{ username }}</a>
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 90%" @command="logout">
+      <span class="el-dropdown-link">
+        {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="退出">退出</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
 
     <div class="body">
-      <div style="position: absolute;left: 29%;width: 60%;top: 7%">
-        <el-descriptions  title="个人信息" direction="vertical" :column="4" border>
+      <div style="position: absolute;left: 30%;width: 60%;top: 7%">
+        <el-descriptions title="个人信息" direction="vertical" :column="4" border>
           <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
           <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
           <el-descriptions-item label="居住地" :span="2">苏州市</el-descriptions-item>
@@ -63,7 +70,7 @@
         width: 200px;
         height: 60px;
       "
-          @click="toBin"
+          @click="bin"
       >
         回收站
       </button>
@@ -85,7 +92,7 @@
 
 <script>
 export default {
-  name: 'Info',
+  name: 'HelloWorld',
   props: {
     msg: String
   },
@@ -111,12 +118,16 @@ export default {
       // this.$message('click on item ' + command);
       this.value = command;
     },
-    toHome:function (){
-      this.$router.push("/home");
+    toHome: function () {
+      this.$router.push("/");
     },
-    toBin:function (){
+    bin() {
       this.$router.push("/bin");
-    }
+    },
+    logout(command) {
+      console.log(command);
+      this.$router.push("/login");
+    },
   }
 }
 </script>
