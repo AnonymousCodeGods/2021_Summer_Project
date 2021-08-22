@@ -78,21 +78,19 @@
       <button
           type="button"
           class="button button--login button--round-s button--text-thick button--inverted button--size"
-          style="position:absolute;left: 5%; top: 4%;width: 180px; height: 50px"
-          @click="addNew"
+          style="position:absolute;left: 5%; top: 7%;width: 200px; height: 60px"
       >创建问卷
       </button>
 
       <!-- menu菜单 -->
-
       <button
           type="button"
           class="button button--join button--round-x button--text-thick button--beforeinverted button--size"
           style="
         position: absolute;
-        left: 5%; top: 130px;
-        width: 180px;
-        height: 50px;
+        left: 5%; top: 150px;
+        width: 200px;
+        height: 60px;
       "
       >
         全部问卷
@@ -102,10 +100,11 @@
           class="button button--join button--round-x button--text-thick button--inverted button--size"
           style="
         position: absolute;
-        left: 5%; top: 180px;
-        width: 180px;
-        height: 50px;
+        left: 5%; top: 210px;
+        width: 200px;
+        height: 60px;
       "
+          @click="bin"
       >
         回收站
       </button>
@@ -114,9 +113,9 @@
           class="button button--join button--round-x button--text-thick button--inverted button--size"
           style="
         position: absolute;
-        left: 5%; top: 230px;
-        width: 180px;
-        height: 50px;
+        left: 5%; top: 270px;
+        width: 200px;
+        height: 60px;
       "
           @click="toInfo"
       >
@@ -170,7 +169,7 @@ export default {
   created() {
     const formData = new FormData();
     formData.append("date", "3")
-    this.$axios.post('/aptest/get_q', JSON.stringify(formData))
+    this.$http.post('/aptest/get_q', JSON.stringify(formData))
         .then(result => {
           console.log(result)
         })
@@ -226,6 +225,9 @@ export default {
         for (let i = 0; i < 3; i++)
           this.list.push(this.myList[val * 3 - 3 + i]);
       }
+    },
+    bin(){
+      this.$router.push("/bin");
     },
     sorted(command) {
       // this.$message('click on item ' + command);
@@ -405,7 +407,7 @@ export default {
 
 /* Sizes */
 .button--size {
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .button--size-x {
