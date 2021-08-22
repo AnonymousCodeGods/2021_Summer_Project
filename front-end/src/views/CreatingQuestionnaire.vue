@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div >
     <el-dialog :visible="titleEditDialog" :show-close="false">
       <div slot="title">编辑题目</div>
       <el-input type="textarea" v-model="editingTitle" style="margin-bottom: 30px;width: 80%"/>
       <el-button v-on:click="doneTitleEdit" style="width: 60%" type="success" icon="el-icon-check"></el-button>
     </el-dialog>
-    <el-card style="width: 800px; margin: auto"  v-loading.fullscreen.lock="fullscreenLoading">
+    <el-card style="width: 800px; margin: auto;"  v-loading.fullscreen.lock="fullscreenLoading">
       <div slot="header" class="clearfix">
         <span style="font-size: larger">{{que.title}}</span>
       </div>
