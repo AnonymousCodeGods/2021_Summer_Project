@@ -41,7 +41,6 @@
           <el-table-column
               align="center"
               label="发布日期"
-              sortable
               min-width="6">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
@@ -157,22 +156,26 @@
 <script>
 export default {
   name: 'bin',
+  created() {
+    this.tableData=[{
+      date: '2021-05-02',
+      name: '时间统计',
+      count: 0,
+    }, {
+      date: '2021-05-04',
+      name: '作业统计',
+      count: 7,
+    }, {
+      date: '2021-05-04',
+      name: '作业统计',
+      count: 7,
+    }]
+    this.username='quiz'
+  },
   data() {
     return {
-      tableData: [{
-        date: '2021-05-02',
-        name: '时间统计',
-        count: 0,
-      }, {
-        date: '2021-05-04',
-        name: '作业统计',
-        count: 7,
-      }, {
-        date: '2021-05-04',
-        name: '作业统计',
-        count: 7,
-      }],
-      username: 'quiz'
+      tableData: [],
+      username: ''
     }
   },
   methods: {
@@ -236,15 +239,15 @@ export default {
 
 .item {
   position: absolute;
-  left: 70%;
-  top: 20%;
+  left: 80%;
+  top: 30%;
   height: 50%;
 }
 
-.demo-type{
+.demo-type {
   position: absolute;
   left: 86%;
-  top: 10%;
+  top: 25%;
   height: 40%;
 }
 

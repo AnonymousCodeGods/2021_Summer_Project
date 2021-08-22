@@ -3,21 +3,13 @@
     <a style="float: left;padding-left: 40px;padding-top: 20px;width: 300px">{{ type }}</a>
     <a class="bas" style="float: left;padding-left: 50px;padding-top: 20px">ID：{{ id }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px;">状态：{{ state }}</a>
-<<<<<<< Updated upstream
-    <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">发布日期：{{ date }}</a>
-=======
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">创建日期：{{ date }}</a>
->>>>>>> Stashed changes
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">回收量：{{ num }}</a>
     <!--分割线-->
     <div class="midText"></div>
     <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;cursor:pointer;" @click="del">删除</a>
     <img src="../assets/del.png" style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
-<<<<<<< Updated upstream
-    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="pub" v-if="state==='1'">发布</a>
-=======
     <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="pub" v-if="state==='0'">发布</a>
->>>>>>> Stashed changes
     <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;color: #a5a5a5" @click="pub" v-else>已发布</a>
     <img src="../assets/open.png"
          style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
@@ -66,7 +58,7 @@ export default {
 
     },
     toResult() {
-
+        this.$router.push("/result");
     },
     exported() {
 

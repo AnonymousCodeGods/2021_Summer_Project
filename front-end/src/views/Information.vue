@@ -149,15 +149,15 @@ export default {
 
 .item {
   position: absolute;
-  left: 70%;
-  top: 20%;
+  left: 80%;
+  top: 30%;
   height: 50%;
 }
 
 .demo-type {
   position: absolute;
   left: 86%;
-  top: 10%;
+  top: 25%;
   height: 40%;
 }
 

@@ -20,23 +20,26 @@
         <div style="display: flex;justify-content: left;margin-top: 60px; ">
           <el-card style="width: 1200px;height: 100%" :body-style="{ padding: '0px' }">
             <div slot="header" class="clearfix">
-              <span> {{que.title}} </span>
+              <span> {{ que.title }} </span>
               <el-button style="float: right;" type="primary" @click="ExportData">导出数据</el-button>
             </div>
             <div v-for="item in que.QList" :key="item.id" style="margin: 20px;">
-              <div v-if="item.type===0">
+              <div >
                 <div class="queLabel">
-                  {{item.id+1}}.{{item.title}}
+                  {{ item.id + 1 }}.{{ item.title }}
                 </div>
-                <div style="margin-left: 5%;margin-right: 5%;text-align: center">
-                  <el-row :gutter="50" style="margin-top:2%">
-                    <el-col :span="18" style="height: 100%;width: 60%;margin-top:2%">
+<!--                单选多选-->
+                <div v-if="item.type===0||item.type===1" style="margin-left: 5%;margin-right: 5%;text-align: center">
+                  <el-row style="margin-top:1%">
+                    <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
                       <el-table
                           margin-left: fill
                           border
                           stripe
                           :data="item.options"
-                          style="width: 100%">
+                          style="width: 100%"
+                          :summary-method="getSummaries"
+                          show-summary>
                         <el-table-column
                             align="center"
                             prop="text"
@@ -52,18 +55,79 @@
                             width="100">
                         </el-table-column>
                         <el-table-column
+                            show-overflow-tooltip
                             align="center"
                             prop="percentage"
                             label="比例">
                           <template slot-scope="scope">
-                            <el-progress :percentage="scope.row.percentage"></el-progress>
+                            <el-progress :percentage="scope.row.percentage" :format="format"></el-progress>
                           </template>
                         </el-table-column>
                       </el-table>
                     </el-col>
-                    <el-col :span="6" style="margin-left:10%;text-align: center;vertical-align: middle;display: table-cell;">
-                      <!--TODO：单选题图表-->
-                      <img alt="QR code" src="../assets/search.png" style="width: 200px;height: 200px">
+                  </el-row>
+                </div>
+<!--                填空-->
+                <div v-else-if="item.type===2" style="margin-left: 5%;margin-right: 5%;text-align: center">
+                  <el-row style="margin-top:1%">
+                    <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
+                      <el-table
+                          margin-left: fill
+                          border
+                          stripe
+                          :data="item.Answerlist"
+                          style="width: 100%">
+                        <el-table-column
+                            align="center"
+                            prop="user"
+                            label="填写者"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                            align="center"
+                            prop="input"
+                            label="内容">
+                        </el-table-column>
+                      </el-table>
+                    </el-col>
+                  </el-row>
+                </div>
+<!--                评分-->
+                <div v-else-if="item.type===3" style="margin-left: 5%;margin-right: 5%;text-align: center">
+                  <el-row style="margin-top:1%">
+                    <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
+                      <el-table
+                          margin-left: fill
+                          border
+                          stripe
+                          :data="item.options"
+                          style="width: 100%"
+                          :summary-method="getSummaries"
+                          show-summary>
+                        <el-table-column
+                            align="center"
+                            prop="rate"
+                            sortable
+                            label="分数"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                            align="center"
+                            prop="count"
+                            sortable
+                            label="人数"
+                            width="100">
+                        </el-table-column>
+                        <el-table-column
+                            show-overflow-tooltip
+                            prop="percentage"
+                            label="比例"
+                            >
+                          <template slot-scope="scope">
+                            <el-progress :percentage="scope.row.percentage" :format="format" ></el-progress>
+                          </template>
+                        </el-table-column>
+                      </el-table>
                     </el-col>
                   </el-row>
                 </div>
@@ -89,93 +153,133 @@ export default {
   props: {
     msg: String
   },
+  created() {
+    this.que= {
+      id: 0,
+      title: "**统计",
+      QList: [{
+        id: 0, type: 0, title: "第一题",total:0,
+        options:
+            [{id:0,text: "A", count: 0, percentage: 1},
+              {id:1,text: 'B', count: 0, percentage: "0"}
+            ]
+      }, {
+        id: 1, type: 1, title: "第二题",total:0,
+        options: [{id:0,text: "A", count: 0, percentage: "0"},
+          {id:1,text: 'B', count: 0, percentage: "0"}
+        ]
+      }, {
+        id: 2, type: 2, title: "第三题",
+        Answerlist:[]
+      }, {
+        id: 3, type: 3, title: "第四题",total:0,
+        options:[
+          {rate:1,count:0, percentage: "0"},
+          {rate:2,count:0, percentage: "0"},
+          {rate:3,count:0, percentage: "0"},
+          {rate:4,count:0, percentage: "0"},
+          {rate:5,count:0, percentage: "0"},
+        ]
+      }]
+    }
+    this.records=[
+      {user:"qqq",AnswerList:[
+          {id:0,type:0,selection:0},
+          {id:1,type:1,selection:[0,1]},
+          {id:2,type:2,input: "hhh"},
+          {id:3,type:3,rate: 1}
+        ]
+      },
+      {user:"www",AnswerList:[
+          {id:0,type:0,selection:1},
+          {id:1,type:1,selection:[0]},
+          {id:2,type:2,input: "hhh"},
+          {id:3,type:3,rate: 2}
+        ]
+      }
+    ]
+    this.total=this.que.QList.length
+    for (let i = 0; i <this.records.length; i++){
+      for (let j = 0; j < this.total; j++) {
+        if(this.records[i].AnswerList[j].type===0 ){
+          this.que.QList[j].options[this.records[i].AnswerList[j].selection].count++
+          this.que.QList[j].total++
+        }else if(this.records[i].AnswerList[j].type===1){
+          for (let k = 0; k <this.records[i].AnswerList[j].selection.length; k++) {
+            this.que.QList[j].options[this.records[i].AnswerList[j].selection[k]].count++
+            this.que.QList[j].total++
+          }
+        }else if(this.records[i].AnswerList[j].type===2){
+          this.que.QList[j].Answerlist.push({user:this.records[i].user,input:this.records[i].AnswerList[j].input})
+        }else{
+          this.que.QList[j].options[this.records[i].AnswerList[j].rate-1].count++
+          this.que.QList[j].total++
+        }
+      }
+    }
+    for (let i = 0; i < this.total; i++) {
+      if(this.que.QList[i].type===0||this.que.QList[i].type===1||this.que.QList[i].type===3){
+        for (let j = 0; j <this.que.QList[i].options.length; j++) {
+          this.que.QList[i].options[j].percentage=this.que.QList[i].options[j].count*100.0/this.que.QList[i].total
+        }
+      }
+    }
+  },
   data() {
     return {
       que:{
-        id:0,
-        title:"**统计",
-        QList:[{
-          id:0,
-          type:0,
-          title:"第一题",
-          options:[
-          //TODO；选项数据
-            {
-              text: "A",
-              count : 5,
-              percentage: "50"
-            },
-            {
-              text: 'B',
-              count : 5,
-              percentage: "50"
-            }
-
-          ],
-          Answers:[
-          //TODO：答卷数据
-          ],
-          selection:-1
-        },{
-          id:1,
-          type:1,
-          title:"第二题",
-          options:[
-            //TODO；选项数据
-          ],
-          Answers:[
-            //TODO：答卷数据
-          ]
-        },{
-          id:2,
-          type:2,
-          title:"第三题",
-          options:[
-            //TODO；选项数据
-          ],
-          Answers:[
-            //TODO：答卷数据
-          ]
-        },{
-          id:3,
-          type:3,
-          title:"第四题",
-          options:[
-            //TODO；选项数据
-          ],
-          Answers:[
-            //TODO：答卷数据
-          ]
-        }]
       },
-      total: 100,
+      records: [
+
+      ],
+      total:0
     }
   },
   methods: {
-    sorted(command) {
-      // this.$message('click on item ' + command);
-      this.sort = command;
+    getSummaries(param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '总计 ';
+          return;
+        }else if(index === 2){
+          sums[index] = '';
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+          sums[index] += ' ';
+        } else {
+          sums[index] = 'N/A';
+        }
+      });
+
+      return sums;
     },
-    stated(command) {
-      // this.$message('click on item ' + command);
-      this.state = command;
-    },
-    handleCommand(command) {
-      // this.$message('click on item ' + command);
-      this.value = command;
-    },
-    toHome:function (){
+    format(percentage) {
+      return parseFloat(percentage).toFixed(2)+"%";
+    }
+    ,
+    toHome: function () {
       this.$router.push("/home");
     },
-    ExportData(){
-    //TODO:导出数据
+    ExportData() {
+      //TODO:导出数据
       this.$notify({
         title: '导出成功',
         message: null,
         position: 'bottom-left',
         type: "success"
-      });
-
+      })
     }
   }
 }
@@ -189,7 +293,7 @@ export default {
   height: 8%;
   width: 100%;
   background-color: #ffffff;
-//border:2px solid #000000;
+  //border:2px solid #000000;
 }
 
 .body {
@@ -206,15 +310,15 @@ export default {
 
 .item {
   position: absolute;
-  left: 70%;
-  top: 20%;
+  left: 80%;
+  top: 30%;
   height: 50%;
 }
 
-.demo-type{
+.demo-type {
   position: absolute;
   left: 86%;
-  top: 10%;
+  top: 25%;
   height: 40%;
 }
 
@@ -249,6 +353,7 @@ export default {
 .button > span {
   vertical-align: middle;
 }
+
 /* Sizes */
 .button--size {
   font-size: 14px;
@@ -257,6 +362,7 @@ export default {
 .button--size-x {
   font-size: 15px;
 }
+
 /* Typography and Roundedness */
 .button--text-thick {
   font-weight: 300;
@@ -269,6 +375,7 @@ export default {
 .button--round-x {
 
 }
+
 /* Wapasha */
 .button.button--login {
   background: #176c97;
@@ -316,12 +423,13 @@ export default {
   background-color: #0d78ad;
   color: #fcfcfd;
 }
+
 // 加入按钮
 .button--join.button--inverted {
-     background: #adadad;
-     border: 1px solid #adadad;
-     color: #000000;
-   }
+  background: #adadad;
+  border: 1px solid #adadad;
+  color: #000000;
+}
 
 .button--join::before {
   content: "";
@@ -360,10 +468,12 @@ export default {
 
 .el-row {
   margin-bottom: 20px;
+
   &:last-child {
     margin-bottom: 0;
   }
 }
+
 .el-col {
   border-radius: 4px;
 }
