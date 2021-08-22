@@ -76,7 +76,7 @@
         </tbody>
       </vuedraggable>
       <div style="margin-top: 30px">
-        <el-button plain type="primary" style="width: 15%" icon="el-icon-download"></el-button>
+        <el-button plain type="primary" style="width: 15%" icon="el-icon-download" v-on:click="uploadQn(false)"></el-button>
         <el-popover
             style="margin: 20px"
             placement="top"
@@ -92,7 +92,7 @@
           </div>
           <el-button plain type="success" style="width: 15%" icon="el-icon-plus" v-on:click="addQuestionDialog=true" slot="reference"></el-button>
         </el-popover>
-        <el-button plain type="danger" style="width: 15%" icon="el-icon-upload2" v-on:click="uploadQn"></el-button>
+        <el-button plain type="danger" style="width: 15%" icon="el-icon-upload2" v-on:click="uploadQn(true)"></el-button>
       </div>
     </el-card>
   </div>
@@ -252,9 +252,9 @@ export default {
         this.que.QList[i].qid++
       }
     },
-    uploadQn(){
+    uploadQn(flag){
       this.$axios({method:"post",url:"/questionnaire/saveQn", data:{
-        "share": false,
+        "share": flag,
           "que":{
             "title":this.que.title,
             "QList":this.que.QList
@@ -263,7 +263,7 @@ export default {
             if(res.data.success === true){
               this.$notify({
                 title: '成功',
-                message: '上传问卷成功',
+                message: flag?'分享':'保存'+'问卷成功',
                 type: 'success',
                 position: 'bottom-left'
               });
@@ -271,11 +271,12 @@ export default {
             else {
               this.$notify({
                 title: '失败',
-                message: '上传问卷失败',
+                message: flag?'分享':'保存'+'问卷失败',
                 type: 'error',
                 position: 'bottom-left'
               });
             }
+            //这里要加一个弹出分享窗口的语句
           })
           .catch(() => {
             this.$notify({
