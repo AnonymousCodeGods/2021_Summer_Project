@@ -9,7 +9,7 @@
       <div slot="header" class="clearfix">
         <span style="font-size: larger">{{que.title}}</span>
       </div>
-      <vuedraggable v-model="que.QList" chosen-class="move" ghost="move" force-fallback="true" animation="400" @start="onStart" @end="onEnd">
+      <vuedraggable v-model="que.QList" chosen-class="choose" force-fallback="true" animation="400" @start="onStart" @end="onEnd">
         <tbody is="transition-group">
           <div v-for="item in que.QList"
                :key="item.qid" class="move">
@@ -102,16 +102,12 @@
 import vuedraggable from 'vuedraggable';
 export default {
   components: {
-    vuedraggable,//当前页面注册组件
-  },
-  created() {
-    this.que.qnid=Math.round(Math.random()*10000000);
+    vuedraggable,
   },
   name: 'NewQue',
   data: function(){
     return {
       que: {
-        qnid: 123123,
         title: "holo",
         QList: [{
           qid: 0,
@@ -315,5 +311,9 @@ export default {
 
 .move {
 
+}
+
+.choose {
+  opacity: 0;
 }
 </style>
