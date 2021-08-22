@@ -9,62 +9,66 @@
       <div slot="header" class="clearfix">
         <span style="font-size: larger">{{que.title}}</span>
       </div>
-      <el-card v-for="item in que.QList"
-               :key="item.id" style="margin: 15px"
+      <vuedraggable v-model="que.QList" chosen-class="chosen" force-fallback="true" animation="100" @start="onStart" @end="onEnd" :move="moveElement">
+        <tbody is="transition-group">
+          <el-card v-for="item in que.QList"
+               :key="item.qid" style="margin: 15px;cursor: move"
                shadow="hover">
-        <div style="float: right;margin-right: 12px">
-          <el-button type="text" icon="el-icon-document-copy" v-on:click="copyQuestion(item)"></el-button>
-          <el-button type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
-        </div>
-        <div v-if="item.type===0" class="queLabel">
-          <span style="line-height: 30px;">
-            <el-tag size="small">单选</el-tag>
-            {{item.qid+1}}.{{item.title}}
-            <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
-          </span>
-          <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
-            <el-input v-for="subItem in item.option"
-                      :key="subItem.oid"
-                      v-model="subItem.content"
-                      maxlength="28"
-                      style="width: 100%;margin-bottom: 10px">
-              <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
-            </el-input>
-            <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
-          </div>
-        </div>
-        <div v-if="item.type===1" class="queLabel">
-          <span style="line-height: 30px;">
-            <el-tag size="small" type="success">多选</el-tag>
-            {{item.qid+1}}.{{item.title}}
-            <el-link icon="el-icon-edit" :underline="false"  v-on:click="initialTitleEdit(item)"></el-link>
-          </span>
-          <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
-            <el-input v-for="subItem in item.option"
-                      :key="subItem.oid"
-                      v-model="subItem.content"
-                      maxlength="28"
-                      style="width: 100%;margin-bottom: 10px">
-              <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
-            </el-input>
-            <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
-          </div>
-        </div>
-        <div v-if="item.type===2" class="queLabel">
-          <div style="margin-top: 10px">
-            <el-tag size="small" type="info">填空</el-tag>
-            {{item.qid+1}}.{{item.title}}
-            <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
-          </div>
-        </div>
-        <div v-if="item.type===3" class="queLabel">
-          <div style="margin-top: 10px">
-            <el-tag size="small" type="warning">评分</el-tag>
-            {{item.qid+1}}.{{item.title}}
-            <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
-          </div>
-        </div>
-      </el-card>
+            <div style="float: right;margin-right: 12px">
+              <el-button type="text" icon="el-icon-document-copy" v-on:click="copyQuestion(item)"></el-button>
+              <el-button type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
+            </div>
+            <div v-if="item.type===0" class="queLabel">
+              <span style="line-height: 30px;">
+                <el-tag size="small">单选</el-tag>
+                {{item.qid+1}}.{{item.title}}
+                <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+              </span>
+              <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
+               <el-input v-for="subItem in item.option"
+                         :key="subItem.oid"
+                         v-model="subItem.content"
+                         maxlength="28"
+                         style="width: 100%;margin-bottom: 10px">
+                  <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
+               </el-input>
+                <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
+              </div>
+            </div>
+            <div v-if="item.type===1" class="queLabel">
+             <span style="line-height: 30px;">
+                <el-tag size="small" type="success">多选</el-tag>
+                {{item.qid+1}}.{{item.title}}
+                <el-link icon="el-icon-edit" :underline="false"  v-on:click="initialTitleEdit(item)"></el-link>
+             </span>
+              <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
+                <el-input v-for="subItem in item.option"
+                         :key="subItem.oid"
+                          v-model="subItem.content"
+                          maxlength="28"
+                         style="width: 100%;margin-bottom: 10px">
+                  <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
+                </el-input>
+               <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
+             </div>
+            </div>
+           <div v-if="item.type===2" class="queLabel">
+             <div style="margin-top: 10px">
+               <el-tag size="small" type="info">填空</el-tag>
+               {{item.qid+1}}.{{item.title}}
+               <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+             </div>
+           </div>
+           <div v-if="item.type===3" class="queLabel">
+             <div style="margin-top: 10px">
+               <el-tag size="small" type="warning">评分</el-tag>
+               {{item.qid+1}}.{{item.title}}
+                <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+             </div>
+           </div>
+         </el-card>
+        </tbody>
+      </vuedraggable>
       <div style="margin-top: 30px">
         <el-button plain type="primary" style="width: 15%" icon="el-icon-download"></el-button>
         <el-popover
@@ -89,7 +93,11 @@
 </template>
 
 <script>
+import vuedraggable from 'vuedraggable';
 export default {
+  components: {
+    vuedraggable,//当前页面注册组件
+  },
   name: 'NewQue',
   data: function(){
     return {
@@ -141,7 +149,8 @@ export default {
       titleEditDialog: false,
       editingTitleQuestion:null,
       editingTitle:'',
-      addQuestionVisible: false
+      addQuestionVisible: false,
+      drag: false
     }
   },
   methods: {
@@ -237,6 +246,22 @@ export default {
       for(let i = num+2; i < this.que.QList.length; i++) {
         this.que.QList[i].qid++
       }
+    },
+    onStart() {
+      this.drag = true;
+    },
+    onEnd() {
+      this.drag = false;
+    },
+    moveElement(e){
+      console.log(e.draggedContext.element.qid);
+      console.log(e.relatedContext.element.qid);
+      let temp1 = e.draggedContext.element.qid;
+      e.draggedContext.element.qid = e.relatedContext.element.qid;
+      e.relatedContext.element.qid = temp1;
+      console.log(e.draggedContext.element.qid);
+      console.log(e.relatedContext.element.qid);
+      return null;
     }
   }
 }
