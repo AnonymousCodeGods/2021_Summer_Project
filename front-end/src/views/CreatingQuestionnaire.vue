@@ -253,6 +253,7 @@ export default {
       }
     },
     uploadQn(flag){
+      this.fullscreenLoading = true
       this.$axios({method:"post",url:"/questionnaire/saveQn", data:{
         "share": flag,
           "que":{
@@ -263,7 +264,7 @@ export default {
             if(res.data.success === true){
               this.$notify({
                 title: '成功',
-                message: flag?'分享':'保存'+'问卷成功',
+                message: flag?'发布':'保存'+'问卷成功',
                 type: 'success',
                 position: 'bottom-left'
               });
@@ -271,11 +272,12 @@ export default {
             else {
               this.$notify({
                 title: '失败',
-                message: flag?'分享':'保存'+'问卷失败',
+                message: flag?'发布':'保存'+'问卷失败',
                 type: 'error',
                 position: 'bottom-left'
               });
             }
+            this.fullscreenLoading = false
             //这里要加一个弹出分享窗口的语句
           })
           .catch(() => {
