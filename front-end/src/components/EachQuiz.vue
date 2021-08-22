@@ -60,10 +60,10 @@ export default {
 
     },
     toResult() {
-      this.$router.push("/sentout");
+      this.$router.push("/result");
     },
     exported() {
-      this.$router.push("/result");
+      this.$router.push("/sentout");
     },
     links() {
 
