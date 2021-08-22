@@ -1,8 +1,8 @@
-<template >
-  <div style="display: flex;justify-content: center;margin-top: 150px;">
+<template>
+  <div style="display: flex;justify-content: center;margin-top: 150px">
     <table style="border-spacing: 15px">
       <tr>
-        <el-card style="width: 400px;">
+        <el-card style="width: 400px">
           <div slot="header" class="clearfix">
             <span>登录</span>
           </div>
@@ -64,62 +64,49 @@ export default {
         });
       } else {
         this.fullscreenLoading=true;
-        this.$store.state.username = 'abc';
-        this.$store.state.password = '123';
-       // this.$cookies.set("user",{username:this.username,password:this.password},60 * 60 * 24);
-        this.$notify({
-          title: '成功',
-          message: '登陆成功',
-          position: 'bottom-left',
-          type: "success"
-        });
-        this.$router.push("/home");
-        this.fullscreenLoading=false;
-
-
-
-        // this.$axios({
-        //   method: "POST",
-        //   data: {username: this.username, password: this.password},
-        //   url: "/Login",
-        // })
-        //     .then(res => {
-        //       if (!res.data.success) {
-        //         this.$notify({
-        //           title: '错误',
-        //           message: '登陆失败',
-        //           position: 'bottom-left',
-        //           type: "error"
-        //         });
-        //       } else {
-        //         this.$store.state.userType = res.data.userType;
-        //         this.$store.state.username = this.username;
-        //         this.$store.state.password = this.password;
-        //         this.$cookies.set("user",{username:this.username,password:this.password},60 * 60 * 24);
-        //         this.$notify({
-        //           title: '成功',
-        //           message: '登陆成功',
-        //           position: 'bottom-left',
-        //           type: "success"
-        //         });
-        //         this.$router.push("/home")
-        //       }
-        //       this.fullscreenLoading=false;
-        //     })
-        //     .catch(res => {
-        //       this.$notify({
-        //         title: '错误',
-        //         message: '连接失败',
-        //         position: 'bottom-left',
-        //         type: "error"
-        //       });
-        //       this.fullscreenLoading=false;
-        //     });
+        this.$axios({
+          method: "POST",
+          data: {username: this.username, password: this.password},
+          url: "/Login",
+        })
+            .then(res => {
+              if (!res.data.success) {
+                this.$notify({
+                  title: '错误',
+                  message: '登陆失败',
+                  position: 'bottom-left',
+                  type: "error"
+                });
+              } else {
+                this.$store.state.userType = res.data.userType;
+                this.$store.state.username = this.username;
+                this.$store.state.password = this.password;
+                this.$cookies.set("user",{username:this.username,password:this.password},60 * 60 * 24);
+                this.$notify({
+                  title: '成功',
+                  message: '登陆成功',
+                  position: 'bottom-left',
+                  type: "success"
+                });
+                this.$router.push("/")
+              }
+              this.fullscreenLoading=false;
+            })
+            .catch(res => {
+              console.log(res)
+              this.$notify({
+                title: '错误',
+                message: '连接失败',
+                position: 'bottom-left',
+                type: "error"
+              });
+              this.fullscreenLoading=false;
+            });
       }
     }
   },
   created() {
-    // this.$store.state.currentPage="99"
+    this.$store.state.currentPage="99"
   }
 }
 </script>
