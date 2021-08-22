@@ -7,6 +7,15 @@ Vue.use(Vuex)
 /* eslint-disable no-new */
 const store = new Vuex.Store({
   plugins: [createPersistedState()],
+  state: {
+    username:"",
+    password:"",
+    currentPage:"1"
+  },
+  mutations: {
+  },
+  actions: {
+  },
   modules: {
   }
 })

@@ -16,7 +16,7 @@
 <!--        </div>-->
       </div>
 
-      <a style="position:absolute;top:25%;height: 80%;left: 90%">{{username}}</a>
+      <a style="position:absolute;top:25%;height: 80%;left: 90%">{{this.$store.state.username}}</a>
     </div>
 
     <div class="body">
@@ -132,7 +132,6 @@ export default {
       state: '状态',
       value: '正序',
       input: '',
-      username:'quiz'
     }
   },
   methods: {

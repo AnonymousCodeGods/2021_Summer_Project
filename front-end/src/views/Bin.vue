@@ -157,7 +157,7 @@
 <script>
 export default {
   name: 'bin',
-  data: function () {
+  data() {
     return {
       tableData: [{
         date: '2021-05-02',
@@ -205,7 +205,7 @@ export default {
       this.$router.push("/info");
     },
     toHome:function (){
-      this.$router.push("/");
+      this.$router.push("/home");
     }
   }
 }

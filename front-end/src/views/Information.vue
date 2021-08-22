@@ -112,7 +112,7 @@ export default {
       this.value = command;
     },
     toHome:function (){
-      this.$router.push("/");
+      this.$router.push("/home");
     },
     toBin:function (){
       this.$router.push("/bin");
