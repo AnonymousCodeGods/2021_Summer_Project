@@ -16,11 +16,7 @@
         <!--        </div>-->
       </div>
 
-<<<<<<< Updated upstream
-      <el-dropdown style="position:absolute;top:25%;height: 80%;left: 90%" @command="logout">
-=======
       <el-dropdown style="position:absolute;top:40%;height: 80%;left: 90%" @command="logout">
->>>>>>> Stashed changes
       <span class="el-dropdown-link">
         {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
@@ -88,11 +84,7 @@
       </button>
 
       <!-- menu菜单 -->
-<<<<<<< Updated upstream
-      
-=======
 
->>>>>>> Stashed changes
       <button
           type="button"
           class="button button--join button--round-x button--text-thick button--beforeinverted button--size"
@@ -160,10 +152,7 @@
       </div>
 
     </div>
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
   </div>
 </template>
 
@@ -179,21 +168,9 @@ export default {
     msg: String
   },
   created() {
-<<<<<<< Updated upstream
-    this.myList = [{type: "1",date:"2021-8-21",id:"1234567",num:"123",state:'0'},
-        {type: "数分测验",date:"2021-8-21",id:"1234567",num:"1234567",state:"1"},
-        {type: "情感调查",date:"2021-8-21",id:"1234567",num:"123",state:"1"},
-        {type: "睡眠时间",date:"2021-8-21",id:"1234567",num:"123",state:'0'},
-        {type: "游戏时间",date:"2021-8-21",id:"1234567",num:"123",state:"1"},
-        {type: "开发了么",date:"2021-8-21",id:"1234567",num:"123",state:"1"},
-        {type: "早点睡觉",date:"2021-8-21",id:"1234567",num:"123",state:"1"},
-        {type: "喜好调查",date:"2021-8-21",id:"1234567",num:"123",state:"1"},
-        {type: "游戏调查",date:"2021-8-21",id:"1234567",num:"123",state:"1"},
-      ]
-=======
     const formData = new FormData();
     formData.append("date", "3")
-    this.$http.post('/aptest/get_q', JSON.stringify(formData))
+    this.$axios.post('/aptest/get_q', JSON.stringify(formData))
         .then(result => {
           console.log(result)
         })
@@ -208,7 +185,6 @@ export default {
       {type: "游戏调查", date: "2021-8-21", id: "1234567", num: "133", state: "1"},
     ]
     this.myList = this.allList;
->>>>>>> Stashed changes
     this.total = this.myList.length;
     if (this.myList.length <= 3) {
       this.list = this.myList;
@@ -218,10 +194,7 @@ export default {
         this.list.push(this.myList[i]);
       console.log(this.list);
     }
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
   },
   data() {
     return {
@@ -231,17 +204,11 @@ export default {
       input: '',
       username: 'quiz',
       myList: [],
-<<<<<<< Updated upstream
-      list: [],
-      total: 1,
-      page: 1,
-=======
       allList: [],
       list: [],
       total: 1,
       page: 1,
       order: 0,
->>>>>>> Stashed changes
     }
   },
   methods: {
@@ -249,17 +216,6 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-<<<<<<< Updated upstream
-      console.log(`当前页: ${val}`);
-      this.list=[];
-      if (val * 3 > this.total) {
-        for (let i = val*3-3; i < this.total; i++)
-          this.list.push(this.myList[i]);
-      }
-      else{
-        for (let i = 0; i < 3; i++)
-          this.list.push(this.myList[val*3-3+i]);
-=======
       this.page = val;
       console.log(`当前页: ${val}`);
       this.list = [];
@@ -269,14 +225,11 @@ export default {
       } else {
         for (let i = 0; i < 3; i++)
           this.list.push(this.myList[val * 3 - 3 + i]);
->>>>>>> Stashed changes
       }
     },
     sorted(command) {
       // this.$message('click on item ' + command);
       this.sort = command;
-<<<<<<< Updated upstream
-=======
       if (command === "回收量") {
         this.allList.sort(function (a, b) {
           return a.num - b.num;
@@ -294,13 +247,10 @@ export default {
         for (let i = 0; i < 3; i++)
           this.list.push(this.myList[val * 3 - 3 + i]);
       }
->>>>>>> Stashed changes
     },
     stated(command) {
       // this.$message('click on item ' + command);
       this.state = command;
-<<<<<<< Updated upstream
-=======
       this.myList = [];
       if (command === "已发布") {
         for (let i = 0; i < this.allList.length; i++)
@@ -324,13 +274,10 @@ export default {
         for (let i = 0; i < 3; i++)
           this.list.push(this.myList[val * 3 - 3 + i]);
       }
->>>>>>> Stashed changes
     },
     handleCommand(command) {
       // this.$message('click on item ' + command);
       this.value = command;
-<<<<<<< Updated upstream
-=======
       if (command === "倒序" && this.order === 0) {
         this.order = 1;
         // this.allList.reverse();
@@ -360,22 +307,10 @@ export default {
             this.list.push(this.myList[val * 3 - 3 + i]);
         }
       }
->>>>>>> Stashed changes
     },
     toInfo: function () {
       this.$router.push("/info");
     },
-<<<<<<< Updated upstream
-    logout(command){
-      console.log(command);
-      this.$router.push("/login");
-    },
-  // 查找
-    search(){
-        console.log(this.input)
-    },
-    addNew(){
-=======
     logout(command) {
       console.log(command);
       this.$router.push("/login");
@@ -385,7 +320,6 @@ export default {
       console.log(this.input)
     },
     addNew() {
->>>>>>> Stashed changes
 
     }
   }
@@ -425,24 +359,15 @@ export default {
 
 .item {
   position: absolute;
-<<<<<<< Updated upstream
-  left: 70%;
-  top: 20%;
-=======
   left: 80%;
   top: 30%;
->>>>>>> Stashed changes
   height: 50%;
 }
 
 .demo-type {
   position: absolute;
   left: 86%;
-<<<<<<< Updated upstream
-  top: 10%;
-=======
   top: 25%;
->>>>>>> Stashed changes
   height: 40%;
 }
 
