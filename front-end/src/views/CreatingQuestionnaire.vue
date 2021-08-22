@@ -92,7 +92,7 @@
           </div>
           <el-button plain type="success" style="width: 15%" icon="el-icon-plus" v-on:click="addQuestionDialog=true" slot="reference"></el-button>
         </el-popover>
-        <el-button plain type="danger" style="width: 15%" icon="el-icon-upload2"></el-button>
+        <el-button plain type="danger" style="width: 15%" icon="el-icon-upload2" v-on:click="uploadQn"></el-button>
       </div>
     </el-card>
   </div>
@@ -103,6 +103,9 @@ import vuedraggable from 'vuedraggable';
 export default {
   components: {
     vuedraggable,//当前页面注册组件
+  },
+  created() {
+    this.que.qnid=Math.round(Math.random()*10000000);
   },
   name: 'NewQue',
   data: function(){
@@ -252,6 +255,42 @@ export default {
       for(let i = num+2; i < this.que.QList.length; i++) {
         this.que.QList[i].qid++
       }
+    },
+    uploadQn(){
+      this.$axios({method:"post",url:"/questionnaire/saveQn", data:{
+        "share": false,
+          "que":{
+            "title":this.que.title,
+            "QList":this.que.QList
+          }}})
+          .then(res => {
+            if(res.data.success === true){
+              this.$notify({
+                title: '成功',
+                message: '上传问卷成功',
+                type: 'success',
+                position: 'bottom-left'
+              });
+            }
+            else {
+              this.$notify({
+                title: '失败',
+                message: '上传问卷失败',
+                type: 'error',
+                position: 'bottom-left'
+              });
+            }
+          })
+          .catch(() => {
+            this.$notify({
+              title: '失败',
+              message: '连接失败',
+              type: 'error',
+              position: 'bottom-left'
+            });
+            this.fullscreenLoading=false
+            //this.$router.push('/');
+          })
     },
     onStart() {
       this.drag = true;

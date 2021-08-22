@@ -61,7 +61,7 @@
         </div>
       </div>
       <div style="margin-top: 30px">
-        <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check">提交</el-button>
+        <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="submitQn">提交</el-button>
       </div>
     </el-card>
   </div>
@@ -72,7 +72,7 @@ export default {
   name: 'CQue',
   created() {
     this.fullscreenLoading=true
-    this.$axios({method:"post",url:"/questionnaire/getQn", data:{"QnId": this.$route.query.id}})
+    this.$axios({method:"post",url:"/aptest/getQn", data:{"QnId": this.$route.query.id}})
         .then(res => {
           this.que.QList=[]
           this.que.qnid = res.data.que.qnid;
@@ -155,7 +155,68 @@ export default {
     }
   },
   methods: {
-
+    submitQn(){
+      let AnswerListTemp = [];
+      for(let i=0;i<this.que.QList.length;i++){
+        let temp1=this.que.QList[i];
+        if(temp1.type === 0){
+          AnswerListTemp.push({
+            type:temp1.type,
+            answer:temp1.selection
+          })
+        }
+        else if(temp1.type === 1){
+          AnswerListTemp.push({
+            type:temp1.type,
+            answer: temp1.selections
+          })
+        }
+        else if(temp1.type === 2){
+          AnswerListTemp.push({
+            type:temp1.type,
+            answer : temp1.input
+          })
+        }
+        else{
+          AnswerListTemp.push({
+            type:temp1.type,
+            answer : temp1.rating
+          })
+        }
+      }
+      this.$axios({method:"post",url:"/questionnaire/submitQn", data:{
+          "qnid": this.que.qnid,
+          "AnswerList":AnswerListTemp
+      }})
+          .then(res => {
+            if(res.data.success === true){
+              this.$notify({
+                title: '成功',
+                message: '提交问卷成功',
+                type: 'success',
+                position: 'bottom-left'
+              });
+            }
+            else {
+              this.$notify({
+                title: '失败',
+                message: '提交问卷失败',
+                type: 'error',
+                position: 'bottom-left'
+              });
+            }
+          })
+          .catch(() => {
+            this.$notify({
+              title: '失败',
+              message: '连接失败',
+              type: 'error',
+              position: 'bottom-left'
+            });
+            this.fullscreenLoading=false
+            //this.$router.push('/');
+          })
+    }
   }
 }
 </script>
