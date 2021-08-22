@@ -111,7 +111,7 @@ export default {
   data: function(){
     return {
       que: {
-        qnid: '123123',
+        qnid: 123123,
         title: "holo",
         QList: [{
           qid: 0,

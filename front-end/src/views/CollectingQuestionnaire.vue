@@ -146,7 +146,7 @@ export default {
   data: function(){
     return {
       que: {
-        qnid: '0',
+        qnid: 0,
         title: "测试问卷",
         QList: []
       },
@@ -161,24 +161,28 @@ export default {
         let temp1=this.que.QList[i];
         if(temp1.type === 0){
           AnswerListTemp.push({
+            qid:temp1.qid,
             type:temp1.type,
             answer:temp1.selection
           })
         }
         else if(temp1.type === 1){
           AnswerListTemp.push({
+            qid:temp1.qid,
             type:temp1.type,
             answer: temp1.selections
           })
         }
         else if(temp1.type === 2){
           AnswerListTemp.push({
+            qid:temp1.qid,
             type:temp1.type,
             answer : temp1.input
           })
         }
         else{
           AnswerListTemp.push({
+            qid:temp1.qid,
             type:temp1.type,
             answer : temp1.rating
           })
