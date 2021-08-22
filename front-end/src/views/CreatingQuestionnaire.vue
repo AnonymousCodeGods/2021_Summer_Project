@@ -12,7 +12,10 @@
       <el-card v-for="item in que.QList"
                :key="item.id" style="margin: 15px"
                shadow="hover">
-        <el-button style="float: right;margin-right: 12px" type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
+        <div style="float: right;margin-right: 12px">
+          <el-button type="text" icon="el-icon-document-copy" v-on:click="copyQuestion(item)"></el-button>
+          <el-button type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
+        </div>
         <div v-if="item.type===0" class="queLabel">
           <span style="line-height: 30px;">
             <el-tag size="small">单选</el-tag>
@@ -138,7 +141,7 @@ export default {
       titleEditDialog: false,
       editingTitleQuestion:null,
       editingTitle:'',
-      addQuestionVisible: true
+      addQuestionVisible: false
     }
   },
   methods: {
@@ -207,6 +210,32 @@ export default {
       this.que.QList.splice(num,1)
       for(let i = num; i < this.que.QList.length; i++) {
         this.que.QList[i].qid--
+      }
+    },
+    copyQuestion(question) {
+      let num = this.que.QList.indexOf(question)
+      if(question.type === 0 || question.type === 1) {
+        this.que.QList.splice(num+1,0,{
+          qid: num+1,
+          type: question.type,
+          title: question.title+"（副本）",
+          option: []
+        })
+        for(let i = 0; i < question.option.length; i++) {
+          this.que.QList[num+1].option.push({
+            oid:question.option[i].oid,
+            content:question.option[i].content
+          })
+        }
+      } else if(question.type === 2 || question.type === 3) {
+        this.que.QList.splice(num+1,0,{
+          qid: num+1,
+          type: question.type,
+          title: question.title+"（副本）",
+        })
+      }
+      for(let i = num+2; i < this.que.QList.length; i++) {
+        this.que.QList[i].qid++
       }
     }
   }
