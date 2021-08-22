@@ -61,7 +61,7 @@
         </div>
       </div>
       <div style="margin-top: 30px">
-        <el-button type="primary" style="width: 15%">提交</el-button>
+        <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check">提交</el-button>
       </div>
     </el-card>
   </div>
@@ -71,6 +71,7 @@
 export default {
   name: 'CQue',
   created() {
+    this.fullscreenLoading=true
     this.$axios({method:"post",url:"/questionnaire/getQn", data:{"QnId": this.$route.query.id}})
         .then(res => {
           this.que.QList=[]
@@ -129,8 +130,8 @@ export default {
               })
             }
           }
+          this.fullscreenLoading=false
         })
-        // eslint-disable-next-line no-unused-vars
         .catch(() => {
           this.$notify({
             title: '失败',
@@ -138,57 +139,16 @@ export default {
             type: 'error',
             position: 'bottom-left'
           });
+          this.fullscreenLoading=false
           //this.$router.push('/');
         })
   },
   data: function(){
     return {
       que: {
-        qnid: '123123',
-        title: "holo",
-        QList: [{
-          qid: 0,
-          type: 0,
-          title: "主要用于课堂测试等场景，发布者应该可以设置每道题目的评分和答案，也可以设置问" +
-              "卷整体的限时时间，超时将自动回收。针对填写者，问卷题目应该可以乱序展示，在填写者" +
-              "提交后，问卷应该可以对客观题目进行自动评分，并使填写者可以查看答案。",
-          option: [{
-            oid: 0,
-            content: "你好"
-          }, {
-            oid: 1,
-            content: "hello"
-          }, {
-            oid: 2,
-            content: "hi"
-          }],
-          selection: -1
-        }, {
-          qid: 1,
-          type: 1,
-          title: "到底什么是hello",
-          option: [{
-            oid: 0,
-            content: "你好"
-          }, {
-            oid: 1,
-            content: "hello"
-          }, {
-            oid: 2,
-            content: "hi"
-          }],
-          selections: []
-        }, {
-          qid: 2,
-          type: 2,
-          title: "到底到底什么是hello",
-          input: ""
-        }, {
-          qid: 3,
-          type: 3,
-          title: "到底到底到底什么是hello",
-          rating: 0
-        }]
+        qnid: '0',
+        title: "测试问卷",
+        QList: []
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       fullscreenLoading: false
