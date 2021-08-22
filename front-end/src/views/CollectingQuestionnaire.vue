@@ -17,8 +17,8 @@
                   v-for="subItem in item.option"
                   :key="subItem.oid"
                   :label="subItem.oid"
-                  style="width: 100%;margin: 5px;display: flex;align-items: flex-start;">
-                {{subItem.content}}
+                  style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
+                <span style="font-size: medium;">{{subItem.content}}</span>
               </el-radio>
             </el-radio-group>
           </div>
@@ -34,8 +34,8 @@
                   v-for="subItem in item.option"
                   :key="subItem.oid"
                   :label="subItem.oid"
-                  style="width: 100%;margin: 5px;display: flex;align-items: flex-start;">
-                {{subItem.content}}
+                  style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
+                <span style="font-size: medium;">{{subItem.content}}</span>
               </el-checkbox>
             </el-checkbox-group>
           </div>
@@ -68,17 +68,17 @@
 </template>
 
 <script>
-  export default {
-    name: 'NewQue',
-    created() {
-      this.$axios({method:"post",url:"/questionnaire/getQn", data:{"QnId": this.$route.query.id}})
-          .then(res => {
-            this.que.qnid=res.data.que.qnid;
-            this.que.title = res.data.que.title;
-            this.que.answerTime = res.data.que.title;
-            this.que.limitNum = res.data.que.limitNum;
-            for(let i=0;i<res.data.que.QList.length;i++){
-              let temp1=res.data.que.QList[i];
+export default {
+  name: 'CQue',
+  created() {
+    this.$axios({method:"post",url:"/questionnaire/getQn", data:{"QnId": this.$route.query.id}})
+        .then(res => {
+          this.que.QList=[]
+          this.que.qnid = res.data.que.qnid;
+          this.que.title = res.data.que.title;
+          for(let i=0;i<res.data.que.QList.length;i++){
+            let temp1=res.data.que.QList[i];
+            if(temp1.type === 0){
               let optionTemp=[];
               for(let j=0;j<temp1.option.length;j++){
                 let temp2=temp1.option[j];
@@ -90,81 +90,114 @@
               this.que.QList.push({
                 qid:i,
                 type:temp1.type,
+                title: temp1.title,
                 option:optionTemp,
-                selection: temp1.selection
+                selection:-1
               })
             }
-
-          })
-          // eslint-disable-next-line no-unused-vars
-          .catch(() => {
-            this.$notify({
-              title: '失败',
-              message: '连接失败',
-              type: 'error',
-              position: 'bottom-left'
-            });
-            //this.$router.push('/');
-          })
-    },
-    data: function(){
-      return {
-        que: {
-          qnid: '123123',
-          title: "holo",
-          answerTime:500,
-          limitNum: 20,
-          QList: [{
-            qid: 0,
-            type: 0,
-            title: "主要用于课堂测试等场景，发布者应该可以设置每道题目的评分和答案，也可以设置问" +
-                "卷整体的限时时间，超时将自动回收。针对填写者，问卷题目应该可以乱序展示，在填写者" +
-                "提交后，问卷应该可以对客观题目进行自动评分，并使填写者可以查看答案。",
-            option: [{
-              oid: 0,
-              content: "你好"
-            }, {
-              oid: 1,
-              content: "hello"
-            }, {
-              oid: 2,
-              content: "hi"
-            }],
-            selection: -1
+            else if(temp1.type === 1){
+              let optionTemp=[];
+              for(let j=0;j<temp1.option.length;j++){
+                let temp2=temp1.option[j];
+                optionTemp.push({
+                  oid:j,
+                  content:temp2.content
+                })
+              }
+              this.que.QList.push({
+                qid:i,
+                type:temp1.type,
+                title: temp1.title,
+                option:optionTemp,
+                selections: []
+              })
+            }
+            else if(temp1.type === 2){
+              this.que.QList.push({
+                qid:i,
+                type:temp1.type,
+                title: temp1.title,
+                input : ""
+              })
+            }
+            else{
+              this.que.QList.push({
+                qid:i,
+                type:temp1.type,
+                title: temp1.title,
+                rating : 0
+              })
+            }
+          }
+        })
+        // eslint-disable-next-line no-unused-vars
+        .catch(() => {
+          this.$notify({
+            title: '失败',
+            message: '连接失败',
+            type: 'error',
+            position: 'bottom-left'
+          });
+          //this.$router.push('/');
+        })
+  },
+  data: function(){
+    return {
+      que: {
+        qnid: '123123',
+        title: "holo",
+        QList: [{
+          qid: 0,
+          type: 0,
+          title: "主要用于课堂测试等场景，发布者应该可以设置每道题目的评分和答案，也可以设置问" +
+              "卷整体的限时时间，超时将自动回收。针对填写者，问卷题目应该可以乱序展示，在填写者" +
+              "提交后，问卷应该可以对客观题目进行自动评分，并使填写者可以查看答案。",
+          option: [{
+            oid: 0,
+            content: "你好"
           }, {
-            qid: 1,
-            type: 1,
-            title: "到底什么是hello",
-            option: [{
-              oid: 0,
-              content: "你好"
-            }, {
-              oid: 1,
-              content: "hello"
-            }, {
-              oid: 2,
-              content: "hi"
-            }],
-            selections: []
+            oid: 1,
+            content: "hello"
           }, {
-            qid: 2,
-            type: 2,
-            title: "到底到底什么是hello",
-            input: ""
+            oid: 2,
+            content: "hi"
+          }],
+          selection: -1
+        }, {
+          qid: 1,
+          type: 1,
+          title: "到底什么是hello",
+          option: [{
+            oid: 0,
+            content: "你好"
           }, {
-            qid: 3,
-            type: 3,
-            title: "到底到底到底什么是hello",
-            rating: 0
-          }]
-        },
-        colors: ['#99A9BF', '#F7BA2A', '#FF9900']
-      }
-    },
-    methods: {
-
+            oid: 1,
+            content: "hello"
+          }, {
+            oid: 2,
+            content: "hi"
+          }],
+          selections: []
+        }, {
+          qid: 2,
+          type: 2,
+          title: "到底到底什么是hello",
+          input: ""
+        }, {
+          qid: 3,
+          type: 3,
+          title: "到底到底到底什么是hello",
+          rating: 0
+        }]
+      },
+      colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
+      fullscreenLoading: false
     }
+  },
+  methods: {
+
   }
+}
 </script>
 
 <style>
