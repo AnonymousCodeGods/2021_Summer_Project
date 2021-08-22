@@ -1,18 +1,516 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <div class="head">
+      <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:10%;height: 80%;left: 5%">
+
+      <el-badge :value="12" class="item">
+        <el-button size="small">消息</el-button>
+      </el-badge>
+
+      <div class="demo-type">
+        <div>
+          <el-avatar icon="el-icon-user-solid"></el-avatar>
+        </div>
+        <!--        <div>-->
+        <!--          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
+        <!--        </div>-->
+      </div>
+
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 90%" @command="logout">
+      <span class="el-dropdown-link">
+        {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="退出">退出</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
+
+    <div class="body">
+      <a
+          style="
+        position: absolute;
+        font-size: 20px;
+        font-weight: bold;
+        top: 7%;
+        left: 30%;
+        color: black;
+      "
+      >问卷列表</a>
+
+      <el-dropdown style="position: absolute;left: 45%;top: 8%" @command="sorted">
+      <span class="el-dropdown-link">
+        {{ sort }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="发布时间">发布时间</el-dropdown-item>
+          <el-dropdown-item command="创建时间">创建时间</el-dropdown-item>
+          <el-dropdown-item command="回收量">回收量</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+
+      <el-dropdown style="position: absolute;left: 60%;top: 8%" @command="stated">
+      <span class="el-dropdown-link">
+        {{ state }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="已发布">已发布</el-dropdown-item>
+          <el-dropdown-item command="未发布">未发布</el-dropdown-item>
+          <el-dropdown-item command="全部">全部</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+
+      <el-dropdown style="position: absolute;left: 53%;top: 8%" @command="handleCommand">
+      <span class="el-dropdown-link">
+        {{ value }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="正序">正序</el-dropdown-item>
+          <el-dropdown-item command="倒序">倒序</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <div style="position: absolute;left: 66%;top:6%;width: 18%">
+        <img src="../assets/search.png" style="position:absolute;top:0;height: 40px;left: 0" @click="search">
+        <el-input v-model="input" placeholder="请输入关键字" style="position: absolute;left: 20%"></el-input>
+      </div>
+
+
+      <button
+          type="button"
+          class="button button--login button--round-s button--text-thick button--inverted button--size"
+          style="position:absolute;left: 5%; top: 7%;width: 200px; height: 60px"
+          @click="createQuiz"
+      >创建问卷
+      </button>
+
+      <!-- menu菜单 -->
+      <button
+          type="button"
+          class="button button--join button--round-x button--text-thick button--beforeinverted button--size"
+          style="
+        position: absolute;
+        left: 5%; top: 150px;
+        width: 200px;
+        height: 60px;
+      "
+      >
+        全部问卷
+      </button>
+      <button
+          type="button"
+          class="button button--join button--round-x button--text-thick button--inverted button--size"
+          style="
+        position: absolute;
+        left: 5%; top: 210px;
+        width: 200px;
+        height: 60px;
+      "
+          @click="bin"
+      >
+        回收站
+      </button>
+      <button
+          type="button"
+          class="button button--join button--round-x button--text-thick button--inverted button--size"
+          style="
+        position: absolute;
+        left: 5%; top: 270px;
+        width: 200px;
+        height: 60px;
+      "
+          @click="toInfo"
+      >
+        个人信息
+      </button>
+
+      <!--           问卷信息-->
+      <div style="margin-top: 10%; margin-left:30%;margin-right:10%;background: transparent; height: 75%">
+        <div
+            v-for="it in list"
+            :key="it.index"
+            style="margin-top: 20px;"
+        >
+          <each-quiz
+              :type="it.type"
+              :date="it.date"
+              :id="it.id"
+              :num="it.num"
+              :state="it.state"
+          ></each-quiz>
+        </div>
+        <!--分页-->
+        <div class="block">
+          <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page.sync="page"
+              :page-size="3"
+              layout="total, prev, pager, next"
+              :total=this.total>
+          </el-pagination>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import EachQuiz from "../components/EachQuiz.vue";
 
 export default {
-  name: 'Home',
+  name: 'HelloWorld',
   components: {
-    HelloWorld
+    EachQuiz,
+  },
+  props: {
+    msg: String
+  },
+  created() {
+    const formData = new FormData();
+    formData.append("date", "3")
+    this.$http.post('/aptest/get_q', JSON.stringify(formData))
+        .then(result => {
+          console.log(result)
+        })
+    this.allList = [{type: "1", date: "2021-8-21", id: "1234567", num: "123", state: '0'},
+      {type: "数分测验", date: "2021-8-21", id: "1234567", num: "1", state: "1"},
+      {type: "情感调查", date: "2021-8-21", id: "1234567", num: "12", state: "1"},
+      {type: "睡眠时间", date: "2021-8-21", id: "1234567", num: "123", state: '0'},
+      {type: "游戏时间", date: "2021-8-21", id: "1234567", num: "1234", state: "1"},
+      {type: "开发了么", date: "2021-8-21", id: "1234567", num: "2", state: "1"},
+      {type: "早点睡觉", date: "2021-8-21", id: "1234567", num: "13", state: "1"},
+      {type: "喜好调查", date: "2021-8-21", id: "1234567", num: "153", state: "1"},
+      {type: "游戏调查", date: "2021-8-21", id: "1234567", num: "133", state: "1"},
+    ]
+    this.myList = this.allList;
+    this.total = this.myList.length;
+    if (this.myList.length <= 3) {
+      this.list = this.myList;
+      console.log(this.list);
+    } else {
+      for (let i = 0; i < 3; i++)
+        this.list.push(this.myList[i]);
+      console.log(this.list);
+    }
+
+  },
+  data() {
+    return {
+      sort: '发布时间',
+      state: '状态',
+      value: '正序',
+      input: '',
+      username: 'quiz',
+      myList: [],
+      allList: [],
+      list: [],
+      total: 1,
+      page: 1,
+      order: 0,
+    }
+  },
+  methods: {
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      this.page = val;
+      console.log(`当前页: ${val}`);
+      this.list = [];
+      if (val * 3 > this.total) {
+        for (let i = val * 3 - 3; i < this.total; i++)
+          this.list.push(this.myList[i]);
+      } else {
+        for (let i = 0; i < 3; i++)
+          this.list.push(this.myList[val * 3 - 3 + i]);
+      }
+    },
+    bin(){
+      this.$router.push("/bin");
+    },
+    sorted(command) {
+      // this.$message('click on item ' + command);
+      this.sort = command;
+      if (command === "回收量") {
+        this.allList.sort(function (a, b) {
+          return a.num - b.num;
+        });
+        this.myList.sort(function (a, b) {
+          return a.num - b.num;
+        });
+      }
+      this.list = [];
+      const val = this.page;
+      if (val * 3 > this.total) {
+        for (let i = val * 3 - 3; i < this.total; i++)
+          this.list.push(this.myList[i]);
+      } else {
+        for (let i = 0; i < 3; i++)
+          this.list.push(this.myList[val * 3 - 3 + i]);
+      }
+    },
+    stated(command) {
+      // this.$message('click on item ' + command);
+      this.state = command;
+      this.myList = [];
+      if (command === "已发布") {
+        for (let i = 0; i < this.allList.length; i++)
+          if (this.allList[i].state === "1")
+            this.myList.push(this.allList[i]);
+      } else if (command === "未发布") {
+        for (let i = 0; i < this.allList.length; i++)
+          if (this.allList[i].state === "0")
+            this.myList.push(this.allList[i]);
+      } else {
+        this.myList = this.allList;
+      }
+      this.total = this.myList.length;
+      this.list = [];
+      this.page=1;
+      const val = this.page;
+      if (val * 3 > this.total) {
+        for (let i = val * 3 - 3; i < this.total; i++)
+          this.list.push(this.myList[i]);
+      } else {
+        for (let i = 0; i < 3; i++)
+          this.list.push(this.myList[val * 3 - 3 + i]);
+      }
+    },
+    handleCommand(command) {
+      // this.$message('click on item ' + command);
+      this.value = command;
+      if (command === "倒序" && this.order === 0) {
+        this.order = 1;
+        // this.allList.reverse();
+        this.allList.reverse();
+        this.myList=this.allList;
+        this.list = [];
+        const val = this.page;
+        if (val * 3 > this.total) {
+          for (let i = val * 3 - 3; i < this.total; i++)
+            this.list.push(this.myList[i]);
+        } else {
+          for (let i = 0; i < 3; i++)
+            this.list.push(this.myList[val * 3 - 3 + i]);
+        }
+      } else if (command === "正序" && this.order === 1) {
+        this.order = 0;
+        // this.allList.reverse();
+        this.allList.reverse();
+        this.myList=this.allList;
+        this.list = [];
+        const val = this.page;
+        if (val * 3 > this.total) {
+          for (let i = val * 3 - 3; i < this.total; i++)
+            this.list.push(this.myList[i]);
+        } else {
+          for (let i = 0; i < 3; i++)
+            this.list.push(this.myList[val * 3 - 3 + i]);
+        }
+      }
+    },
+    toInfo: function () {
+      this.$router.push("/info");
+    },
+    logout(command) {
+      console.log(command);
+      this.$router.push("/login");
+    },
+    // 查找
+    search() {
+      console.log(this.input)
+    },
+    addNew() {
+
+    },
+    createQuiz(){
+      this.$router.push("/create");
+    },
   }
 }
 </script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="less" scoped>
+.head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 8%;
+  width: 100%;
+  background-color: #ffffff;
+  //border:2px solid #000000;
+}
+
+.body {
+  position: absolute;
+  min-width: 1300px;
+  top: 8%;
+  left: 0;
+  height: 92%;
+  width: 100%;
+  background-color: #f5f4f4;
+  border-top: 1px transparent solid;
+  box-shadow: #c6c5c5;
+  border-image: linear-gradient(0deg, #979696, #e7e7e7) 1 10;
+}
+
+.block {
+  position: absolute;
+  margin-top: 45px;
+  right: 12%;
+}
+
+.item {
+  position: absolute;
+  left: 80%;
+  top: 30%;
+  height: 50%;
+}
+
+.demo-type {
+  position: absolute;
+  left: 86%;
+  top: 25%;
+  height: 40%;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: #6a6a6a;
+}
+
+.el-icon-arrow-down {
+  font-size: 6px;
+}
+
+.button {
+  float: left;
+  min-width: 150px;
+  max-width: 500px;
+  display: block;
+  margin: 1em;
+  padding: 1em 2em;
+  border: none;
+  background: none;
+  color: inherit;
+  position: relative;
+  z-index: 1;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.button > span {
+  vertical-align: middle;
+}
+
+/* Sizes */
+.button--size {
+  font-size: 14px;
+}
+
+.button--size-x {
+  font-size: 15px;
+}
+
+/* Typography and Roundedness */
+.button--text-thick {
+  font-weight: 300;
+}
+
+.button--round-s {
+  border-radius: 2px;
+}
+
+.button--round-x {
+  border-radius: 0;
+}
+
+/* Wapasha */
+.button.button--login {
+  background: #176c97;
+  color: #fff;
+  -webkit-transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.button.button--join {
+  background: #d2d1d1;
+  color: #000000;
+  -webkit-transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.button--login.button--inverted {
+  background: #0b92e8;
+  color: #fdfeff;
+}
+
+.button--login::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  -webkit-transform: scale3d(0.6, 0.6, 1);
+  transform: scale3d(0.6, 0.6, 1);
+  -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+  transition: transform 0.3s, opacity 0.3s;
+  -webkit-transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
+  transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
+}
+
+.button--login:hover {
+  background-color: #fff;
+  color: #3f51b5;
+}
+
+.button--login.button--inverted:hover {
+  background-color: #0d78ad;
+  color: #fcfcfd;
+}
+
+// 加入按钮
+.button--join.button--inverted {
+  background: #adadad;
+  border: 1px solid #adadad;
+  color: #000000;
+}
+
+.button--join::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  -webkit-transform: scale3d(0.6, 0.6, 1);
+  transform: scale3d(0.6, 0.6, 1);
+  -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+  transition: transform 0.3s, opacity 0.3s;
+  -webkit-transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
+  transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
+}
+
+.button--join:hover {
+  background-color: #dcd8d8;
+  color: #000000;
+}
+
+.button--join.button--inverted:hover {
+  background-color: #55646d;
+  color: #fcfcfd;
+}
+</style>

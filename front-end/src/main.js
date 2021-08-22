@@ -9,7 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
-Vue.prototype.$axios = axios
+Vue.prototype.$http = axios
 Vue.use(VueCookies)
 axios.defaults.baseURL="http://172.16.1.26:8000/";
 
