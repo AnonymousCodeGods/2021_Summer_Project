@@ -1,27 +1,41 @@
 <template>
   <div class="quiz">
-    <a style="float: left;padding-left: 40px;padding-top: 20px;width: 300px;text-align:left">{{ type }}</a>
+    <a style="float: left;padding-left: 40px;padding-top: 20px;width: 300px">{{ type }}</a>
     <a class="bas" style="float: left;padding-left: 50px;padding-top: 20px">ID：{{ id }}</a>
-    <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px;">状态：{{ state }}</a>
-    <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">创建日期：{{ date }}</a>
+    <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px;">状态：{{ state === true ? '已发布' : '未发布' }}</a>
+    <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">创建日期：{{ date.substring(0,10) }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">回收量：{{ num }}</a>
     <!--分割线-->
     <div class="midText"></div>
     <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;cursor:pointer;" @click="del">删除</a>
     <img src="../assets/del.png" style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
-    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="pub" v-if="state==='0'">发布</a>
-    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;color: #a5a5a5" @click="pub" v-else>已发布</a>
+    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="pub"
+       v-if="state===false">发布</a>
+    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;"
+       @click="suspend"
+       v-else>暂停</a>
     <img src="../assets/open.png"
          style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
     <a class="fun" style="float: right;padding-right: 190px;padding-top: 58px" @click="edit"
        @mouseover="mouseOver($event)"
        @mouseleave="mouseLeave($event)">编辑问卷</a>
+    <!--    暂时先写成导出结果-->
+
+    <download-excel
+        :data="json_data"
+        :fields="json_fields"
+        worksheet="My Worksheet"
+        type="excel"
+        name="filename.xls">
+      <a class="fun" style="float: right;padding-right: 30px;padding-top: 58px"
+         @mouseover="mouseOver($event)"
+         @mouseleave="mouseLeave($event)"
+         @click="exported">导出数据</a>
+    </download-excel>
+
     <a class="fun" style="float: right;padding-right: 30px;padding-top: 58px" @click="toResult"
        @mouseover="mouseOver($event)"
        @mouseleave="mouseLeave($event)">查看结果</a>
-    <a class="fun" style="float: right;padding-right: 30px;padding-top: 58px" @click="exported"
-       @mouseover="mouseOver($event)"
-       @mouseleave="mouseLeave($event)">导出问卷</a>
     <a class="fun" style="float: right;padding-right: 30px;padding-top: 58px" @click="links"
        @mouseover="mouseOver($event)"
        @mouseleave="mouseLeave($event)">发送链接</a>
@@ -36,9 +50,15 @@ export default {
   props: {
     type: String,
     id: String,
-    state: String,
+    state: Boolean,
     date: String,
     num: String,
+  },
+  data() {
+    return {
+      json_fields: {},
+      json_data: [],
+    }
 
   },
   methods: {
@@ -49,10 +69,33 @@ export default {
       $event.currentTarget.className = 'fun';
     },
     del() {
-
+      const formData = new FormData();
+      formData.append("ID", this.id)
+      this.$axios.post('/quiz/delete', {"ID":this.id})
+          .then(result => {
+            console.log(result)
+            this.$router.push("/");
+          })
     },
     pub() {
-
+      const formData = new FormData();
+      formData.append("ID", this.id)
+      this.$axios.post('/quiz/publish', {"ID":this.id})
+          .then(result => {
+            console.log(result)
+            this.state = true;
+            this.$router.go(0);
+          })
+    },
+    suspend() {
+      const formData = new FormData();
+      formData.append("ID", this.id)
+      this.$axios.post('/quiz/suspend', {"ID":this.id})
+          .then(result => {
+            console.log(result)
+            this.state = false;
+            this.$router.go(0);
+          })
     },
     edit() {
 
@@ -62,10 +105,32 @@ export default {
     },
     exported() {
 
+      this.json_fields = {
+        'Complete name': 'name',
+        'City': 'city',
+        'Telephone': 'phone.mobile',
+        'Telephone 2': {
+          field: 'phone.landline',
+          callback: (value) => {
+            return `Landline Phone - ${value}`;
+          }
+        },
+      };
+      this.json_data = [
+        {
+          'name': 'Tony Pena',
+          'city': 'New York',
+          'country': 'United States',
+          'birthdate': '1978-03-15',
+          'phone': {
+            'mobile': '1-541-754-3010',
+            'landline': '(541) 754-3010'
+          }
+        }];
     },
     links() {
 
-    },
+    }
   }
 }
 </script>

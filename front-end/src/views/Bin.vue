@@ -16,7 +16,14 @@
         <!--        </div>-->
       </div>
 
-      <a style="position:absolute;top:25%;height: 80%;left: 90%">{{ username }}</a>
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 90%" @command="logout">
+      <span class="el-dropdown-link">
+        {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="退出">退出</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
     <div class="body">
       <a
@@ -36,7 +43,7 @@
             style="width:1000px; margin-left: fill"
             border
             stripe
-            :default-sort = "{prop: 'date', order: 'descending'}"
+            :default-sort="{prop: 'date', order: 'descending'}"
         >
           <el-table-column
               align="center"
@@ -65,7 +72,9 @@
               label="清空问卷"
               min-width="4">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="clearR(scope.$index,scope.row)" v-if="scope.row.count!==0">清空问卷</el-button>
+              <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="clearR(scope.$index,scope.row)"
+                         v-if="scope.row.count!==0">清空问卷
+              </el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -74,7 +83,8 @@
               label="恢复"
               min-width="4">
             <template slot-scope="scope">
-              <el-button type="success" size="mini" icon="el-icon-refresh-right" @click="recoverR(scope.row)">恢复</el-button>
+              <el-button type="success" size="mini" icon="el-icon-refresh-right" @click="recoverR(scope.row)">恢复
+              </el-button>
             </template>
 
           </el-table-column>
@@ -90,8 +100,8 @@
                            icon="el-icon-info"
                            slot-scope="scope"
                            @confirm="deleteR(scope.row)">
-              <el-tooltip slot="reference" effect="dark" content="删除该问卷" placement="top" >
-                <el-button type="danger" size="mini" icon="el-icon-delete" >删除</el-button>
+              <el-tooltip slot="reference" effect="dark" content="删除该问卷" placement="top">
+                <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
               </el-tooltip>
             </el-popconfirm>
           </el-table-column>
@@ -157,7 +167,7 @@
 export default {
   name: 'bin',
   created() {
-    this.tableData=[{
+    this.tableData = [{
       date: '2021-05-02',
       name: '时间统计',
       count: 0,
@@ -170,7 +180,7 @@ export default {
       name: '作业统计',
       count: 7,
     }]
-    this.username='quiz'
+    this.username = 'quiz'
   },
   data() {
     return {
@@ -195,21 +205,25 @@ export default {
       });
       this.tableData.splice(this.tableData.indexOf(row), 1);
     },
-    clearR(index,row) {
+    clearR(index, row) {
       this.$notify({
         message: '问卷已清空',
         type: 'info',
         position: 'bottom-left'
       });
-      this.tableData[index].count=0;
+      this.tableData[index].count = 0;
       this.$set(this.tableData, index, row);
     },
-    toInfo:function (){
+    toInfo: function () {
       this.$router.push("/info");
     },
-    toHome:function (){
+    toHome: function () {
       this.$router.push("/");
-    }
+    },
+    logout(command) {
+      console.log(command);
+      this.$router.push("/login");
+    },
   }
 }
 </script>
@@ -222,7 +236,7 @@ export default {
   height: 8%;
   width: 100%;
   background-color: #ffffff;
-//border:2px solid #000000;
+
 }
 
 .body {
@@ -346,11 +360,11 @@ export default {
 }
 
 /*  加入按钮*/
-   .button--join.button--inverted {
-     background: #adadad;
-     border: 1px solid #adadad;
-     color: #000000;
-   }
+.button--join.button--inverted {
+  background: #adadad;
+  border: 1px solid #adadad;
+  color: #000000;
+}
 
 .button--join::before {
   content: "";
