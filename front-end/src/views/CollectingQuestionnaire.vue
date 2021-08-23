@@ -6,10 +6,10 @@
         <span style="font-size: larger">{{que.title}}</span>
       </div>
       <div v-for="item in que.QList"
-           :key="item.id" style="margin: 15px">
+           :key="item.qtid" style="margin: 15px">
         <div v-if="item.type===0">
           <div class="queLabel">
-            {{item.qid+1}}.{{item.title}}
+            {{item.qtid+1}}.{{item.title}}
           </div>
           <div style="margin-left: 10%;margin-right: 10%">
             <el-radio-group
@@ -26,7 +26,7 @@
         </div>
         <div v-if="item.type===1">
           <div class="queLabel">
-            {{item.qid+1}}.{{item.title}}
+            {{item.qtid+1}}.{{item.title}}
           </div>
           <div style="margin-left: 10%;margin-right: 10%">
             <el-checkbox-group
@@ -43,7 +43,7 @@
         </div>
         <div v-if="item.type===2">
           <div class="queLabel">
-            {{item.qid+1}}.{{item.title}}
+            {{item.qtid+1}}.{{item.title}}
           </div>
           <div style="margin: 7px 10%;">
             <el-input v-model="item.input"/>
@@ -51,7 +51,7 @@
         </div>
         <div v-if="item.type===3">
           <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
-            {{item.qid+1}}.{{item.title}}
+            {{item.qtid+1}}.{{item.title}}
           </div>
           <div class="queLabel">
             <el-rate
@@ -75,7 +75,7 @@ export default {
   name: 'CQue',
   created() {
     this.fullscreenLoading=true
-    this.$axios({method:"post",url:"/aptest/getQn", data:{"QnId": this.$route.query.id}})
+    this.$axios({method:"post",url:"/getQn", data:{"QnId": this.$route.query.id}})
         .then(res => {
           this.que.QList=[]
           this.que.qnid = res.data.que.qnid;
@@ -92,7 +92,8 @@ export default {
                 })
               }
               this.que.QList.push({
-                qid:i,
+                qtid:i,
+                qid:temp1.qid,
                 type:temp1.type,
                 title: temp1.title,
                 option:optionTemp,
@@ -109,7 +110,8 @@ export default {
                 })
               }
               this.que.QList.push({
-                qid:i,
+                qtid:i,
+                qid:temp1.qid,
                 type:temp1.type,
                 title: temp1.title,
                 option:optionTemp,
@@ -118,7 +120,8 @@ export default {
             }
             else if(temp1.type === 2){
               this.que.QList.push({
-                qid:i,
+                qtid:i,
+                qid:temp1.qid,
                 type:temp1.type,
                 title: temp1.title,
                 input : ""
@@ -126,7 +129,8 @@ export default {
             }
             else{
               this.que.QList.push({
-                qid:i,
+                qtid:i,
+                qid:temp1.qid,
                 type:temp1.type,
                 title: temp1.title,
                 rating : 0
@@ -191,7 +195,7 @@ export default {
           })
         }
       }
-      this.$axios({method:"post",url:"/questionnaire/submitQn", data:{
+      this.$axios({method:"post",url:"/quiz/submitQn", data:{
           "qnid": this.que.qnid,
           "AnswerList":AnswerListTemp
       }})
