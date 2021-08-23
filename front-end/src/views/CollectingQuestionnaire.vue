@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-card style="width: 800px; margin: auto"  v-loading.fullscreen.lock="fullscreenLoading">
+      <div class="row" id="pdfDom">
       <div slot="header" class="clearfix">
         <span style="font-size: larger">{{que.title}}</span>
       </div>
@@ -60,8 +61,10 @@
           </div>
         </div>
       </div>
+      </div>
       <div style="margin-top: 30px">
         <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="submitQn">提交</el-button>
+        <el-button type="info" style="width: 15%" plain icon="el-icon-download" v-on:click="getPdf('问卷')">导出pdf</el-button>
       </div>
     </el-card>
   </div>

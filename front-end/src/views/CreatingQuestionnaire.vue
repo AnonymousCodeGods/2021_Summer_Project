@@ -104,6 +104,84 @@ export default {
   components: {
     vuedraggable,
   },
+  created() {
+    if(this.$route.query.id === null){
+      if(this.que.qnid !== 0){
+        this.$router.push({
+          path : '/creatingQuestionnaire',
+          id : this.que.qnid
+        })
+      }
+    }
+    else{
+      this.fullscreenLoading=true
+      this.$axios({method:"post",url:"/creatQn/getQn", data:{"QnId": this.$route.query.id}})
+          .then(res => {
+            this.que.QList=[]
+            this.que.qnid = res.data.que.qnid;
+            this.que.title = res.data.que.title;
+            for(let i=0;i<res.data.que.QList.length;i++){
+              let temp1=res.data.que.QList[i];
+              if(temp1.type === 0){
+                let optionTemp=[];
+                for(let j=0;j<temp1.option.length;j++){
+                  let temp2=temp1.option[j];
+                  optionTemp.push({
+                    oid:j,
+                    content:temp2.content
+                  })
+                }
+                this.que.QList.push({
+                  qid:i,
+                  type:temp1.type,
+                  title: temp1.title,
+                  option:optionTemp
+                })
+              }
+              else if(temp1.type === 1){
+                let optionTemp=[];
+                for(let j=0;j<temp1.option.length;j++){
+                  let temp2=temp1.option[j];
+                  optionTemp.push({
+                    oid:j,
+                    content:temp2.content
+                  })
+                }
+                this.que.QList.push({
+                  qid:i,
+                  type:temp1.type,
+                  title: temp1.title,
+                  option:optionTemp
+                })
+              }
+              else if(temp1.type === 2){
+                this.que.QList.push({
+                  qid:i,
+                  type:temp1.type,
+                  title: temp1.title
+                })
+              }
+              else{
+                this.que.QList.push({
+                  qid:i,
+                  type:temp1.type,
+                  title: temp1.title
+                })
+              }
+            }
+            this.fullscreenLoading=false
+          })
+          .catch(() => {
+            this.$notify({
+              title: '失败',
+              message: '连接失败',
+              type: 'error',
+              position: 'bottom-left'
+            });
+            this.fullscreenLoading=false
+          })
+    }
+  },
   name: 'NewQue',
   data: function(){
     return {

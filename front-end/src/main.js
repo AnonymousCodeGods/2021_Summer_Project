@@ -7,7 +7,9 @@ import VueCookies from 'vue-cookies'
 import ElementUI from 'element-ui';
 import * as vuedraggable from "vuedraggable";
 import 'element-ui/lib/theme-chalk/index.css';
+import htmlToPdf from './components/HtmlToPdf'
 
+Vue.use(htmlToPdf)
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(vuedraggable);
