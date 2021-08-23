@@ -106,37 +106,62 @@ export default {
       });
     },
     toResult() {
-      this.$router.push({
-        path: "/result",
-        query: {
-          id: this.id
-        }
-      });
+      if (this.num !== '0'){
+         this.$router.push({
+          path: "/result",
+          query: {
+            id: this.id
+          }
+        });
+      }else{
+        this.$notify({
+            title: '抱歉',
+            message: '暂时没有答卷',
+            position: 'bottom-left',
+            type: "warning"
+          });
+      }
+
     },
     exported() {
-
+      this.$axios.post('/quiz/result', {"ID": this.id})
+          .then(result => {
+            console.log(result.data.AnswerList)
+            this.json_data = result.data.AnswerList;
+          });
       this.json_fields = {
-        'Complete name': 'name',
-        'City': 'city',
-        'Telephone': 'phone.mobile',
-        'Telephone 2': {
-          field: 'phone.landline',
-          callback: (value) => {
-            return `Landline Phone - ${value}`;
-          }
-        },
+        'num': 'Qnum',
+        'type': 'type',
+        'answer': 'selection',
+        'input': 'input'
+
       };
-      this.json_data = [
-        {
-          'name': 'Tony Pena',
-          'city': 'New York',
-          'country': 'United States',
-          'birthdate': '1978-03-15',
-          'phone': {
-            'mobile': '1-541-754-3010',
-            'landline': '(541) 754-3010'
-          }
-        }];
+      // this.json_data = [
+      //   {
+      //     'Qnum': '1',
+      //     'type': '0',
+      //     'selection': [0, 1, 2, 3],
+      //     'input':[]
+      //   },
+      //   {
+      //     'Qnum': '2',
+      //     'type': '1',
+      //     'selection': [0, 1, 2, 3, 4, 5, 6, 7, 7],
+      //     'input':[]
+      //   },
+      //   {
+      //     'Qnum': '3',
+      //     'type': '3',
+      //     'input': ["ss"],
+      //     'selection': [],
+      //   },
+      //   {
+      //     'Qnum': '4',
+      //     'type': '4',
+      //     'selection': [1,2,3,4,5],
+      //     'input': [],
+      //   },
+      // ];
     },
     links() {
       this.$router.push({path: "/sentout", query: {id: this.id}});
