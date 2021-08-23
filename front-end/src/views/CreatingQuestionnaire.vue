@@ -9,12 +9,13 @@
       <div slot="header" class="clearfix">
         <span style="font-size: larger">{{que.title}}</span>
       </div>
-      <vuedraggable v-model="que.QList" chosen-class="choose" force-fallback="true" animation="400" @start="onStart" @end="onEnd">
+      <vuedraggable v-model="que.QList" chosenClass="ghost" handle=".drag" force-fallback="true" animation="400" @start="onStart" @end="onEnd">
         <tbody is="transition-group">
           <div v-for="item in que.QList"
                :key="item.qtid" class="move">
             <el-card style="margin: 15px;cursor: move"
                      shadow="hover">
+              <el-button type="text" icon="el-icon-rank" class="drag"></el-button>
               <div style="float: right;margin-right: 12px">
                 <el-button type="text" icon="el-icon-document-copy" v-on:click="copyQuestion(item)"></el-button>
                 <el-button type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
@@ -105,7 +106,6 @@ export default {
     vuedraggable,
   },
   created() {
-    console.log(this.$route.query.id)
     if(this.$route.query.id !== '0') {
       this.getQn(this.$route.query.id)
     } else if(this.que.qnid !== 0) {
@@ -116,15 +116,12 @@ export default {
   data: function(){
     return {
       que: {
-        qnid:0,
+        qnid: 0,
         title: "holo",
         QList: [{
-          qtid:0,
           qid: 0,
           type: 0,
-          title: "主要用于课堂测试等场景，发布者应该可以设置每道题目的评分和答案，也可以设置问" +
-              "卷整体的限时时间，超时将自动回收。针对填写者，问卷题目应该可以乱序展示，在填写者" +
-              "提交后，问卷应该可以对客观题目进行自动评分，并使填写者可以查看答案。",
+          title: "这是一道单选题，点击右边的按钮可以更改题目",
           option: [{
             oid: 0,
             content: "你好"
@@ -133,13 +130,12 @@ export default {
             content: "hello"
           }, {
             oid: 2,
-            content: "hi"
+            content: "这是一个选项，点击下方按钮可以增加新的选项"
           }],
         }, {
-          qtid:1,
           qid: 1,
           type: 1,
-          title: "到底什么是hello",
+          title: "这是一道多选题",
           option: [{
             oid: 0,
             content: "你好"
@@ -151,15 +147,13 @@ export default {
             content: "hi"
           }],
         }, {
-          qtid:2,
           qid: 2,
           type: 2,
-          title: "到底到底什么是hello",
+          title: "我是一道填空题",
         }, {
-          qtid:3,
           qid: 3,
           type: 3,
-          title: "到底到底到底什么是hello",
+          title: "我是一道评分题",
         }]
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
@@ -404,7 +398,13 @@ export default {
 
 }
 
-.choose {
-  opacity: 0;
+.drag {
+  float:left;
+  margin-left: 12px;
+  cursor: move;
+}
+
+.ghost {
+  opacity: 1;
 }
 </style>
