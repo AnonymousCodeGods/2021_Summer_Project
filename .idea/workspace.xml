@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Bin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Bin.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Home.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Register.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Register.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Result.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Result.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/SentOut.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/SentOut.vue" afterDir="false" />
+    </list>
+    <list id="7a3cd647-e299-426e-8574-ee29d86c3a2e" name="Changes by zhang" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1tcuNzHNgYHAQxWWBBhuZ9eHX6j" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="codeWithMe.voiceChat.enabledByDefault" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="ts.external.directory.path" value="D:\WebStorm 2021.1.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\MyWorkSpace\ovsms-前端\src\assets" />
+      <recent name="D:\MyWorkSpace\ovsms-前端\src\views" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="" />
+      <created>1623080664397</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1623080664397</updated>
+      <workItem from="1623080667389" duration="3589000" />
+      <workItem from="1623122363389" duration="1840000" />
+      <workItem from="1623125193644" duration="23024000" />
+      <workItem from="1623207290327" duration="18284000" />
+      <workItem from="1623295275459" duration="3496000" />
+      <workItem from="1623298786164" duration="23177000" />
+      <workItem from="1623384712635" duration="8615000" />
+      <workItem from="1623476386924" duration="3680000" />
+      <workItem from="1623916545823" duration="2240000" />
+      <workItem from="1624002805200" duration="4574000" />
+      <workItem from="1624025732018" duration="106000" />
+      <workItem from="1625586104740" duration="130000" />
+      <workItem from="1629438939846" duration="578000" />
+      <workItem from="1629440269983" duration="255000" />
+      <workItem from="1629623988981" duration="504000" />
+      <workItem from="1629624525952" duration="244000" />
+      <workItem from="1629624786917" duration="96000" />
+      <workItem from="1629712561196" duration="1552000" />
+      <workItem from="1629714640048" duration="58000" />
+      <workItem from="1629714735733" duration="1328000" />
+      <workItem from="1629721800337" duration="10292000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

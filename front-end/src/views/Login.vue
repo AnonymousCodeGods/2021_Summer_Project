@@ -63,11 +63,11 @@ export default {
           type: "error"
         });
       } else {
-        this.fullscreenLoading=true;
+        this.fullscreenLoading = true;
         this.$axios({
-          method: "post",
-          data: {username: this.username, password: this.password},
-          url: "/user/login",
+          method: "POST",
+          data: {userName: this.username, pwd: this.password},
+          url: "user/login",
         })
             .then(res => {
               if (!res.data.success) {
@@ -81,16 +81,20 @@ export default {
                 this.$store.state.userType = res.data.userType;
                 this.$store.state.username = this.username;
                 this.$store.state.password = this.password;
-                this.$cookies.set("user",{username:this.username,password:this.password},60 * 60 * 24);
+                this.$cookies.set("username", this.username, 60 * 60 * 24);
                 this.$notify({
                   title: '成功',
                   message: '登陆成功',
                   position: 'bottom-left',
                   type: "success"
                 });
-                this.$router.push("/")
+                this.$router.push({
+                  path: "/home", query: {
+                    username:this.username
+                  }
+                })
               }
-              this.fullscreenLoading=false;
+              this.fullscreenLoading = false;
             })
             .catch(res => {
               console.log(res)
@@ -100,13 +104,13 @@ export default {
                 position: 'bottom-left',
                 type: "error"
               });
-              this.fullscreenLoading=false;
+              this.fullscreenLoading = false;
             });
       }
     }
   },
   created() {
-    this.$store.state.currentPage="99"
+    this.$store.state.currentPage = "99"
   }
 }
 </script>

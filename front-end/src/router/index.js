@@ -5,12 +5,12 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
     component: () => import(/* webpackChunkName: "about" */ '../views/Home')
   },
   {
-    path: '/login',
+    path: '/',
     name: 'Login',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -23,14 +23,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Register.vue')
   },
   {
-    path: '/collect' ,
+    path: '/collectingQuestionnaire' ,
     name: 'Collect' ,
     component: () => import('../views/CollectingQuestionnaire')
-  },
-  {
-    path: '/create',
-    name: 'create',
-    component: () => import(/* webpackChunkName: "about" */ '../views/CreatingQuestionnaire.vue')
   },
   {
     path: '/bin' ,
@@ -51,6 +46,16 @@ const routes = [
     path: '/result',
     name: 'Result',
     component: () => import(/* webpackChunkName: "about" */ '../views/Result.vue')
+  },
+  {
+    path: '/creatingQuestionnaire' ,
+    name: 'CreatingQuestionnaire' ,
+    component: () => import('../views/CreatingQuestionnaire')
+  },
+  {
+    path: '/showVoteResult' ,
+    name: 'ShowVoteResult' ,
+    component: () => import('../views/ShowVoteResult')
   }
 ]
 
@@ -58,6 +63,18 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.path === '/') return next();
+  // if (to.path === '/register') return next();
+  // if (to.path === '/CollectingQuestionnaire') return next();
+  // const tokenStr = this.$cookies.get('username')
+  // console.log(tokenStr)
+  // if (tokenStr === '') return next('/')
+  // if (tokenStr&&to.path === '/register') return next('/home')
+  // if (tokenStr&&to.path === '/login') return next('/home')
+  next()
 })
 
 export default router

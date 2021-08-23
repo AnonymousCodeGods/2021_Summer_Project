@@ -23,10 +23,10 @@
               <span> {{ que.title }} </span>
               <el-button style="float: right;" type="primary" @click="ExportData">导出数据</el-button>
             </div>
-            <div v-for="item in que.QList" :key="item.id" style="margin: 20px;">
+            <div v-for="(item,index) in que.QList" :key="item.id" style="margin: 20px;">
               <div >
                 <div class="queLabel">
-                  {{ item.id + 1 }}.{{ item.title }}
+                  {{ index + 1 }}.{{ item.title }}
                 </div>
 <!--                单选多选-->
                 <div v-if="item.type===0||item.type===1" style="margin-left: 5%;margin-right: 5%;text-align: center">
@@ -157,12 +157,13 @@ export default {
   },
   created() {
     this.fullscreenLoading=true;
-    this.que.qid=this.$route.query.ID
+    this.que.qid=this.$route.query.id
+    console.log(this.$route.query.id)
     this.$axios({
       method:"post",
       //todo: url
       url:"/getQn",
-      data:{"ID": this.que.qid}
+      data:{"QnId": this.que.qid}
     })
         .then(res => {
           this.que.title=res.data.que.title
@@ -200,30 +201,8 @@ export default {
     this.que= {
       qid: 0,
       title: "时间统计",
-      QList: [{
-        id: 0, type: 0, title: "第一题",total:0,
-        options:
-            [{id:0,text: "A", count: 0, percentage: 0},
-              {id:1,text: 'B', count: 0, percentage: "0"}
-            ]
-      }, {
-        id: 1, type: 1, title: "第二题",total:0,
-        options: [{id:0,text: "A", count: 0, percentage: "0"},
-          {id:1,text: 'B', count: 0, percentage: "0"}
-        ]
-      }, {
-        id: 2, type: 2, title: "第三题",
-        Inputlist:[]
-      }, {
-        id: 3, type: 3, title: "第四题",total:0,
-        options:[
-          {rate:1,count:0, percentage: "0"},
-          {rate:2,count:0, percentage: "0"},
-          {rate:3,count:0, percentage: "0"},
-          {rate:4,count:0, percentage: "0"},
-          {rate:5,count:0, percentage: "0"},
-        ]
-      }]
+      QList: [
+      ]
     }
 
     this.AnswerList=[
@@ -313,7 +292,7 @@ export default {
     }
     ,
     toHome: function () {
-      this.$router.push("/");
+      this.$router.push("/home");
     },
     ExportData() {
       //TODO:导出数据
