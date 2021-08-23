@@ -3,7 +3,7 @@
     <div style="display: flex;justify-content: center;margin-top: 150px">
       <el-card style="width: 400px">
         <div slot="header" class="clearfix">
-          <el-page-header @back="$router.push('./Login')" content="注册">
+          <el-page-header @back="$router.push('./')" content="注册">
           </el-page-header>
         </div>
         <table style="border-spacing: 20px">
@@ -102,7 +102,7 @@ export default {
                   position: 'bottom-left',
                   type: "success"
                 });
-                router.push('/Login')
+                router.push('/')
               } else {
                 this.$notify({
                   title: '失败',

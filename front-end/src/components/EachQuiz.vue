@@ -1,6 +1,6 @@
 <template>
   <div class="quiz">
-    <a style="float: left;padding-left: 40px;padding-top: 20px;width: 300px">{{ type }}</a>
+    <a style="float: left;padding-left: 40px;padding-top: 20px;width: 300px;text-align:left;">{{ type }}</a>
     <a class="bas" style="float: left;padding-left: 50px;padding-top: 20px">ID：{{ id }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px;">状态：{{ state === true ? '已发布' : '未发布' }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">创建日期：{{ date.substring(0, 10) }}</a>
@@ -71,10 +71,10 @@ export default {
     del() {
       const formData = new FormData();
       formData.append("ID", this.id)
-      this.$axios.post('/quiz/delete', {"ID": this.id})
+      this.$axios.post('/quiz/recycle', {"ID": this.id})
           .then(result => {
             console.log(result)
-            this.$router.push("/");
+            this.$router.go(0);
           })
     },
     pub() {
@@ -106,7 +106,12 @@ export default {
       });
     },
     toResult() {
-      this.$router.push("/result")
+      this.$router.push({
+        path: "/result",
+        query: {
+          id: this.id
+        }
+      });
     },
     exported() {
 
@@ -134,7 +139,7 @@ export default {
         }];
     },
     links() {
-      this.$router.push("/sentout")
+      this.$router.push({path: "/sentout", query: {id: this.id}});
     }
   }
 }

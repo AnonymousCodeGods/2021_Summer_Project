@@ -23,7 +23,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Register.vue')
   },
   {
-    path: '/collect' ,
+    path: '/collectingQuestionnaire' ,
     name: 'Collect' ,
     component: () => import('../views/CollectingQuestionnaire')
   },

@@ -37,7 +37,6 @@
         color: black;
       "
       >问卷列表</a>
-
       <el-dropdown style="position: absolute;left: 45%;top: 8%" @command="sorted">
       <span class="el-dropdown-link">
         {{ sort }}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -48,7 +47,6 @@
           <el-dropdown-item command="回收量">回收量</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-
       <el-dropdown style="position: absolute;left: 60%;top: 8%" @command="stated">
       <span class="el-dropdown-link">
         {{ state }}<i class="el-icon-arrow-down el-icon--right"></i>
