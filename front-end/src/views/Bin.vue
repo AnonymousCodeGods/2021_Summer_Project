@@ -163,10 +163,10 @@ export default {
     this.$axios({
       method: "post",
       data: {username: this.username,},
-      url: "/user/bin",
+      url: "/user_b/info",
     })
         .then(res => {
-          const binlist =res.quizs
+          const binlist =res.data.quizs
           for (let i = 0; i <binlist.length; i++) {
             this.tableData.push({qnid:binlist[i].id,date:binlist[i].createDate,name:binlist[i].name,count:binlist[i].num})
           }

@@ -44,7 +44,7 @@
       </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="创建时间">创建时间</el-dropdown-item>
-          <el-dropdown-item command="创建顺序">ID</el-dropdown-item>
+          <el-dropdown-item command="发布日期">发布时间</el-dropdown-item>
           <el-dropdown-item command="回收量">回收量</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -191,7 +191,7 @@ export default {
   },
   data() {
     return {
-      sort: '发布时间',
+      sort: '创建时间',
       state: '状态',
       value: '正序',
       input: '',
@@ -233,12 +233,12 @@ export default {
         this.myList.sort(function (a, b) {
           return a.num - b.num;
         });
-      }else if(command === "创建顺序"){
+      }else if(command === "发布日期"){
         this.allList.sort(function (a, b) {
-          return a.ID - b.ID;
+          return Date.parse(a.pubDate) - Date.parse(b.pubDate);
         });
         this.myList.sort(function (a, b) {
-          return a.ID - b.ID;
+          return Date.parse(a.pubDate) - Date.parse(b.pubDate);
         });
       }else{
         this.allList.sort(function (a, b) {
@@ -357,7 +357,11 @@ export default {
 
     },
     createQuiz() {
-      this.$router.push("/create");
+      this.$router.push({
+        path:"/creatingQuestionnaire",
+        query:{
+          id:0
+        }});
     },
 
   }

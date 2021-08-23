@@ -9,7 +9,7 @@
       <div slot="header" class="clearfix">
         <span style="font-size: larger">{{que.title}}</span>
       </div>
-      <vuedraggable v-model="que.QList" chosenClass="ghost" handle=".drag" force-fallback="true" animation="400" @start="onStart" @end="onEnd">
+      <vuedraggable v-model="que.QList" chosenClass="ghost" handle=".drag" force-fallback="true" animation="400" @start="onStart" @end="onEnd" style="display:table;width:100%">
         <tbody is="transition-group">
           <div v-for="item in que.QList"
                :key="item.qtid" class="move">

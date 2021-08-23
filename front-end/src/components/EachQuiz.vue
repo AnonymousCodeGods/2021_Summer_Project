@@ -3,7 +3,7 @@
     <a style="float: left;padding-left: 40px;padding-top: 20px;width: 300px">{{ type }}</a>
     <a class="bas" style="float: left;padding-left: 50px;padding-top: 20px">ID：{{ id }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px;">状态：{{ state === true ? '已发布' : '未发布' }}</a>
-    <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">创建日期：{{ date.substring(0,10) }}</a>
+    <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">创建日期：{{ date.substring(0, 10) }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">回收量：{{ num }}</a>
     <!--分割线-->
     <div class="midText"></div>
@@ -71,7 +71,7 @@ export default {
     del() {
       const formData = new FormData();
       formData.append("ID", this.id)
-      this.$axios.post('/quiz/delete', {"ID":this.id})
+      this.$axios.post('/quiz/delete', {"ID": this.id})
           .then(result => {
             console.log(result)
             this.$router.push("/");
@@ -80,7 +80,7 @@ export default {
     pub() {
       const formData = new FormData();
       formData.append("ID", this.id)
-      this.$axios.post('/quiz/publish', {"ID":this.id})
+      this.$axios.post('/quiz/publish', {"ID": this.id})
           .then(result => {
             console.log(result)
             this.state = true;
@@ -90,7 +90,7 @@ export default {
     suspend() {
       const formData = new FormData();
       formData.append("ID", this.id)
-      this.$axios.post('/quiz/suspend', {"ID":this.id})
+      this.$axios.post('/quiz/suspend', {"ID": this.id})
           .then(result => {
             console.log(result)
             this.state = false;
@@ -98,10 +98,15 @@ export default {
           })
     },
     edit() {
-
+      this.$router.push({
+        path: "/creatingQuestionnaire",
+        query: {
+          id: this.id,
+        }
+      });
     },
     toResult() {
-
+      this.$router.push("/result")
     },
     exported() {
 
@@ -129,7 +134,7 @@ export default {
         }];
     },
     links() {
-
+      this.$router.push("/sentout")
     }
   }
 }
