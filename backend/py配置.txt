@@ -1,0 +1,29 @@
+环境配置指令
+pip install Django==3.1.7
+
+pip install simplejson==3.17.2
+
+pip install openpyxl==3.0.6
+
+pip install python-docx==0.8.10
+
+安装最新版本应该也可以，后续可能添加其它package
+
+
+Django 操作指令
+在终端输入：
+
+#创建app
+python manage.py startapp appname
+
+#创建数据库迁移文件
+python manage.py makemigrations
+
+#创建表
+0.0.0.0:8000
+
+#后台管理员注册
+python manage.py createsuperuser
+
+#启动程序
+python manage.py runserver
