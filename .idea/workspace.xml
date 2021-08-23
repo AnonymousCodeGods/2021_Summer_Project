@@ -2,15 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.idea/backend.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/Bin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Bin.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Home.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/Information.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Information.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/CollectingQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CollectingQuestionnaire.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/ShowVoteResult.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/ShowVoteResult.vue" afterDir="false" />
     </list>
     <list id="7a3cd647-e299-426e-8574-ee29d86c3a2e" name="Changes by zhang" comment="" />
+    <list id="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" name="V_sion 进行的更改" comment="">
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/CollectingQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CollectingQuestionnaire.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,6 +34,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitSEFilterConfiguration">
@@ -37,6 +48,52 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue">
+      <ranges>
+        <range start1="1" end1="2" start2="1" end2="2" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="7" end1="98" start2="7" end2="100" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="108" end1="109" start2="110" end2="111" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="187" end1="189" start2="189" end2="190" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="204" end1="206" start2="205" end2="206" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="213" end1="215" start2="213" end2="214" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="219" end1="220" start2="218" end2="219" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="221" end1="223" start2="220" end2="221" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="266" end1="267" start2="264" end2="264" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="277" end1="278" start2="274" end2="274" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="288" end1="289" start2="284" end2="284" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="298" end1="299" start2="293" end2="293" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="309" end1="310" start2="303" end2="303" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="316" end1="317" start2="309" end2="309" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="330" end1="331" start2="322" end2="322" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="338" end1="339" start2="329" end2="329" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="380" end1="381" start2="370" end2="371" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="405" end1="405" start2="395" end2="396" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+      </ranges>
+    </file>
+    <file path="$PROJECT_DIR$/front-end/src/views/CollectingQuestionnaire.vue">
+      <ranges>
+        <range start1="3" end1="4" start2="3" end2="3" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="8" end1="9" start2="7" end2="8" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="11" end1="12" start2="10" end2="11" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="28" end1="29" start2="27" end2="28" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="45" end1="46" start2="44" end2="45" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="53" end1="54" start2="52" end2="53" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="63" end1="64" start2="62" end2="62" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="66" end1="67" start2="64" end2="64" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="76" end1="77" start2="73" end2="74" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="94" end1="96" start2="91" end2="92" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="112" end1="114" start2="108" end2="109" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="122" end1="124" start2="117" end2="118" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="131" end1="133" start2="125" end2="126" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+        <range start1="170" end1="172" start2="163" end2="164" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="177" end1="179" start2="169" end2="170" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="184" end1="186" start2="175" end2="176" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="191" end1="193" start2="181" end2="182" changelist="e9bcb146-4df3-4c5d-9d98-749325eda57f" />
+        <range start1="230" end1="232" start2="219" end2="220" changelist="268b9ab4-71ae-4d37-8cfa-a6264c3d0a53" />
+      </ranges>
+    </file>
   </component>
   <component name="ProjectId" id="1tcuNzHNgYHAQxWWBBhuZ9eHX6j" />
   <component name="ProjectViewState">
@@ -49,6 +106,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="codeWithMe.voiceChat.enabledByDefault" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="ts.external.directory.path" value="D:\WebStorm 2021.1.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
