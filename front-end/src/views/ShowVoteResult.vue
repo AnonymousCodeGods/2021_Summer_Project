@@ -32,6 +32,61 @@
 export default {
   name: 'CQue',
   created() {
+    this.fullscreenLoading=true
+    this.$axios({method:"post",url:"/result/getQn", data:{"QnId": this.$route.query.id}})
+        .then(res => {
+          this.que.QList=[]
+          this.que.qnid = res.data.que.qnid;
+          this.que.title = res.data.que.title;
+          for(let i=0;i<res.data.que.QList.length;i++){
+            let temp1=res.data.que.QList[i];
+            if(temp1.type === 0){
+              let optionTemp=[];
+              for(let j=0;j<temp1.option.length;j++){
+                let temp2=temp1.option[j];
+                optionTemp.push({
+                  oid:j,
+                  content:temp2.content
+                })
+              }
+              this.que.QList.push({
+                qid:i,
+                type:temp1.type,
+                title: temp1.title,
+                option:optionTemp,
+                percentage:temp1.percentage
+              })
+            }
+            else if(temp1.type === 1){
+              let optionTemp=[];
+              for(let j=0;j<temp1.option.length;j++){
+                let temp2=temp1.option[j];
+                optionTemp.push({
+                  oid:j,
+                  content:temp2.content
+                })
+              }
+              this.que.QList.push({
+                qid:i,
+                type:temp1.type,
+                title: temp1.title,
+                option:optionTemp,
+                percentage:temp1.percentage
+              })
+            }
+          }
+          this.fullscreenLoading=false
+        })
+        .catch(() => {
+          this.$notify({
+            title: '失败',
+            message: '连接失败',
+            type: 'error',
+            position: 'bottom-left'
+          });
+          this.fullscreenLoading=false
+          //this.$router.push('/');
+        })
   },
   data: function(){
     return {

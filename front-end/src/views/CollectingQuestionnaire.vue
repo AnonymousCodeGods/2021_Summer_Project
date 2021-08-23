@@ -223,6 +223,10 @@ export default {
             this.fullscreenLoading=false
             this.$router.push('/');
           })
+      this.$router.push({
+        path: '/showVoteResult',
+        id:this.que.qnid
+      })
     }
   }
 }
