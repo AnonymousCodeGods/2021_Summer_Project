@@ -30,6 +30,9 @@ class Questionnaire(models.Model):
     title = models.CharField(max_length=64,null=True)
     FQID = models.CharField(max_length=64,null=True)
 
+    def __str__(self):
+        return self.title
+
 class Question(models.Model):
     content = models.TextField()
 
@@ -43,13 +46,16 @@ class Question(models.Model):
 class Complition(Question):
     CMPID = models.CharField(max_length=64,unique=True)
     NQID = models.CharField(max_length=64)
+    def __str__(self):
+        return self.CMPID
 
 class ChoiceQuestion(Question):
     CHID = models.CharField(max_length=64,unique=True)
     NQID = models.CharField(max_length=64)
     FOID = models.IntegerField(null=True)
     isMulti = models.BooleanField(default=False,null=True)
-
+    def __str__(self):
+        return self.CHID
 class Option(models.Model):
     NOID = models.IntegerField(null=True)
 
@@ -61,9 +67,15 @@ class Option(models.Model):
 
     isCorrect = models.BooleanField(null=True)
 
+    def __str__(self):
+        return 'OP'+str(self.id)
+
 class Answer(models.Model):
     content = models.TextField()
     CMP = models.ForeignKey('Complition',on_delete=models.CASCADE,null=True)
+
+    def __str__(self):
+        return self.content
 
 class StarNum(models.Model):
     CH = models.ForeignKey('ChoiceQuestion',on_delete=models.CASCADE,null=True)

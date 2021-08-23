@@ -42,7 +42,9 @@ INSTALLED_APPS = [
 
     'prototype',
     'quiz',
-    'user_manage'
+    'user_manage',
+    'user_b',
+    'createQn'
 ]
 
 MIDDLEWARE = [

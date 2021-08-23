@@ -22,5 +22,7 @@ urlpatterns = [
     path('aptest/', include('aptest.urls')),
     path('quiz/', include('quiz.urls')),
     path('user/', include('user_manage.urls')),
-
+    path('user_b/', include('user_b.urls')),
+    path('createQn/', include('createQn.urls')),
+    path('',include('getQn.urls')),
 ]

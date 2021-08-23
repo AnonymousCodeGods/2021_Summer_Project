@@ -17,6 +17,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\createQn\views.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\prototype\base_option.py">
           <value>
             <Attribute>
@@ -39,6 +46,27 @@
           </value>
         </entry>
         <entry key="\qrtest.py">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\quiz\urls.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\quiz\views.py">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\user_manage\views.py">
           <value>
             <Attribute>
               <option name="separator" value=":" />

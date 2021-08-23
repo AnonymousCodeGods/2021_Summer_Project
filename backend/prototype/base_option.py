@@ -57,9 +57,7 @@ def choice_create(dict):
 
 
 def questionnaire_create(dict):
-    #print(dict)
-    #print(dict['share'])
-    quesn = Questionnaire(title=dict['title'],isPublished=dict['share'])
+    quesn = Questionnaire(title=dict['title'],USER=dict['user'])
     quesn.save()
     QList = dict['QList']
     insList = []
@@ -78,16 +76,18 @@ def questionnaire_create(dict):
             comp = complition_create(q)
             insList.append(comp)
     print(insList)
+    if isinstance(insList[0], ChoiceQuestion):
+        quesn.FQID = insList[0].CHID
+    else:
+        quesn.FQID = insList[0].CMPID
 
     for i in range(0,len(insList)-1):
         if isinstance(insList[i+1],ChoiceQuestion):
             insList[i].NQID = insList[i+1].CHID
-            if i == 0:
-                quesn.FQID = insList[0].CHID
+
         else:
             insList[i].NQID = insList[i+1].CMPID
-            if i == 0:
-                quesn.FQID = insList[0].CMPID
+
         insList[i].save()
         quesn.save()
     return quesn
@@ -111,7 +111,6 @@ def get_questionnaire(QnId):
            quei['title'] = comp.content
            next_id = comp.NQID
         elif re.match(r'CH',que_id):
-
             choi = ChoiceQuestion.objects.get(CHID=que_id)
             quei['qid'] = int(que_id.lstrip('CH'))
             if choi.FOID is None:

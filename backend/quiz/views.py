@@ -75,3 +75,64 @@ def submitQn(request):
         qn.recoverNum = re+1
         qn.save()
         return JsonResponse({'success':True})
+
+def result(request):
+    if request.method == 'POST':
+        r = simplejson.loads(request.body)
+        print(r)
+        AnswerList = []
+        qnid = r['ID']
+        quen = get_questionnaire(qnid)
+        QList = quen['QList']
+        print(QList)
+        for q in QList:
+            Answeri = {}
+            Answeri['type'] = q['type']
+            qid = q['qid']
+            Answeri['Qnum'] = qid
+            selection = None
+            if q['type'] in [0,1,3]:
+                selection = []
+                if q['type'] != 3:
+                    options = q['option']
+                    for option in options:
+                        op = Option.objects.get(id=option['oid'])
+                        selection.append(op.selectedNum)
+
+                else:
+                    star = StarNum.objects.get(CH=qid)
+                    selection.append(star.zero_star)
+                    selection.append(star.one_star)
+                    selection.append(star.two_star)
+                    selection.append(star.three_star)
+                    selection.append(star.four_star)
+                    selection.append(star.five_star)
+                Answeri['selection'] = selection
+            else:
+                input = []
+                comp = Complition.objects.get(pk=qid)
+                answers = Answer.objects.filter(CMP=comp)
+                for answer in answers:
+                    input.append(answer.content)
+                Answeri['input'] = input
+            AnswerList.append(Answeri)
+        return JsonResponse({'AnswerList':AnswerList})
+
+def publish(request):
+    if request.method == 'POST':
+        r = simplejson.loads(request.body)
+        print(r)
+        quen = Questionnaire.objects.get(id=r['ID'])
+        quen.isPublished = True
+        quen.save()
+    return JsonResponse({'success':True})
+
+def suspend(request):
+    if request.method == 'POST':
+        r = simplejson.loads(request.body)
+        print(r)
+        quen = Questionnaire.objects.get(id=r['ID'])
+        quen.isDeleted = True
+        quen.save()
+    return JsonResponse({'success': True})
+
