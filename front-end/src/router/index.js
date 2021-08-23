@@ -28,11 +28,6 @@ const routes = [
     component: () => import('../views/CollectingQuestionnaire')
   },
   {
-    path: '/create',
-    name: 'create',
-    component: () => import(/* webpackChunkName: "about" */ '../views/CreatingQuestionnaire.vue')
-  },
-  {
     path: '/bin' ,
     name: 'Bin' ,
     component: () => import('../views/Bin')
@@ -51,6 +46,16 @@ const routes = [
     path: '/result',
     name: 'Result',
     component: () => import(/* webpackChunkName: "about" */ '../views/Result.vue')
+  },
+  {
+    path: '/creatingQuestionnaire' ,
+    name: 'CreatingQuestionnaire' ,
+    component: () => import('../views/CreatingQuestionnaire')
+  },
+  {
+    path: '/showVoteResult' ,
+    name: 'ShowVoteResult' ,
+    component: () => import('../views/ShowVoteResult')
   }
 ]
 

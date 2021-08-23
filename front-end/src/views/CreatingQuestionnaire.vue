@@ -9,12 +9,13 @@
       <div slot="header" class="clearfix">
         <span style="font-size: larger">{{que.title}}</span>
       </div>
-      <vuedraggable v-model="que.QList" chosen-class="move" ghost="move" force-fallback="true" animation="400" @start="onStart" @end="onEnd">
+      <vuedraggable v-model="que.QList" chosenClass="ghost" handle=".drag" force-fallback="true" animation="400" @start="onStart" @end="onEnd">
         <tbody is="transition-group">
           <div v-for="item in que.QList"
-               :key="item.qid" class="move">
+               :key="item.qtid" class="move">
             <el-card style="margin: 15px;cursor: move"
                      shadow="hover">
+              <el-button type="text" icon="el-icon-rank" class="drag"></el-button>
               <div style="float: right;margin-right: 12px">
                 <el-button type="text" icon="el-icon-document-copy" v-on:click="copyQuestion(item)"></el-button>
                 <el-button type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
@@ -23,7 +24,7 @@
                 <div>
                   <span style="line-height: 30px;">
                   <el-tag size="small">单选</el-tag>
-                  {{item.qid+1}}.{{item.title}}
+                  {{item.qtid+1}}.{{item.title}}
                   <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
                 </span>
                   <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
@@ -42,7 +43,7 @@
                 <div>
                   <span style="line-height: 30px;">
                       <el-tag size="small" type="success">多选</el-tag>
-                      {{item.qid+1}}.{{item.title}}
+                      {{item.qtid+1}}.{{item.title}}
                       <el-link icon="el-icon-edit" :underline="false"  v-on:click="initialTitleEdit(item)"></el-link>
                   </span>
                   <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
@@ -60,14 +61,14 @@
               <div v-if="item.type===2" class="queLabel">
                 <div style="margin-top: 10px">
                   <el-tag size="small" type="info">填空</el-tag>
-                  {{item.qid+1}}.{{item.title}}
+                  {{item.qtid+1}}.{{item.title}}
                   <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
                 </div>
               </div>
               <div v-if="item.type===3" class="queLabel">
                 <div style="margin-top: 10px">
                   <el-tag size="small" type="warning">评分</el-tag>
-                  {{item.qid+1}}.{{item.title}}
+                  {{item.qtid+1}}.{{item.title}}
                   <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
                 </div>
               </div>
@@ -76,7 +77,7 @@
         </tbody>
       </vuedraggable>
       <div style="margin-top: 30px">
-        <el-button plain type="primary" style="width: 15%" icon="el-icon-download"></el-button>
+        <el-button plain type="primary" style="width: 15%" icon="el-icon-download" v-on:click="uploadQn(false)"></el-button>
         <el-popover
             style="margin: 20px"
             placement="top"
@@ -92,7 +93,7 @@
           </div>
           <el-button plain type="success" style="width: 15%" icon="el-icon-plus" v-on:click="addQuestionDialog=true" slot="reference"></el-button>
         </el-popover>
-        <el-button plain type="danger" style="width: 15%" icon="el-icon-upload2" v-on:click="uploadQn"></el-button>
+        <el-button plain type="danger" style="width: 15%" icon="el-icon-upload2" v-on:click="uploadQn(true)"></el-button>
       </div>
     </el-card>
   </div>
@@ -102,23 +103,25 @@
 import vuedraggable from 'vuedraggable';
 export default {
   components: {
-    vuedraggable,//当前页面注册组件
+    vuedraggable,
   },
   created() {
-    this.que.qnid=Math.round(Math.random()*10000000);
+    if(this.$route.query.id !== '0') {
+      this.getQn(this.$route.query.id)
+    } else if(this.que.qnid !== 0) {
+      this.getQn(this.que.qnid)
+    }
   },
   name: 'NewQue',
   data: function(){
     return {
       que: {
-        qnid: 123123,
+        qnid: 0,
         title: "holo",
         QList: [{
           qid: 0,
           type: 0,
-          title: "主要用于课堂测试等场景，发布者应该可以设置每道题目的评分和答案，也可以设置问" +
-              "卷整体的限时时间，超时将自动回收。针对填写者，问卷题目应该可以乱序展示，在填写者" +
-              "提交后，问卷应该可以对客观题目进行自动评分，并使填写者可以查看答案。",
+          title: "这是一道单选题，点击右边的按钮可以更改题目",
           option: [{
             oid: 0,
             content: "你好"
@@ -127,12 +130,12 @@ export default {
             content: "hello"
           }, {
             oid: 2,
-            content: "hi"
+            content: "这是一个选项，点击下方按钮可以增加新的选项"
           }],
         }, {
           qid: 1,
           type: 1,
-          title: "到底什么是hello",
+          title: "这是一道多选题",
           option: [{
             oid: 0,
             content: "你好"
@@ -146,11 +149,11 @@ export default {
         }, {
           qid: 2,
           type: 2,
-          title: "到底到底什么是hello",
+          title: "我是一道填空题",
         }, {
           qid: 3,
           type: 3,
-          title: "到底到底到底什么是hello",
+          title: "我是一道评分题",
         }]
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
@@ -163,6 +166,78 @@ export default {
     }
   },
   methods: {
+    getQn(qnid) {
+      this.fullscreenLoading=true
+      this.$axios({method:"post", url:"/getQn", data:{"QnId": qnid}})
+          .then(res => {
+            this.que.QList=[]
+            this.que.qnid = res.data.que.qnid;
+            this.que.title = res.data.que.title;
+            for(let i=0;i<res.data.que.QList.length;i++){
+              let temp1=res.data.que.QList[i];
+              if(temp1.type === 0){
+                let optionTemp=[];
+                for(let j=0;j<temp1.option.length;j++){
+                  let temp2=temp1.option[j];
+                  optionTemp.push({
+                    oid:j,
+                    content:temp2.content
+                  })
+                }
+                this.que.QList.push({
+                  qtid:i,
+                  qid:temp1.qid,
+                  type:temp1.type,
+                  title: temp1.title,
+                  option:optionTemp
+                })
+              }
+              else if(temp1.type === 1){
+                let optionTemp=[];
+                for(let j=0;j<temp1.option.length;j++){
+                  let temp2=temp1.option[j];
+                  optionTemp.push({
+                    oid:j,
+                    content:temp2.content
+                  })
+                }
+                this.que.QList.push({
+                  qtid:i,
+                  qid:temp1.qid,
+                  type:temp1.type,
+                  title: temp1.title,
+                  option:optionTemp
+                })
+              }
+              else if(temp1.type === 2){
+                this.que.QList.push({
+                  qtid:i,
+                  qid:temp1.qid,
+                  type:temp1.type,
+                  title: temp1.title
+                })
+              }
+              else{
+                this.que.QList.push({
+                  qtid:i,
+                  qid:temp1.qid,
+                  type:temp1.type,
+                  title: temp1.title
+                })
+              }
+            }
+            this.fullscreenLoading=false
+          })
+          .catch(() => {
+            this.$notify({
+              title: '失败',
+              message: '连接失败',
+              type: 'error',
+              position: 'bottom-left'
+            });
+            this.fullscreenLoading=false
+          })
+    },
     initialTitleEdit(question){
       this.editingTitle=question.title
       this.editingTitleQuestion=question
@@ -189,6 +264,7 @@ export default {
       this.addQuestionVisible = false;
       let i = this.que.QList.length
       this.que.QList.push({
+        qtid: i,
         qid: i,
         type: 0,
         title: "请输入题干",
@@ -199,6 +275,7 @@ export default {
       this.addQuestionVisible = false;
       let i = this.que.QList.length
       this.que.QList.push({
+        qtid: i,
         qid: i,
         type: 1,
         title: "请输入题干",
@@ -209,6 +286,7 @@ export default {
       this.addQuestionVisible = false;
       let i = this.que.QList.length
       this.que.QList.push({
+        qtid: i,
         qid: i,
         type: 2,
         title: "请输入题干",
@@ -218,6 +296,7 @@ export default {
       this.addQuestionVisible = false;
       let i = this.que.QList.length
       this.que.QList.push({
+        qtid: i,
         qid: i,
         type: 3,
         title: "请输入题干",
@@ -228,12 +307,14 @@ export default {
       this.que.QList.splice(num,1)
       for(let i = num; i < this.que.QList.length; i++) {
         this.que.QList[i].qid--
+        this.que.QList[i].qtid--
       }
     },
     copyQuestion(question) {
       let num = this.que.QList.indexOf(question)
       if(question.type === 0 || question.type === 1) {
         this.que.QList.splice(num+1,0,{
+          qtid:num+1,
           qid: num+1,
           type: question.type,
           title: question.title+"（副本）",
@@ -247,6 +328,7 @@ export default {
         }
       } else if(question.type === 2 || question.type === 3) {
         this.que.QList.splice(num+1,0,{
+          qtid:num+1,
           qid: num+1,
           type: question.type,
           title: question.title+"（副本）",
@@ -254,31 +336,30 @@ export default {
       }
       for(let i = num+2; i < this.que.QList.length; i++) {
         this.que.QList[i].qid++
+        this.que.QList[i].qtid++
       }
     },
-    uploadQn(){
-      this.$axios({method:"post",url:"/questionnaire/saveQn", data:{
-        "share": false,
+    uploadQn(flag){
+      this.fullscreenLoading = true
+      this.$axios({method:"post",url:"/createQn/saveQn", data:{
+          "qnid":this.que.qnid,
+          "userName": this.$cookies.isKey("username")?this.$cookies.get("username"):"wang",
           "que":{
             "title":this.que.title,
             "QList":this.que.QList
           }}})
           .then(res => {
-            if(res.data.success === true){
-              this.$notify({
-                title: '成功',
-                message: '上传问卷成功',
-                type: 'success',
-                position: 'bottom-left'
-              });
-            }
-            else {
-              this.$notify({
-                title: '失败',
-                message: '上传问卷失败',
-                type: 'error',
-                position: 'bottom-left'
-              });
+            this.$notify({
+              title: '成功',
+              message: flag?'发布':'保存'+'问卷成功',
+              type: 'success',
+              position: 'bottom-left'
+            });
+            this.fullscreenLoading = false
+            if(flag) {
+              this.$router.push("/")
+            } else {
+              this.getQn(res.data.qnid)
             }
           })
           .catch(() => {
@@ -315,5 +396,15 @@ export default {
 
 .move {
 
+}
+
+.drag {
+  float:left;
+  margin-left: 12px;
+  cursor: move;
+}
+
+.ghost {
+  opacity: 1;
 }
 </style>
