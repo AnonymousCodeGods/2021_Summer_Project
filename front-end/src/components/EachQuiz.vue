@@ -9,13 +9,15 @@
     <div class="midText"></div>
     <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;cursor:pointer;" @click="del">删除</a>
     <img src="../assets/del.png" style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
-    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="pub"
+    <a style="float:right;padding-right: 80px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="pub"
        v-if="state===false">发布</a>
-    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;"
+    <a style="float:right;padding-right: 80px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;"
        @click="suspend"
        v-else>暂停</a>
-    <img src="../assets/open.png"
-         style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
+    <img src="../assets/suspend.png" v-if="state===true"
+         style="float:right;padding-right: 0;padding-top: 61px;height: 20px;cursor:pointer;">
+    <img src="../assets/open.png" v-else
+         style="float:right;padding-right: 0;padding-top: 61px;height: 20px;cursor:pointer;">
     <a class="fun" style="float: right;padding-right: 190px;padding-top: 58px" @click="edit"
        @mouseover="mouseOver($event)"
        @mouseleave="mouseLeave($event)">编辑问卷</a>
