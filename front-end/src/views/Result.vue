@@ -270,7 +270,7 @@ export default {
     return {
       que: {
         qid: '',
-        title: "测试问卷",
+        title: "",
         QList: []
       },
       fullscreenLoading: false,
