@@ -90,8 +90,8 @@ export default {
         this.fullscreenLoading = true;
         this.$axios({
           method: "post",
-          url: "/Register",
-          data: {username: this.username, password: this.password}
+          url: "/user/register",
+          data: {userName: this.username, pwd: this.password,sex: true,phone: 111111,mail:"sdsd@qq.com"}
         })
             .then(res => {
               console.log(res)

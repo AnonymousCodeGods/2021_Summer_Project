@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="head">
-      <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:10%;height: 80%;left: 5%">
+      <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:10%;height: 85%;left: 5%">
 
       <el-badge :value="12" class="item">
         <el-button size="small">消息</el-button>
@@ -43,8 +43,8 @@
         {{ sort }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="发布时间">发布时间</el-dropdown-item>
           <el-dropdown-item command="创建时间">创建时间</el-dropdown-item>
+          <el-dropdown-item command="发布日期">发布时间</el-dropdown-item>
           <el-dropdown-item command="回收量">回收量</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -56,7 +56,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="已发布">已发布</el-dropdown-item>
           <el-dropdown-item command="未发布">未发布</el-dropdown-item>
-          <el-dropdown-item command="全部">全部</el-dropdown-item>
+          <el-dropdown-item command="状态">全部</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
 
@@ -131,10 +131,10 @@
             style="margin-top: 20px;"
         >
           <each-quiz
-              :type="it.type"
-              :date="it.date"
-              :id="it.id"
-              :num="it.num"
+              :type="it.name"
+              :date="it.createDate"
+              :id="it.ID.toString()"
+              :num="it.num.toString()"
               :state="it.state"
           ></each-quiz>
         </div>
@@ -150,9 +150,7 @@
           </el-pagination>
         </div>
       </div>
-
     </div>
-
   </div>
 </template>
 
@@ -168,37 +166,32 @@ export default {
     msg: String
   },
   created() {
-    const formData = new FormData();
-    formData.append("date", "3")
-    this.$http.post('/aptest/get_q', JSON.stringify(formData))
+    console.log(this.$route.query)
+    this.username = this.$cookies.get('username')
+    this.$axios.post('/user/info', {"userName": this.username})
         .then(result => {
-          console.log(result)
+          this.allList = result.data.info.quizs;
+          console.log(this.allList)
+          this.myList = [];
+          console.log(this.allList.length)
+          for (let i = 0; i < this.allList.length; i++)
+            if (this.allList[i].bin === false)
+              this.myList.push(this.allList[i]);
+          console.log(this.myList)
+          this.total = this.myList.length;
+          if (this.myList.length <= 3) {
+            this.list = this.myList;
+            console.log(this.list);
+          } else {
+            for (let i = 0; i < 3; i++)
+              this.list.push(this.myList[i]);
+            console.log(this.list);
+          }
         })
-    this.allList = [{type: "1", date: "2021-8-21", id: "1234567", num: "123", state: '0'},
-      {type: "数分测验", date: "2021-8-21", id: "1234567", num: "1", state: "1"},
-      {type: "情感调查", date: "2021-8-21", id: "1234567", num: "12", state: "1"},
-      {type: "睡眠时间", date: "2021-8-21", id: "1234567", num: "123", state: '0'},
-      {type: "游戏时间", date: "2021-8-21", id: "1234567", num: "1234", state: "1"},
-      {type: "开发了么", date: "2021-8-21", id: "1234567", num: "2", state: "1"},
-      {type: "早点睡觉", date: "2021-8-21", id: "1234567", num: "13", state: "1"},
-      {type: "喜好调查", date: "2021-8-21", id: "1234567", num: "153", state: "1"},
-      {type: "游戏调查", date: "2021-8-21", id: "1234567", num: "133", state: "1"},
-    ]
-    this.myList = this.allList;
-    this.total = this.myList.length;
-    if (this.myList.length <= 3) {
-      this.list = this.myList;
-      console.log(this.list);
-    } else {
-      for (let i = 0; i < 3; i++)
-        this.list.push(this.myList[i]);
-      console.log(this.list);
-    }
-
   },
   data() {
     return {
-      sort: '发布时间',
+      sort: '创建时间',
       state: '状态',
       value: '正序',
       input: '',
@@ -227,7 +220,7 @@ export default {
           this.list.push(this.myList[val * 3 - 3 + i]);
       }
     },
-    bin(){
+    bin() {
       this.$router.push("/bin");
     },
     sorted(command) {
@@ -239,6 +232,20 @@ export default {
         });
         this.myList.sort(function (a, b) {
           return a.num - b.num;
+        });
+      }else if(command === "发布日期"){
+        this.allList.sort(function (a, b) {
+          return Date.parse(a.pubDate) - Date.parse(b.pubDate);
+        });
+        this.myList.sort(function (a, b) {
+          return Date.parse(a.pubDate) - Date.parse(b.pubDate);
+        });
+      }else{
+        this.allList.sort(function (a, b) {
+          return Date.parse(a.createDate) - Date.parse(b.createDate);
+        });
+        this.myList.sort(function (a, b) {
+          return Date.parse(a.createDate) - Date.parse(b.createDate);
         });
       }
       this.list = [];
@@ -257,18 +264,18 @@ export default {
       this.myList = [];
       if (command === "已发布") {
         for (let i = 0; i < this.allList.length; i++)
-          if (this.allList[i].state === "1")
+          if (this.allList[i].state === true)
             this.myList.push(this.allList[i]);
       } else if (command === "未发布") {
         for (let i = 0; i < this.allList.length; i++)
-          if (this.allList[i].state === "0")
+          if (this.allList[i].state === false)
             this.myList.push(this.allList[i]);
       } else {
         this.myList = this.allList;
       }
       this.total = this.myList.length;
       this.list = [];
-      this.page=1;
+      this.page = 1;
       const val = this.page;
       if (val * 3 > this.total) {
         for (let i = val * 3 - 3; i < this.total; i++)
@@ -285,7 +292,7 @@ export default {
         this.order = 1;
         // this.allList.reverse();
         this.allList.reverse();
-        this.myList=this.allList;
+        this.myList = this.allList;
         this.list = [];
         const val = this.page;
         if (val * 3 > this.total) {
@@ -299,7 +306,7 @@ export default {
         this.order = 0;
         // this.allList.reverse();
         this.allList.reverse();
-        this.myList=this.allList;
+        this.myList = this.allList;
         this.list = [];
         const val = this.page;
         if (val * 3 > this.total) {
@@ -316,18 +323,48 @@ export default {
     },
     logout(command) {
       console.log(command);
-      this.$router.push("/login");
+      this.$cookies.remove('username');
+      this.$router.push("/");
     },
     // 查找
     search() {
-      console.log(this.input)
+      console.log(this.input);
+      console.log(this.state);
+      this.myList.splice(0)
+      console.log(":::::", this.myList)
+      if (this.input === '') {
+        this.$router.go(0);
+      } else {
+        if (this.state === '状态') {
+          this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1)
+        } else {
+          this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1 && item.state === this.state)
+        }
+
+        this.total = this.myList.length;
+        this.list = [];
+        this.page = 1;
+        const val = this.page;
+        if (val * 3 > this.total) {
+          for (let i = val * 3 - 3; i < this.total; i++)
+            this.list.push(this.myList[i]);
+        } else {
+          for (let i = 0; i < 3; i++)
+            this.list.push(this.myList[val * 3 - 3 + i]);
+        }
+      }
     },
     addNew() {
 
     },
-    createQuiz(){
-      this.$router.push("/create");
+    createQuiz() {
+      this.$router.push({
+        path:"/creatingQuestionnaire",
+        query:{
+          id:0
+        }});
     },
+
   }
 }
 </script>

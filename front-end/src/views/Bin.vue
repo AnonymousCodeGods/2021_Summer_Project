@@ -15,7 +15,6 @@
         <!--          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
         <!--        </div>-->
       </div>
-
       <el-dropdown style="position:absolute;top:40%;height: 80%;left: 90%" @command="logout">
       <span class="el-dropdown-link">
         {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -36,7 +35,6 @@
         color: black;
       "
       >已删除问卷</a>
-
       <div class="bin" style="position: absolute;left: 27%;width: 70%;top: 12%">
         <el-table
             :data="tableData"
@@ -47,7 +45,7 @@
         >
           <el-table-column
               align="center"
-              label="发布日期"
+              label="创建日期"
               min-width="6">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
@@ -86,7 +84,6 @@
               <el-button type="success" size="mini" icon="el-icon-refresh-right" @click="recoverR(scope.row)">恢复
               </el-button>
             </template>
-
           </el-table-column>
           <el-table-column
               align="center"
@@ -106,17 +103,13 @@
             </el-popconfirm>
           </el-table-column>
         </el-table>
-
       </div>
-
-
       <button
           type="button"
           class="button button--login button--round-s button--text-thick button--inverted button--size"
           style="position:absolute;left: 5%; top: 7%;width: 200px; height: 60px"
       >创建问卷
       </button>
-
       <!-- menu菜单 -->
       <button
           type="button"
@@ -157,60 +150,142 @@
         个人信息
       </button>
     </div>
-
-
   </div>
-
 </template>
 
 <script>
 export default {
   name: 'bin',
   created() {
-    this.tableData = [{
-      date: '2021-05-02',
-      name: '时间统计',
-      count: 0,
-    }, {
-      date: '2021-05-04',
-      name: '作业统计',
-      count: 7,
-    }, {
-      date: '2021-05-04',
-      name: '作业统计',
-      count: 7,
-    }]
-    this.username = 'quiz'
+    this.fullscreenLoading=true;
+    this.username = this.$cookies.get('username')
+    // this.username = this.$cookies.get('username')
+    this.$axios({
+      method: "post",
+      data: {username: this.username,},
+      url: "/user_b/info",
+    })
+        .then(res => {
+          const binlist =res.data.quizs
+          for (let i = 0; i <binlist.length; i++) {
+            this.tableData.push({qnid:binlist[i].id,date:binlist[i].createDate,name:binlist[i].name,count:binlist[i].num})
+          }
+          this.fullscreenLoading=false;
+        })
+        .catch(res => {
+          console.log(res)
+          this.$notify({
+            title: '错误',
+            message: '连接失败',
+            position: 'bottom-left',
+            type: "error"
+          });
+          this.fullscreenLoading=false;
+        });
   },
   data() {
     return {
-      tableData: [],
+      tableData: [
+        {
+          qnid:1,
+          date:'2021-8-21',
+          name:'时间统计',
+          count:5
+        }
+
+      ],
       username: ''
     }
   },
   methods: {
-    deleteR(row) {
-      this.$notify({
-        message: '问卷已删除',
-        type: 'warning',
-        position: 'bottom-left'
-      });
+    deleteR(index,row) {
+      this.fullscreenLoading=true;
+      this.$axios({
+        method: "post",
+        data: {qnid: this.tableData[index].qnid},
+        //todo: url
+        url: "",
+      })
+        .then(res => {
+          if (res.data.success) {
+            this.$notify({
+              message: '问卷已删除',
+              type: 'warning',
+              position: 'bottom-left'
+            })
+            this.fullscreenLoading=false;
+          }
+        })
+        .catch(res => {
+          console.log(res)
+          this.$notify({
+            title: '错误',
+            message: '连接失败',
+            position: 'bottom-left',
+            type: "error"
+          });
+          this.fullscreenLoading=false;
+        });
       this.tableData.splice(this.tableData.indexOf(row), 1);
     },
-    recoverR(row) {
-      this.$notify({
-        message: '问卷已恢复',
-        type: 'success',
-        position: 'bottom-left'
-      });
+    recoverR(index, row) {
+      this.fullscreenLoading=true;
+      this.$axios({
+        method: "post",
+        data: {qnid: this.tableData[index].qnid},
+        //todo: url
+        url: "",
+      })
+          .then(res => {
+            if (res.data.success) {
+              this.$notify({
+                message: '问卷已恢复',
+                type: 'success',
+                position: 'bottom-left'
+              });
+              this.fullscreenLoading = false;
+            }
+          })
+          .catch(res => {
+            console.log(res)
+            this.$notify({
+              title: '错误',
+              message: '连接失败',
+              position: 'bottom-left',
+              type: "error"
+            });
+            this.fullscreenLoading = false;
+          });
       this.tableData.splice(this.tableData.indexOf(row), 1);
     },
     clearR(index, row) {
-      this.$notify({
-        message: '问卷已清空',
-        type: 'info',
-        position: 'bottom-left'
-      });
+      this.fullscreenLoading=true;
+      this.$axios({
+        method: "post",
+        data: {qnid: this.tableData[index].qnid},
+        //todo: url
+        url: "",
+      })
+          .then(res => {
+            if (res.data.success) {
+              this.$notify({
+                message: '问卷已清空',
+                type: 'info',
+                position: 'bottom-left'
+              });
+              this.fullscreenLoading = false;
+            }
+          })
+          .catch(res => {
+            console.log(res)
+            this.$notify({
+              title: '错误',
+              message: '连接失败',
+              position: 'bottom-left',
+              type: "error"
+            });
+            this.fullscreenLoading = false;
+          });
       this.tableData[index].count = 0;
       this.$set(this.tableData, index, row);
     },
@@ -218,11 +293,12 @@ export default {
       this.$router.push("/info");
     },
     toHome: function () {
-      this.$router.push("/");
+      this.$router.push("/home");
     },
     logout(command) {
       console.log(command);
-      this.$router.push("/login");
+      this.$cookies.remove('username');
+      this.$router.push("/");
     },
   }
 }
