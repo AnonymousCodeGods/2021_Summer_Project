@@ -293,11 +293,12 @@ export default {
       this.$router.push("/info");
     },
     toHome: function () {
-      this.$router.push("/");
+      this.$router.push("/home");
     },
     logout(command) {
       console.log(command);
-      this.$router.push("/login");
+      this.$cookies.remove('username');
+      this.$router.push("/");
     },
   }
 }

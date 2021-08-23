@@ -323,7 +323,8 @@ export default {
     },
     logout(command) {
       console.log(command);
-      this.$router.push("/login");
+      this.$cookies.remove('username');
+      this.$router.push("/");
     },
     // 查找
     search() {

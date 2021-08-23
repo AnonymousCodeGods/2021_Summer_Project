@@ -5,12 +5,12 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
     component: () => import(/* webpackChunkName: "about" */ '../views/Home')
   },
   {
-    path: '/login',
+    path: '/',
     name: 'Login',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -63,6 +63,18 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.path === '/') return next();
+  // if (to.path === '/register') return next();
+  // if (to.path === '/CollectingQuestionnaire') return next();
+  // const tokenStr = this.$cookies.get('username')
+  // console.log(tokenStr)
+  // if (tokenStr === '') return next('/')
+  // if (tokenStr&&to.path === '/register') return next('/home')
+  // if (tokenStr&&to.path === '/login') return next('/home')
+  next()
 })
 
 export default router

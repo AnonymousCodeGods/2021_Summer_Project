@@ -89,7 +89,7 @@ export default {
                   type: "success"
                 });
                 this.$router.push({
-                  path: "/", query: {
+                  path: "/home", query: {
                     username:this.username
                   }
                 })

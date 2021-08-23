@@ -131,14 +131,15 @@ export default {
       this.value = command;
     },
     toHome: function () {
-      this.$router.push("/");
+      this.$router.push("/home");
     },
     bin() {
       this.$router.push("/bin");
     },
     logout(command) {
       console.log(command);
-      this.$router.push("/login");
+            this.$cookies.remove('username');
+      this.$router.push("/");
     },
   }
 }

@@ -4,10 +4,11 @@
     <list default="true" id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/router/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/views/Bin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Bin.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/views/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Home.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Information.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Information.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Login.vue" afterDir="false" />
     </list>
     <list id="7a3cd647-e299-426e-8574-ee29d86c3a2e" name="Changes by zhang" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -85,6 +86,8 @@
       <workItem from="1629624525952" duration="244000" />
       <workItem from="1629624786917" duration="96000" />
       <workItem from="1629712561196" duration="1552000" />
+      <workItem from="1629714640048" duration="58000" />
+      <workItem from="1629714735733" duration="1328000" />
     </task>
     <servers />
   </component>
