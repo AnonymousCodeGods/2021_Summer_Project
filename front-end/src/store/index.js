@@ -10,7 +10,8 @@ const store = new Vuex.Store({
   state: {
     username:"",
     password:"",
-    currentPage:"1"
+    currentPage:"1",
+    que:{}
   },
   mutations: {
   },

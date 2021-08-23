@@ -63,10 +63,10 @@ export default {
       this.$router.push("/result");
     },
     exported() {
-      this.$router.push("/sentout");
+
     },
     links() {
-
+      this.$router.push("/sentout");
     },
   }
 }

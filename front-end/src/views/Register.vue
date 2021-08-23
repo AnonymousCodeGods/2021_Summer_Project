@@ -8,19 +8,38 @@
         </div>
         <table style="border-spacing: 20px">
           <tr>
-            <td>用户名</td>
+            <td>用户名:</td>
             <td>
               <el-input v-model="username" placeholder="请输入用户名"></el-input>
             </td>
           </tr>
           <tr>
-            <td>密码</td>
+            <td>性别</td>
+            <td>
+              <el-radio v-model="sex" label=true>男</el-radio>
+              <el-radio v-model="sex" label=false>女</el-radio>
+            </td>
+          </tr>
+          <tr>
+            <td>电话:</td>
+            <td>
+              <el-input type="password" v-model="phonenumber" placeholder="请输入电话"></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td>E-mail:</td>
+            <td>
+              <el-input type="password" v-model="email" placeholder="请输入邮箱"></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td>密码:</td>
             <td>
               <el-input type="password" v-model="password" placeholder="请输入密码"></el-input>
             </td>
           </tr>
           <tr>
-            <td>确认密码</td>
+            <td>确认密码:</td>
             <td>
               <el-input type="password" v-model="confirmPassword" placeholder="请再次输入密码"></el-input>
             </td>
@@ -38,13 +57,16 @@
   </div>
 </template>
 <script>
-import router from "../router";
+// import router from "../router";
 
 export default {
   data() {
     return {
       username: '',
       password: '',
+      sex: null,
+      phonenumber: '',
+      email: '',
       confirmPassword: '',
       fullscreenLoading: false
     }
@@ -65,7 +87,28 @@ export default {
           position: 'bottom-left',
           type: "error"
         });
-      } else if (this.password === '') {
+      } else if (this.sex=== null) {
+        this.$notify({
+          title: '错误',
+          message: '请选择性别',
+          position: 'bottom-left',
+          type: "error"
+        });
+      } else if (this.phonenumber === '') {
+        this.$notify({
+          title: '错误',
+          message: '电话不能为空',
+          position: 'bottom-left',
+          type: "error"
+        });
+      } else if (this.email === '') {
+        this.$notify({
+          title: '错误',
+          message: '邮箱不能为空',
+          position: 'bottom-left',
+          type: "error"
+        });
+      }else if (this.password === '') {
         this.$notify({
           title: '错误',
           message: '密码不能为空',
@@ -90,8 +133,12 @@ export default {
         this.fullscreenLoading = true;
         this.$axios({
           method: "post",
-          url: "/Register",
-          data: {username: this.username, password: this.password}
+          url: "/user/register",
+          data: {userName:this.username,
+            pwd:this.password,
+            sex:this.sex,
+            phone:this.phonenumber,
+            mail:this.email}
         })
             .then(res => {
               console.log(res)
@@ -102,7 +149,7 @@ export default {
                   position: 'bottom-left',
                   type: "success"
                 });
-                router.push('/Login')
+                this.$router.push('/Login')
               } else {
                 this.$notify({
                   title: '失败',

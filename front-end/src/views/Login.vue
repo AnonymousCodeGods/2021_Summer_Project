@@ -65,9 +65,9 @@ export default {
       } else {
         this.fullscreenLoading=true;
         this.$axios({
-          method: "POST",
+          method: "post",
           data: {username: this.username, password: this.password},
-          url: "/Login",
+          url: "/user/login",
         })
             .then(res => {
               if (!res.data.success) {

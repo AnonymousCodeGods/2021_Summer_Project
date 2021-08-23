@@ -75,7 +75,7 @@ export default {
       this.$router.push("/info");
     },
     toHome:function (){
-      this.$router.push("/home");
+      this.$router.push("/");
     },
     toBin:function (){
       this.$router.push("/bin");

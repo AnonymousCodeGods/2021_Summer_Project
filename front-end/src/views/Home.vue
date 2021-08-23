@@ -168,6 +168,7 @@ export default {
     msg: String
   },
   created() {
+
     const formData = new FormData();
     formData.append("date", "3")
     this.$http.post('/aptest/get_q', JSON.stringify(formData))
