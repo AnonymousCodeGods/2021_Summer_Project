@@ -3,9 +3,9 @@
     <div class="head">
       <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:10%;height: 80%;left: 5%">
 
-      <el-badge :value="12" class="item">
-        <el-button size="small">消息</el-button>
-      </el-badge>
+<!--      <el-badge :value="12" class="item">-->
+<!--        <el-button size="small">消息</el-button>-->
+<!--      </el-badge>-->
 
       <div class="demo-type">
         <div>

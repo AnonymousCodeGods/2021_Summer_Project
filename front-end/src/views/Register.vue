@@ -26,6 +26,18 @@
             </td>
           </tr>
           <tr>
+            <td>手机号</td>
+            <td>
+              <el-input type="password" v-model="phone" placeholder="请输入手机号"></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td>邮箱</td>
+            <td>
+              <el-input type="password" v-model="mail" placeholder="请输入邮箱"></el-input>
+            </td>
+          </tr>
+          <tr>
             <td colspan="2">
               <el-button style="width: 300px" type="primary" @click="doRegister"
                          v-loading.fullscreen.lock="fullscreenLoading">注册
@@ -46,6 +58,8 @@ export default {
       username: '',
       password: '',
       confirmPassword: '',
+      phone:'',
+      mail:'',
       fullscreenLoading: false
     }
   },
@@ -91,7 +105,7 @@ export default {
         this.$axios({
           method: "post",
           url: "/user/register",
-          data: {userName: this.username, pwd: this.password,sex: true,phone: 111111,mail:"sdsd@qq.com"}
+          data: {userName: this.username, pwd: this.password,sex: true,phone: this.phone,mail:this.mail}
         })
             .then(res => {
               console.log(res)

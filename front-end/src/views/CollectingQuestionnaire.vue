@@ -220,7 +220,9 @@ export default {
           })
       this.$router.push({
         path: '/showVoteResult',
-        id:this.que.qnid
+        query: {
+          id:this.que.qnid
+        }
       })
     }
   }

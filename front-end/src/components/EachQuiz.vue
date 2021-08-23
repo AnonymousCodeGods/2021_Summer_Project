@@ -106,62 +106,57 @@ export default {
       });
     },
     toResult() {
-      if (this.num !== '0'){
-         this.$router.push({
+      if (this.num !== '0') {
+        this.$router.push({
           path: "/result",
           query: {
             id: this.id
           }
         });
-      }else{
+      } else {
         this.$notify({
-            title: '抱歉',
-            message: '暂时没有答卷',
-            position: 'bottom-left',
-            type: "warning"
-          });
+          title: '抱歉',
+          message: '暂时没有答卷',
+          position: 'bottom-left',
+          type: "warning"
+        });
       }
 
     },
     exported() {
-      this.$axios.post('/quiz/result', {"ID": this.id})
-          .then(result => {
-            console.log(result.data.AnswerList)
-            this.json_data = result.data.AnswerList;
-          });
-      this.json_fields = {
-        'num': 'Qnum',
-        'type': 'type',
-        'answer': 'selection',
-        'input': 'input'
+      if (this.num !== '0') {
+        this.$axios.post('/quiz/result', {"ID": this.id})
+            .then(result => {
+              this.json_data = result.data.AnswerList;
+              for (let i = 0; i < this.json_data.length; i++) {
+                this.json_data[i].Qnum = i+1;
+                console.log(this.json_data[i].type === 0)
+                if (this.json_data[i].type === 0)
+                  this.json_data[i].type = '单选';
+                else if (this.json_data[i].type === 1)
+                  this.json_data[i].type = '多选';
+                else if (this.json_data[i].type === 2)
+                  this.json_data[i].type = '填空';
+                else if (this.json_data[i].type === 3)
+                  this.json_data[i].type = '评分';
+              }
+              console.log(this.json_data)
+            });
+        this.json_fields = {
+          'num': 'Qnum',
+          'type': 'type',
+          'answer': 'selection',
+          'input': 'input'
 
-      };
-      // this.json_data = [
-      //   {
-      //     'Qnum': '1',
-      //     'type': '0',
-      //     'selection': [0, 1, 2, 3],
-      //     'input':[]
-      //   },
-      //   {
-      //     'Qnum': '2',
-      //     'type': '1',
-      //     'selection': [0, 1, 2, 3, 4, 5, 6, 7, 7],
-      //     'input':[]
-      //   },
-      //   {
-      //     'Qnum': '3',
-      //     'type': '3',
-      //     'input': ["ss"],
-      //     'selection': [],
-      //   },
-      //   {
-      //     'Qnum': '4',
-      //     'type': '4',
-      //     'selection': [1,2,3,4,5],
-      //     'input': [],
-      //   },
-      // ];
+        };
+      } else {
+        this.$notify({
+          title: '抱歉',
+          message: '暂时没有答卷',
+          position: 'bottom-left',
+          type: "warning"
+        });
+      }
     },
     links() {
       this.$router.push({path: "/sentout", query: {id: this.id}});
