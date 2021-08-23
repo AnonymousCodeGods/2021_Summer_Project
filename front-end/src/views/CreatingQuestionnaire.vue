@@ -9,12 +9,13 @@
       <div slot="header" class="clearfix">
         <span style="font-size: larger">{{que.title}}</span>
       </div>
-      <vuedraggable v-model="que.QList" chosen-class="choose" force-fallback="true" animation="400" @start="onStart" @end="onEnd">
+      <vuedraggable v-model="que.QList" chosenClass="ghost" handle=".drag" force-fallback="true" animation="400" @start="onStart" @end="onEnd">
         <tbody is="transition-group">
           <div v-for="item in que.QList"
                :key="item.qid" class="move">
             <el-card style="margin: 15px;cursor: move"
                      shadow="hover">
+              <el-button type="text" icon="el-icon-rank" class="drag"></el-button>
               <div style="float: right;margin-right: 12px">
                 <el-button type="text" icon="el-icon-document-copy" v-on:click="copyQuestion(item)"></el-button>
                 <el-button type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
@@ -105,17 +106,69 @@ export default {
     vuedraggable,
   },
   created() {
-    if(this.$route.query.id === null){
-      if(this.que.qnid !== 0){
-        this.$router.push({
-          path : '/creatingQuestionnaire',
-          id : this.que.qnid
-        })
-      }
+    if(this.$route.query.id !== '0') {
+      this.getQn(this.$route.query.id)
+    } else if(this.que.qnid !== 0) {
+      this.getQn(this.que.qnid)
     }
-    else{
+  },
+  name: 'NewQue',
+  data: function(){
+    return {
+      que: {
+        qnid: 0,
+        title: "holo",
+        QList: [{
+          qid: 0,
+          type: 0,
+          title: "这是一道单选题，点击右边的按钮可以更改题目",
+          option: [{
+            oid: 0,
+            content: "你好"
+          }, {
+            oid: 1,
+            content: "hello"
+          }, {
+            oid: 2,
+            content: "这是一个选项，点击下方按钮可以增加新的选项"
+          }],
+        }, {
+          qid: 1,
+          type: 1,
+          title: "这是一道多选题",
+          option: [{
+            oid: 0,
+            content: "你好"
+          }, {
+            oid: 1,
+            content: "hello"
+          }, {
+            oid: 2,
+            content: "hi"
+          }],
+        }, {
+          qid: 2,
+          type: 2,
+          title: "我是一道填空题",
+        }, {
+          qid: 3,
+          type: 3,
+          title: "我是一道评分题",
+        }]
+      },
+      colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
+      fullscreenLoading: false,
+      titleEditDialog: false,
+      editingTitleQuestion:null,
+      editingTitle:'',
+      addQuestionVisible: false,
+      drag: false
+    }
+  },
+  methods: {
+    getQn(qnid) {
       this.fullscreenLoading=true
-      this.$axios({method:"post",url:"/creatQn/getQn", data:{"QnId": this.$route.query.id}})
+      this.$axios({method:"post", url:"/getQn", data:{"QnId": qnid}})
           .then(res => {
             this.que.QList=[]
             this.que.qnid = res.data.que.qnid;
@@ -180,63 +233,7 @@ export default {
             });
             this.fullscreenLoading=false
           })
-    }
-  },
-  name: 'NewQue',
-  data: function(){
-    return {
-      que: {
-        title: "holo",
-        QList: [{
-          qid: 0,
-          type: 0,
-          title: "主要用于课堂测试等场景，发布者应该可以设置每道题目的评分和答案，也可以设置问" +
-              "卷整体的限时时间，超时将自动回收。针对填写者，问卷题目应该可以乱序展示，在填写者" +
-              "提交后，问卷应该可以对客观题目进行自动评分，并使填写者可以查看答案。",
-          option: [{
-            oid: 0,
-            content: "你好"
-          }, {
-            oid: 1,
-            content: "hello"
-          }, {
-            oid: 2,
-            content: "hi"
-          }],
-        }, {
-          qid: 1,
-          type: 1,
-          title: "到底什么是hello",
-          option: [{
-            oid: 0,
-            content: "你好"
-          }, {
-            oid: 1,
-            content: "hello"
-          }, {
-            oid: 2,
-            content: "hi"
-          }],
-        }, {
-          qid: 2,
-          type: 2,
-          title: "到底到底什么是hello",
-        }, {
-          qid: 3,
-          type: 3,
-          title: "到底到底到底什么是hello",
-        }]
-      },
-      colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
-      fullscreenLoading: false,
-      titleEditDialog: false,
-      editingTitleQuestion:null,
-      editingTitle:'',
-      addQuestionVisible: false,
-      drag: false
-    }
-  },
-  methods: {
+    },
     initialTitleEdit(question){
       this.editingTitle=question.title
       this.editingTitleQuestion=question
@@ -332,31 +329,26 @@ export default {
     },
     uploadQn(flag){
       this.fullscreenLoading = true
-      this.$axios({method:"post",url:"/questionnaire/saveQn", data:{
-        "share": flag,
+      this.$axios({method:"post",url:"/createQn/saveQn", data:{
+          "userName": this.$cookies.isKey("username")?this.$cookies.get("username"):"unknown",
           "que":{
+            "qnid":this.que.qnid,
             "title":this.que.title,
             "QList":this.que.QList
           }}})
           .then(res => {
-            if(res.data.success === true){
-              this.$notify({
-                title: '成功',
-                message: flag?'发布':'保存'+'问卷成功',
-                type: 'success',
-                position: 'bottom-left'
-              });
-            }
-            else {
-              this.$notify({
-                title: '失败',
-                message: flag?'发布':'保存'+'问卷失败',
-                type: 'error',
-                position: 'bottom-left'
-              });
-            }
+            this.$notify({
+              title: '成功',
+              message: flag?'发布':'保存'+'问卷成功',
+              type: 'success',
+              position: 'bottom-left'
+            });
             this.fullscreenLoading = false
-            //这里要加一个弹出分享窗口的语句
+            if(flag) {
+              this.$router.push("/")
+            } else {
+              this.getQn(res.data.qnid)
+            }
           })
           .catch(() => {
             this.$notify({
@@ -394,7 +386,13 @@ export default {
 
 }
 
-.choose {
-  opacity: 0;
+.drag {
+  float:left;
+  margin-left: 12px;
+  cursor: move;
+}
+
+.ghost {
+  opacity: 1;
 }
 </style>

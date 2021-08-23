@@ -75,7 +75,7 @@ export default {
   name: 'CQue',
   created() {
     this.fullscreenLoading=true
-    this.$axios({method:"post",url:"/aptest/getQn", data:{"QnId": this.$route.query.id}})
+    this.$axios({method:"post",url:"/getQn", data:{"QnId": this.$route.query.id}})
         .then(res => {
           this.que.QList=[]
           this.que.qnid = res.data.que.qnid;
@@ -191,7 +191,7 @@ export default {
           })
         }
       }
-      this.$axios({method:"post",url:"/questionnaire/submitQn", data:{
+      this.$axios({method:"post",url:"/submitQn", data:{
           "qnid": this.que.qnid,
           "AnswerList":AnswerListTemp
       }})
@@ -221,7 +221,7 @@ export default {
               position: 'bottom-left'
             });
             this.fullscreenLoading=false
-            //this.$router.push('/');
+            this.$router.push('/');
           })
     }
   }
