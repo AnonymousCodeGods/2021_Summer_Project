@@ -1,0 +1,11 @@
+Django 操作指令
+在manage.py所在目录下终端输入：
+
+python manage.py startapp appname       #创建app
+
+python manage.py makemigrations        #创建数据库迁移文件
+python manage.py migrate          #创建表 (一般与上一条连用 )
+
+python manage.py createsuperuser       #管理员注册
+
+python manage.py runserver 0.0.0.0:8000        #启动后端服务
