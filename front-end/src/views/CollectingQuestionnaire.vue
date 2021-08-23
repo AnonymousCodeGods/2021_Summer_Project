@@ -1,15 +1,14 @@
 <template>
   <div>
     <el-card style="width: 800px; margin: auto"  v-loading.fullscreen.lock="fullscreenLoading">
-      <div class="row" id="pdfDom">
       <div slot="header" class="clearfix">
         <span style="font-size: larger">{{que.title}}</span>
       </div>
       <div v-for="item in que.QList"
-           :key="item.qtid" style="margin: 15px">
+           :key="item.qid" style="margin: 15px">
         <div v-if="item.type===0">
           <div class="queLabel">
-            {{item.qtid+1}}.{{item.title}}
+            {{item.qid+1}}.{{item.title}}
           </div>
           <div style="margin-left: 10%;margin-right: 10%">
             <el-radio-group
@@ -26,7 +25,7 @@
         </div>
         <div v-if="item.type===1">
           <div class="queLabel">
-            {{item.qtid+1}}.{{item.title}}
+            {{item.qid+1}}.{{item.title}}
           </div>
           <div style="margin-left: 10%;margin-right: 10%">
             <el-checkbox-group
@@ -43,7 +42,7 @@
         </div>
         <div v-if="item.type===2">
           <div class="queLabel">
-            {{item.qtid+1}}.{{item.title}}
+            {{item.qid+1}}.{{item.title}}
           </div>
           <div style="margin: 7px 10%;">
             <el-input v-model="item.input"/>
@@ -51,7 +50,7 @@
         </div>
         <div v-if="item.type===3">
           <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
-            {{item.qtid+1}}.{{item.title}}
+            {{item.qid+1}}.{{item.title}}
           </div>
           <div class="queLabel">
             <el-rate
@@ -61,10 +60,8 @@
           </div>
         </div>
       </div>
-      </div>
       <div style="margin-top: 30px">
         <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="submitQn">提交</el-button>
-        <el-button type="info" style="width: 15%" plain icon="el-icon-download" v-on:click="getPdf('问卷')">导出pdf</el-button>
       </div>
     </el-card>
   </div>
@@ -74,7 +71,7 @@
 export default {
   name: 'CQue',
   created() {
-    this.fullscreenLoading=true
+    this.fullscreenLoading=true;
     this.$axios({method:"post",url:"/getQn", data:{"QnId": this.$route.query.id}})
         .then(res => {
           this.que.QList=[]
@@ -110,8 +107,7 @@ export default {
                 })
               }
               this.que.QList.push({
-                qtid:i,
-                qid:temp1.qid,
+                qid:i,
                 type:temp1.type,
                 title: temp1.title,
                 option:optionTemp,
@@ -120,8 +116,7 @@ export default {
             }
             else if(temp1.type === 2){
               this.que.QList.push({
-                qtid:i,
-                qid:temp1.qid,
+                qid:i,
                 type:temp1.type,
                 title: temp1.title,
                 input : ""
@@ -168,29 +163,25 @@ export default {
         let temp1=this.que.QList[i];
         if(temp1.type === 0){
           AnswerListTemp.push({
-            qid:temp1.qid,
-            type:temp1.type,
+            type: temp1.type,
             answer:temp1.selection
           })
         }
         else if(temp1.type === 1){
           AnswerListTemp.push({
-            qid:temp1.qid,
-            type:temp1.type,
+            type: temp1.type,
             answer: temp1.selections
           })
         }
         else if(temp1.type === 2){
           AnswerListTemp.push({
-            qid:temp1.qid,
-            type:temp1.type,
+            type: temp1.type,
             answer : temp1.input
           })
         }
         else{
           AnswerListTemp.push({
-            qid:temp1.qid,
-            type:temp1.type,
+            type: temp1.type,
             answer : temp1.rating
           })
         }
