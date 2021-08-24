@@ -92,6 +92,7 @@ def result(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
         print(r)
+        resultList = {}
         AnswerList = []
         qnid = r['ID']
         quen = get_questionnaire(qnid)
@@ -176,6 +177,9 @@ def clear(request):
         r = simplejson.loads(request.body)
         print(r)
         quen = get_questionnaire(r['qnid'])
+        quen_ins = Questionnaire.objects.get(pk=r['qnid'])
+        quen_ins.recoverNum = 0
+        quen_ins.save()
         print(quen)
         QList = quen['QList']
         for q in QList:
