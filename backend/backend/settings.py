@@ -88,11 +88,15 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wenjuanxing',
         'USER': 'root',
-        'PASSWORD': '200141qq',
-        'HOST': 'localhost',
+        'PASSWORD': 'MySqlRoot123',
+        'HOST': 'rm-bp15pskt3a99774wupo.mysql.rds.aliyuncs.com',
         'PORT': '3306'
     }
 }
+
+CORS_ALLOWED_ORIGINS = [
+"http://*"
+]
 
 
 # Password validation
