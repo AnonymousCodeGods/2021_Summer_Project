@@ -93,8 +93,7 @@ export default {
                 })
               }
               this.que.QList.push({
-                qtid:i,
-                qid:temp1.qid,
+                qid:i,
                 type:temp1.type,
                 title: temp1.title,
                 option:optionTemp,
@@ -128,8 +127,7 @@ export default {
             }
             else{
               this.que.QList.push({
-                qtid:i,
-                qid:temp1.qid,
+                qid:i,
                 type:temp1.type,
                 title: temp1.title,
                 rating : 0
@@ -210,6 +208,7 @@ export default {
                 type: 'error',
                 position: 'bottom-left'
               });
+              this.$router.push('/');
             }
           })
           .catch(() => {
