@@ -335,8 +335,11 @@ export default {
       } else {
         if (this.state === '状态') {
           this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1)
-        } else {
-          this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1 && item.state === this.state)
+        } else if(this.state === '已发布') {
+          this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1 && item.state === true)
+        }
+        else{
+          this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1 && item.state === false)
         }
 
         this.total = this.myList.length;
