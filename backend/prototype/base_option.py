@@ -48,13 +48,17 @@ def choice_create(dict):
         choi.FOID = front_op.id
         for i in range(1,len(options)):
             back_op = option_create(options[i])
-            print(back_op.id)
+
             front_op.NOID = back_op.id
             front_op.save()
             front_op = back_op
     choi.save()
     return choi
 
+def get_qutesion_ins(qnid):
+    quen = Questionnaire.objects.get(pk=qnid)
+
+    return
 
 def questionnaire_create(dict):
     quesn = Questionnaire(title=dict['title'],USER=dict['user'])
@@ -75,7 +79,7 @@ def questionnaire_create(dict):
         else:
             comp = complition_create(q)
             insList.append(comp)
-    print(insList)
+
     if isinstance(insList[0], ChoiceQuestion):
         quesn.FQID = insList[0].CHID
     else:
@@ -101,49 +105,53 @@ def get_questionnaire(QnId):
     que_dict['qnid'] = QnId
     que_dict['title'] = questionnaire.title
     QList = []
-    while True:
-        quei = {}
-        if re.match(r'CMP',que_id):
-           print(que_id)
-           comp = Complition.objects.get(CMPID=que_id)
-           quei['qid'] = int(que_id.lstrip('CMP'))
-           quei['type'] = 2
-           quei['title'] = comp.content
-           next_id = comp.NQID
-        elif re.match(r'CH',que_id):
-            choi = ChoiceQuestion.objects.get(CHID=que_id)
-            quei['qid'] = int(que_id.lstrip('CH'))
-            if choi.FOID is None:
-                quei['type'] = 3
-                quei['title'] = choi.content
+    if que_id:
+        while True:
+            quei = {}
+            quei['total'] = 0
+            if re.match(r'CMP',que_id):
+
+               comp = Complition.objects.get(CMPID=que_id)
+               quei['qid'] = int(que_id.lstrip('CMP'))
+               quei['type'] = 2
+               quei['title'] = comp.content
+               next_id = comp.NQID
+            elif re.match(r'CH',que_id):
+                choi = ChoiceQuestion.objects.get(CHID=que_id)
+                quei['qid'] = int(que_id.lstrip('CH'))
+                if choi.FOID is None:
+                    quei['type'] = 3
+                    quei['title'] = choi.content
+                else:
+
+                    if choi.isMulti == False:
+                        quei['type'] = 0
+                    elif choi.isMulti == True:
+                        quei['type'] = 1
+                    quei['title'] = choi.content
+                    op = Option.objects.get(pk=choi.FOID)
+                    option = []
+                    while True:
+
+                        op_dict = {}
+                        op_dict['oid'] = op.pk
+                        op_dict['content'] = op.content
+                        op_dict['count'] = 0
+                        op_dict['percentage'] = 0
+                        option.append(op_dict)
+                        if op.NOID:
+                            op = Option.objects.get(pk=op.NOID)
+                        else:
+                            break
+                    quei['option'] = option
+                next_id = choi.NQID
+
+
+            QList.append(quei)
+            if not next_id:
+                break
             else:
-                print('choi')
-                if choi.isMulti == False:
-                    quei['type'] = 0
-                elif choi.isMulti == True:
-                    quei['type'] = 1
-                quei['title'] = choi.content
-                op = Option.objects.get(pk=choi.FOID)
-                option = []
-                while True:
-                    print(option)
-                    op_dict = {}
-                    op_dict['oid'] = op.pk
-                    op_dict['content'] = op.content
-                    option.append(op_dict)
-                    if op.NOID:
-                        op = Option.objects.get(pk=op.NOID)
-                    else:
-                        break
-                quei['option'] = option
-            next_id = choi.NQID
-
-
-        QList.append(quei)
-        if not next_id:
-            break
-        else:
-            que_id = next_id
+                que_id = next_id
     que_dict['QList'] = QList
     return que_dict
 

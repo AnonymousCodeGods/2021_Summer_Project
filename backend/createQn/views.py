@@ -10,9 +10,6 @@ import os
 # Create your views here.
 
 
-
-
-
 def saveQn(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
