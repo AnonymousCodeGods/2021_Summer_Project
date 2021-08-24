@@ -3,9 +3,9 @@
     <div class="head">
       <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:10%;height: 80%;left: 5%">
 
-      <el-badge :value="12" class="item">
-        <el-button size="small">消息</el-button>
-      </el-badge>
+<!--      <el-badge :value="12" class="item">-->
+<!--        <el-button size="small">消息</el-button>-->
+<!--      </el-badge>-->
       <div class="demo-type">
         <div>
           <el-avatar icon="el-icon-user-solid"></el-avatar>
@@ -21,7 +21,7 @@
           <el-card style="width: 1200px;height: 100%" :body-style="{ padding: '0px' }">
             <div slot="header" class="clearfix">
               <span> {{ this.que.title }} </span>
-              <el-button style="float: right;" type="primary" @click="ExportData">导出数据</el-button>
+<!--              <el-button style="float: right;" type="primary" @click="ExportData">导出数据</el-button>-->
             </div>
             <div v-for="(item,index) in que.QList" :key="item.qid" style="margin: 20px;">
               <div >

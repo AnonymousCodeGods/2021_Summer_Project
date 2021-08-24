@@ -19,7 +19,8 @@ Vue.use(vuedraggable);
 Vue.prototype.$axios = axios
 
 Vue.use(VueCookies)
-axios.defaults.baseURL="http://35.229.157.90:8000/";
+// axios.defaults.baseURL="http://35.229.157.90:8000/";
+axios.defaults.baseURL="http://172.16.1.26:8000/";
 
 new Vue({
   axios,

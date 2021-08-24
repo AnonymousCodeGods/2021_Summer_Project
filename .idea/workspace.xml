@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="" />
+    <list default="true" id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Result.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Result.vue" afterDir="false" />
+    </list>
     <list id="7a3cd647-e299-426e-8574-ee29d86c3a2e" name="Changes by zhang" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +93,7 @@
       <workItem from="1629721800337" duration="11616000" />
       <workItem from="1629734119170" duration="6398000" />
       <workItem from="1629740774256" duration="1473000" />
-      <workItem from="1629769065455" duration="640000" />
+      <workItem from="1629769065455" duration="1320000" />
     </task>
     <servers />
   </component>
