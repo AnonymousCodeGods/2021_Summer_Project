@@ -209,6 +209,9 @@ export default {
                 type: 'error',
                 position: 'bottom-left'
               });
+              this.$router.push({
+                path: '/successResult',
+              })
             }
           })
           .catch(() => {
