@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-card style="width: 800px; margin: auto"  v-loading.fullscreen.lock="fullscreenLoading">
+    <div class="row" id="pdfDom">
       <div slot="header" class="clearfix">
         <span style="font-size: larger">{{que.title}}</span>
       </div>
@@ -60,8 +61,10 @@
           </div>
         </div>
       </div>
+      </div>
       <div style="margin-top: 30px">
         <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="submitQn">提交</el-button>
+        <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="getPdf('问卷')">导出pdf</el-button>
       </div>
     </el-card>
   </div>
@@ -92,8 +95,7 @@ export default {
                 })
               }
               this.que.QList.push({
-                qtid:i,
-                qid:temp1.qid,
+                qid:i,
                 type:temp1.type,
                 title: temp1.title,
                 option:optionTemp,
@@ -127,8 +129,7 @@ export default {
             }
             else{
               this.que.QList.push({
-                qtid:i,
-                qid:temp1.qid,
+                qid:i,
                 type:temp1.type,
                 title: temp1.title,
                 rating : 0
@@ -145,7 +146,7 @@ export default {
             position: 'bottom-left'
           });
           this.fullscreenLoading=false
-          //this.$router.push('/');
+          this.$router.push('/');
         })
   },
   data: function(){
@@ -209,6 +210,7 @@ export default {
                 type: 'error',
                 position: 'bottom-left'
               });
+              this.$router.push('/');
             }
           })
           .catch(() => {
@@ -221,12 +223,7 @@ export default {
             this.fullscreenLoading=false
             this.$router.push('/');
           })
-      this.$router.push({
-        path: '/',
-        query: {
-          id:this.que.qnid
-        }
-      })
+      this.$router.push('/successResult');
     }
   }
 }
