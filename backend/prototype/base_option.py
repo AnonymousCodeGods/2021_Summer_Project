@@ -104,6 +104,7 @@ def get_questionnaire(QnId):
     que_dict = {}
     que_dict['qnid'] = QnId
     que_dict['title'] = questionnaire.title
+    que_dict['state'] = questionnaire.isPublished
     QList = []
     if que_id:
         while True:
