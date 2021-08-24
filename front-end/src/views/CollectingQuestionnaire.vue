@@ -152,7 +152,7 @@ export default {
     return {
       que: {
         qnid: 0,
-        title: "测试问卷",
+        title: "test",
         QList: []
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
