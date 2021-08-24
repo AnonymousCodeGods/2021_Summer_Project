@@ -222,7 +222,7 @@ export default {
             this.$router.push('/');
           })
       this.$router.push({
-        path: '/showVoteResult',
+        path: '/',
         query: {
           id:this.que.qnid
         }
