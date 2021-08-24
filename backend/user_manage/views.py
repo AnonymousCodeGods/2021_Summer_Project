@@ -2,6 +2,7 @@ from django.shortcuts import render
 from prototype.models import User,Questionnaire
 import simplejson
 from django.http import JsonResponse, HttpResponse, FileResponse
+import datetime
 # Create your views here.
 
 def register(request):
@@ -51,7 +52,7 @@ def get_quizs(quens):
         quiz['name'] = quen.title
         quiz['ID'] = quen.id
         quiz['state'] = quen.isPublished
-        quiz['createDate'] = quen.createTime
+        quiz['createDate'] = quen.createTime+datetime.timedelta(hours=8)
         quiz['pubDate'] = quen.publishTime
         quiz['bin'] = quen.isDeleted
         quiz['num'] = quen.recoverNum
