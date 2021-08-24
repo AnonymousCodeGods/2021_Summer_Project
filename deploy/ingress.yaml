@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    cloud.google.com/load-balancer-type: "External"
+    kubernetes.io/ingress.class: "gce"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /backend
+            backend:
+              serviceName: backend-service
+              servicePort: 8000
+          - path: /frontend
+            backend:
+              serviceName: frontend-service
+              servicePort: 8080
