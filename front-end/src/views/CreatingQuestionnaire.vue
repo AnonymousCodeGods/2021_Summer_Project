@@ -228,6 +228,9 @@ export default {
                 })
               }
             }
+            for(let i = 0; i < this.que.QList.length; i++) {
+        this.que.QList[i].qid=i;
+      }
             this.fullscreenLoading=false
           })
           .catch(() => {
