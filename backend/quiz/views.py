@@ -5,16 +5,28 @@ from prototype.models import Questionnaire,User,ChoiceQuestion,Complition,Option
 import django.utils.timezone as timezone
 from prototype.base_option import complition_create,get_questionnaire,choice_create,questionnaire_create,delete_questionnaire,get_options
 # Create your views here.
+import django.utils.timezone
 from django.db.models import F
 import os
+import datetime
+from collections import Counter
 # Create your views here.
+
+
+
 def submitQn(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
+        print("****************************************************************")
         print(r)
+        quen = get_questionnaire(r['qnid'])
+        print(quen)
+        QList = quen['QList']
+        i = 0
         AnswerList = r['AnswerList']
         for ans in AnswerList:
-            qid = ans['qid']
+            qid = QList[i]['qid']
+            i = i+1
             type = ans['type']
             answer = ans['answer']
             choi = None
@@ -84,7 +96,6 @@ def result(request):
         qnid = r['ID']
         quen = get_questionnaire(qnid)
         QList = quen['QList']
-        print(QList)
         for q in QList:
             Answeri = {}
             Answeri['type'] = q['type']
@@ -114,6 +125,7 @@ def result(request):
                 answers = Answer.objects.filter(CMP=comp)
                 for answer in answers:
                     input.append(answer.content)
+
                 Answeri['input'] = input
             AnswerList.append(Answeri)
         return JsonResponse({'AnswerList':AnswerList})
@@ -124,15 +136,74 @@ def publish(request):
         print(r)
         quen = Questionnaire.objects.get(id=r['ID'])
         quen.isPublished = True
+        quen.publishTime = django.utils.timezone.now()+datetime.timedelta(hours=8)
         quen.save()
     return JsonResponse({'success':True})
+
+def recycle(request):
+    if request.method == 'POST':
+        r = simplejson.loads(request.body)
+        print(r)
+        quen = Questionnaire.objects.get(id=r['ID'])
+        quen.isDeleted = True
+
+        quen.save()
+        print(quen.isDeleted)
+    return JsonResponse({'success': True})
+
+def recover(request):
+    if request.method == 'POST':
+        r = simplejson.loads(request.body)
+        print(r)
+        quen = Questionnaire.objects.get(id=r['ID'])
+        quen.isDeleted = False
+        quen.save()
+        print(quen.isDeleted)
+    return JsonResponse({'success': True})
 
 def suspend(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
         print(r)
         quen = Questionnaire.objects.get(id=r['ID'])
-        quen.isDeleted = True
+        quen.isPublished = False
         quen.save()
+        print(quen.isDeleted)
     return JsonResponse({'success': True})
 
+def clear(request):
+    if request.method == 'POST':
+        r = simplejson.loads(request.body)
+        print(r)
+        quen = get_questionnaire(r['qnid'])
+        print(quen)
+        QList = quen['QList']
+        for q in QList:
+            type = q['type']
+            if type in[0,1,3]:
+                choi = ChoiceQuestion.objects.get(id=q['qid'])
+                choi.participantsNum = 0
+                choi.save()
+                if type != 3:
+                    option = q['option']
+                    for opt in option:
+                        op = Option.objects.get(pk=opt['oid'])
+                        op.selectedNum = 0
+                        op.save()
+                else:
+                    star = StarNum.objects.get(CH=choi)
+                    star.zero_star = 0
+                    star.one_star = 0
+                    star.two_star = 0
+                    star.three_star = 0
+                    star.four_star = 0
+                    star.five_star = 0
+                    star.save()
+                    pass
+                pass
+            else:
+                comp = Complition.objects.get(pk=q['qid'])
+                Answer.objects.filter(CMP=comp).delete()
+                comp.participantsNum = 0
+                comp.save()
+    return JsonResponse({'success': True})
