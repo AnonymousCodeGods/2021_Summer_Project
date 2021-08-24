@@ -201,6 +201,9 @@ export default {
                 type: 'success',
                 position: 'bottom-left'
               });
+              this.$router.push({
+                path: '/successResult',
+              })
             }
             else {
               this.$notify({
@@ -209,9 +212,6 @@ export default {
                 type: 'error',
                 position: 'bottom-left'
               });
-              this.$router.push({
-                path: '/successResult',
-              })
             }
           })
           .catch(() => {
@@ -225,7 +225,7 @@ export default {
             this.$router.push('/');
           })
       this.$router.push({
-        path: '/showVoteResult',
+        path: '/',
         id:this.que.qnid
       })
     }
