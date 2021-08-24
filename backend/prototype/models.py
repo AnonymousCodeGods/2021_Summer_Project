@@ -86,3 +86,12 @@ class StarNum(models.Model):
     three_star = models.IntegerField(null=True,default=0)
     four_star = models.IntegerField(null=True,default=0)
     five_star = models.IntegerField(null=True,default=0)
+
+class RealNameAnswer(models.Model):
+    USER = models.ForeignKey('User',on_delete=models.CASCADE)
+    answer = models.TextField()
+    QID = models.CharField(max_length=32)
+    Score = models.IntegerField(default=0,null=True)
+
+
+

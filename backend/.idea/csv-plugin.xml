@@ -24,6 +24,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\getQn\views.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\prototype\base_option.py">
           <value>
             <Attribute>

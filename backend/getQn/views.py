@@ -17,3 +17,10 @@ def getQn(request):
         print(QnId)
         que = get_questionnaire(QnId)
         return JsonResponse({'que':que})
+    if request.method == 'GET':
+        r = simplejson.loads(request.body)
+        print(r)
+        QnId = r['QnId']
+        print(QnId)
+        que = get_questionnaire(QnId)
+        return JsonResponse({'que':que})

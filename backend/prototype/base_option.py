@@ -93,7 +93,7 @@ def questionnaire_create(dict):
             insList[i].NQID = insList[i+1].CMPID
 
         insList[i].save()
-        quesn.save()
+    quesn.save()
     return quesn
 
 
