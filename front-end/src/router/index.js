@@ -24,7 +24,7 @@ const routes = [
   },
   {
     path: '/collectingQuestionnaire' ,
-    name: 'CollectingQuestionnaire' ,
+    name: 'Collect' ,
     component: () => import('../views/CollectingQuestionnaire')
   },
   {
@@ -56,6 +56,16 @@ const routes = [
     path: '/showVoteResult' ,
     name: 'ShowVoteResult' ,
     component: () => import('../views/ShowVoteResult')
+  },
+  {
+    path: '/successResult' ,
+    name: 'SuccessResult' ,
+    component: () => import('../views/successResult')
+  },
+  {
+    path: '/failedResult' ,
+    name: 'FailedResult' ,
+    component: () => import('../views/failedResult')
   }
 ]
 

@@ -20,13 +20,13 @@
         <div style="display: flex;justify-content: left;margin-top: 60px; ">
           <el-card style="width: 1200px;height: 100%" :body-style="{ padding: '0px' }">
             <div slot="header" class="clearfix">
-              <span> {{ que.title }} </span>
+              <span> {{ this.que.title }} </span>
               <el-button style="float: right;" type="primary" @click="ExportData">导出数据</el-button>
             </div>
-            <div v-for="item in que.QList" :key="item.id" style="margin: 20px;">
+            <div v-for="(item,index) in que.QList" :key="item.qid" style="margin: 20px;">
               <div >
                 <div class="queLabel">
-                  {{ item.id + 1 }}.{{ item.title }}
+                  {{ index + 1 }}.{{ item.title }}
                 </div>
 <!--                单选多选-->
                 <div v-if="item.type===0||item.type===1" style="margin-left: 5%;margin-right: 5%;text-align: center">
@@ -36,13 +36,13 @@
                           margin-left: fill
                           border
                           stripe
-                          :data="item.options"
+                          :data="item.option"
                           style="width: 100%"
                           :summary-method="getSummaries"
                           show-summary>
                         <el-table-column
                             align="center"
-                            prop="text"
+                            prop="content"
                             label="选项"
                             sortable
                         >
@@ -102,13 +102,13 @@
                           margin-left: fill
                           border
                           stripe
-                          :data="item.options"
+                          :data="item.option"
                           style="width: 100%"
                           :summary-method="getSummaries"
                           show-summary>
                         <el-table-column
                             align="center"
-                            prop="rate"
+                            prop="content"
                             sortable
                             label="分数"
                         >
@@ -123,6 +123,7 @@
                         <el-table-column
                             show-overflow-tooltip
                             prop="percentage"
+                            align="center"
                             label="比例"
                             >
                           <template slot-scope="scope">
@@ -157,26 +158,51 @@ export default {
   },
   created() {
     this.fullscreenLoading=true;
-    this.que.qid=this.$route.query.ID
+    this.que.qid=this.$route.query.id
     this.$axios({
       method:"post",
       //todo: url
       url:"/getQn",
-      data:{"ID": this.que.qid}
+      data:{"QnId": this.que.qid}
     })
         .then(res => {
           this.que.title=res.data.que.title
-          this.que.QList=res.data.que.QList
-        })
-        .catch(() => {
-          this.$notify({
-            title: '失败',
-            message: '连接失败',
-            type: 'error',
-            position: 'bottom-left'
-          });
+          for (let i = 0; i < res.data.que.QList.length; i++) {
+            if(res.data.que.QList[i].type===0||res.data.que.QList[i].type===1){
+              this.que.QList.push({
+                qid:res.data.que.QList[i].qid,
+                total:0,
+                type:res.data.que.QList[i].type,
+                title:res.data.que.QList[i].title,
+                option:res.data.que.QList[i].option
+              })
+            }else if(res.data.que.QList[i].type===2){
+              this.que.QList.push({
+                qid:res.data.que.QList[i].qid,
+                type:res.data.que.QList[i].type,
+                title:res.data.que.QList[i].title,
+                Inputlist:[]
+              })
+            }else{
+              this.que.QList.push({
+                qid:res.data.que.QList[i].qid,
+                total:0,
+                type:res.data.que.QList[i].type,
+                title:res.data.que.QList[i].title,
+                option:[]
+              })
+              for (let j = 0; j < 6; j++) {
+                this.que.QList[i].option.push({content:j+1,count:0,percentage:0})
+              }
+            }
+          }
           this.fullscreenLoading=false
         })
+        .catch(() => {
+          this.fullscreenLoading=false
+        })
+
+
     this.$axios({
           method:"post",
           //todo: url
@@ -184,93 +210,44 @@ export default {
           data:{"ID": this.que.qid}
     })
       .then(res => {
-        this.AnswerList=res.data.AnswerList
+        this.AnswerList=JSON.parse(JSON.stringify(res.data.AnswerList))
+        for (let i = 0; i < this.AnswerList.length; i++) {
+          if (this.AnswerList[i].type === 0 || this.AnswerList[i].type === 1 || this.AnswerList[i].type === 3) {
+            for (let j = 0; j < this.AnswerList[i].selection.length; j++) {
+
+              this.que.QList[i].option[j].count = this.AnswerList[i].selection[j];
+              this.que.QList[i].total += this.AnswerList[i].selection[j]
+            }
+          } else if (this.AnswerList[i].type === 2) {
+            for (let j = 0; j < this.AnswerList[i].input.length; j++)
+              this.que.QList[i].Inputlist.push({index:j+1,content:this.AnswerList[i].input[j]})
+          }
+        }
+
+        console.log(this.AnswerList)
+        console.log(this.que.QList)
+        for (let i = 0; i < this.AnswerList.length; i++) {
+          if(this.AnswerList[i].type===0||this.AnswerList[i].type===1||this.AnswerList[i].type===3){
+            for (let j = 0; j <this.que.QList[i].option.length; j++) {
+              this.que.QList[i].option[j].percentage=this.que.QList[i].option[j].count*100.0/this.que.QList[i].total
+            }
+          }
+        }
+
         this.fullscreenLoading=false
       })
       .catch(() => {
-          this.$notify({
-          title: '失败',
-          message: '连接失败',
-          type: 'error',
-          position: 'bottom-left'
-        });
         this.fullscreenLoading=false
       })
 
-    this.que= {
-      qid: 0,
-      title: "时间统计",
-      QList: [{
-        id: 0, type: 0, title: "第一题",total:0,
-        options:
-            [{id:0,text: "A", count: 0, percentage: 0},
-              {id:1,text: 'B', count: 0, percentage: "0"}
-            ]
-      }, {
-        id: 1, type: 1, title: "第二题",total:0,
-        options: [{id:0,text: "A", count: 0, percentage: "0"},
-          {id:1,text: 'B', count: 0, percentage: "0"}
-        ]
-      }, {
-        id: 2, type: 2, title: "第三题",
-        Inputlist:[]
-      }, {
-        id: 3, type: 3, title: "第四题",total:0,
-        options:[
-          {rate:1,count:0, percentage: "0"},
-          {rate:2,count:0, percentage: "0"},
-          {rate:3,count:0, percentage: "0"},
-          {rate:4,count:0, percentage: "0"},
-          {rate:5,count:0, percentage: "0"},
-        ]
-      }]
-    }
 
-    this.AnswerList=[
-      {
-        Qnum: 0,
-        type: 0,
-        selection: [2,2],
-      },{
-        Qnum: 1,
-        type: 1,
-        selection: [2,2],
-      },{
-        Qnum: 2,
-        type: 2,
-        input:['www','lll']
-      },{
-        Qnum: 3,
-        type: 3,
-        selection: [2,2,1,1,1],
-      }
-    ]
 
-    for (let i = 0; i < this.AnswerList.length; i++) {
-      if (this.AnswerList[i].type === 0 || this.AnswerList[i].type === 1 || this.AnswerList[i].type === 3) {
-        for (let j = 0; j < this.AnswerList[i].selection.length; j++) {
-          this.que.QList[i].options[j].count = this.AnswerList[i].selection[j]
-          this.que.QList[i].total += this.AnswerList[i].selection[j]
-        }
-      } else if (this.AnswerList[i].type === 2) {
-        for (let j = 0; j < this.AnswerList[i].input.length; j++)
-          this.que.QList[i].Inputlist.push({index:j+1,content:this.AnswerList[i].input[j]})
-      }
-    }
-
-    for (let i = 0; i < this.AnswerList.length; i++) {
-      if(this.que.QList[i].type===0||this.que.QList[i].type===1||this.que.QList[i].type===3){
-        for (let j = 0; j <this.que.QList[i].options.length; j++) {
-          this.que.QList[i].options[j].percentage=this.que.QList[i].options[j].count*100.0/this.que.QList[i].total
-        }
-      }
-    }
   },
   data() {
     return {
       que: {
         qid: '',
-        title: "测试问卷",
+        title: "",
         QList: []
       },
       fullscreenLoading: false,
@@ -313,7 +290,7 @@ export default {
     }
     ,
     toHome: function () {
-      this.$router.push("/");
+      this.$router.push("/home");
     },
     ExportData() {
       //TODO:导出数据

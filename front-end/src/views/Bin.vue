@@ -81,7 +81,7 @@
               label="恢复"
               min-width="4">
             <template slot-scope="scope">
-              <el-button type="success" size="mini" icon="el-icon-refresh-right" @click="recoverR(scope.row)">恢复
+              <el-button type="success" size="mini" icon="el-icon-refresh-right" @click="recoverR(scope.$index,scope.row)">恢复
               </el-button>
             </template>
           </el-table-column>
@@ -96,7 +96,7 @@
                            cancel-button-type="infomation"
                            icon="el-icon-info"
                            slot-scope="scope"
-                           @confirm="deleteR(scope.row)">
+                           @confirm="deleteR(scope.$index,scope.row)">
               <el-tooltip slot="reference" effect="dark" content="删除该问卷" placement="top">
                 <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
               </el-tooltip>
@@ -162,14 +162,17 @@ export default {
     // this.username = this.$cookies.get('username')
     this.$axios({
       method: "post",
-      data: {username: this.username,},
+      data: {userName: this.username},
       url: "/user_b/info",
     })
         .then(res => {
-          const binlist =res.data.quizs
+          console.log(res.data)
+          let binlist = [];
+          binlist = res.data.info.quizs//todo:bug
           for (let i = 0; i <binlist.length; i++) {
-            this.tableData.push({qnid:binlist[i].id,date:binlist[i].createDate,name:binlist[i].name,count:binlist[i].num})
+            this.tableData.push({qnid:binlist[i].ID,date:binlist[i].createDate,name:binlist[i].name,count:binlist[i].num})
           }
+          console.log(this.tableData)
           this.fullscreenLoading=false;
         })
         .catch(res => {
@@ -185,15 +188,7 @@ export default {
   },
   data() {
     return {
-      tableData: [
-        {
-          qnid:1,
-          date:'2021-8-21',
-          name:'时间统计',
-          count:5
-        }
-
-      ],
+      tableData: [],
       username: ''
     }
   },
@@ -204,7 +199,7 @@ export default {
         method: "post",
         data: {qnid: this.tableData[index].qnid},
         //todo: url
-        url: "",
+        url: "user_b/del",
       })
         .then(res => {
           if (res.data.success) {
@@ -217,7 +212,6 @@ export default {
           }
         })
         .catch(res => {
-          console.log(res)
           this.$notify({
             title: '错误',
             message: '连接失败',
@@ -227,14 +221,17 @@ export default {
           this.fullscreenLoading=false;
         });
       this.tableData.splice(this.tableData.indexOf(row), 1);
+      console.log(this.tableData)
     },
     recoverR(index, row) {
+      console.log(index)
+      console.log(this.tableData[index].qnid)
       this.fullscreenLoading=true;
       this.$axios({
         method: "post",
-        data: {qnid: this.tableData[index].qnid},
+        data: {ID: this.tableData[index].qnid},
         //todo: url
-        url: "",
+        url: "quiz/recover",
       })
           .then(res => {
             if (res.data.success) {
@@ -264,7 +261,7 @@ export default {
         method: "post",
         data: {qnid: this.tableData[index].qnid},
         //todo: url
-        url: "",
+        url: "quiz/clear",
       })
           .then(res => {
             if (res.data.success) {
@@ -287,7 +284,6 @@ export default {
             this.fullscreenLoading = false;
           });
       this.tableData[index].count = 0;
-      this.$set(this.tableData, index, row);
     },
     toInfo: function () {
       this.$router.push("/info");
@@ -297,8 +293,7 @@ export default {
     },
     logout(command) {
       console.log(command);
-      this.$cookies.remove('username');
-      this.$router.push("/");
+      this.$router.push("/login");
     },
   }
 }

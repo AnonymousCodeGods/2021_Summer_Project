@@ -33,8 +33,10 @@ export default {
   name: 'CQue',
   created() {
     this.fullscreenLoading=true
-    this.$axios({method:"post",url:"/getResult", data:{"QnId": this.$route.query.id}})
+    console.log( this.$route.query.id)
+    this.$axios({method:"post",url:"/quiz/result", data:{"ID": this.$route.query.id}})
         .then(res => {
+          console.log( res)
           this.que.QList=[]
           this.que.qnid = res.data.que.qnid;
           this.que.title = res.data.que.title;

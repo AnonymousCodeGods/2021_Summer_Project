@@ -3,7 +3,7 @@
     <div style="display: flex;justify-content: center;margin-top: 150px">
       <el-card style="width: 400px">
         <div slot="header" class="clearfix">
-          <el-page-header @back="$router.push('./Login')" content="注册">
+          <el-page-header @back="$router.push('./')" content="注册">
           </el-page-header>
         </div>
         <table style="border-spacing: 20px">
@@ -23,6 +23,18 @@
             <td>确认密码</td>
             <td>
               <el-input type="password" v-model="confirmPassword" placeholder="请再次输入密码"></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td>手机号</td>
+            <td>
+              <el-input type="password" v-model="phone" placeholder="请输入手机号"></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td>邮箱</td>
+            <td>
+              <el-input type="password" v-model="mail" placeholder="请输入邮箱"></el-input>
             </td>
           </tr>
           <tr>
@@ -46,6 +58,8 @@ export default {
       username: '',
       password: '',
       confirmPassword: '',
+      phone:'',
+      mail:'',
       fullscreenLoading: false
     }
   },
@@ -91,7 +105,7 @@ export default {
         this.$axios({
           method: "post",
           url: "/user/register",
-          data: {userName: this.username, pwd: this.password,sex: true,phone: 111111,mail:"sdsd@qq.com"}
+          data: {userName: this.username, pwd: this.password,sex: true,phone: this.phone,mail:this.mail}
         })
             .then(res => {
               console.log(res)
@@ -102,7 +116,7 @@ export default {
                   position: 'bottom-left',
                   type: "success"
                 });
-                router.push('/Login')
+                router.push('/')
               } else {
                 this.$notify({
                   title: '失败',

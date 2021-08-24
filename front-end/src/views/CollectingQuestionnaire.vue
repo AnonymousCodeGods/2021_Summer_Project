@@ -74,6 +74,9 @@ export default {
     this.fullscreenLoading=true;
     this.$axios({method:"post",url:"/getQn", data:{"QnId": this.$route.query.id}})
         .then(res => {
+          if(res.data.que.state === false){
+            this.$router.push('/failedResult');
+          }
           this.que.QList=[]
           this.que.qnid = res.data.que.qnid;
           this.que.title = res.data.que.title;
@@ -220,7 +223,9 @@ export default {
           })
       this.$router.push({
         path: '/showVoteResult',
-        id:this.que.qnid
+        query: {
+          id:this.que.qnid
+        }
       })
     }
   }

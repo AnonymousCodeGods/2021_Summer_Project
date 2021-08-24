@@ -1,4 +1,3 @@
-
 <template>
   <div id="sentout" :style="heightAndWidth">
     <div class="head">
@@ -14,7 +13,7 @@
         </div>
       </div>
 
-      <a style="position:absolute;top:25%;height: 80%;left: 90%">{{this.$store.state.username}}</a>
+      <a style="position:absolute;top:25%;height: 80%;left: 90%">{{ this.$store.state.username }}</a>
     </div>
     <div class="body">
       <el-col :span="24">
@@ -28,8 +27,8 @@
                 <div style="
                 width: 300px;height: 300px;
                 display: table-cell;vertical-align: middle;
-                text-align: center;border-radius: 4px;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)" >
-                  <img alt="QR code" src="../assets/QRcode.jpg" style="height: 90%;width: 90%">
+                text-align: center;border-radius: 4px;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)">
+                  <div class="qrcode" ref="qrCodeUrl"></div>
                 </div>
               </el-col>
               <el-col :span="14">
@@ -58,29 +57,49 @@
 </template>
 
 <script>
+import QRCode from 'qrcodejs2'
+
 export default {
   name: "SentOut",
   data() {
-    return{
-      heightAndWidth: 'margin:0; height:'+
-          (window.innerHeight).toString()+
-          'px; width:'+
-          (window.innerWidth).toString()+
+    return {
+      id: '',
+      heightAndWidth: 'margin:0; height:' +
+          (window.innerHeight).toString() +
+          'px; width:' +
+          (window.innerWidth).toString() +
           'px;',
-      address: 'https://www.wjx.top/jq/52268413.aspx',
+      address: '',
     }
   },
-  methods:{
-    toInfo:function (){
+  created() {
+    this.id = this.$route.query.id;
+    this.address = 'localhost:8080/collectingQuestionnaire?id=' + this.id;
+  },
+  methods: {
+    toInfo: function () {
       this.$router.push("/info");
     },
-    toHome:function (){
-      this.$router.push("/");
+    toHome: function () {
+      this.$router.push("/home");
     },
-    toBin:function (){
+    toBin: function () {
       this.$router.push("/bin");
-    }
-  }
+    },
+    creatQrCode() {
+      const qrcode = new QRCode(this.$refs.qrCodeUrl, {
+        text: this.address, // 需要转换为二维码的内容
+        width: 200,
+        height: 200,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    },
+  },
+  mounted() {
+    this.creatQrCode();
+  },
 }
 </script>
 
@@ -88,9 +107,13 @@ export default {
 .bg-purple {
   background: #d3dce6;
 }
+
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
+}
+.qrcode{
+  margin-left: 18%;
 }
 
 .head {
@@ -100,7 +123,6 @@ export default {
   height: 8%;
   width: 100%;
   background-color: #ffffff;
-//border:2px solid #000000;
 }
 
 .body {

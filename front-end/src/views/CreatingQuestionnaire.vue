@@ -352,13 +352,13 @@ export default {
           .then(res => {
             this.$notify({
               title: '成功',
-              message: flag?'发布':'保存'+'问卷成功',
+              message: flag?'创建':'保存'+'问卷成功',
               type: 'success',
               position: 'bottom-left'
             });
             this.fullscreenLoading = false
             if(flag) {
-              this.$router.push("/")
+              this.$router.push("/home")
             } else {
               this.getQn(res.data.qnid)
             }
