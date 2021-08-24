@@ -62,6 +62,7 @@
       </div>
       <div style="margin-top: 30px">
         <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="submitQn">提交</el-button>
+        <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="getPdf('问卷')">导出pdf</el-button>
       </div>
     </el-card>
   </div>
@@ -145,7 +146,7 @@ export default {
             position: 'bottom-left'
           });
           this.fullscreenLoading=false
-          //this.$router.push('/');
+          this.$router.push('/');
         })
   },
   data: function(){
@@ -221,12 +222,7 @@ export default {
             this.fullscreenLoading=false
             this.$router.push('/');
           })
-      this.$router.push({
-        path: '/',
-        query: {
-          id:this.que.qnid
-        }
-      })
+      this.$router.push('/successResult');
     }
   }
 }
