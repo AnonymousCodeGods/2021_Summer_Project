@@ -9,13 +9,15 @@
     <div class="midText"></div>
     <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;cursor:pointer;" @click="del">删除</a>
     <img src="../assets/del.png" style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
-    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="pub"
+    <a style="float:right;padding-right: 80px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="pub"
        v-if="state===false">发布</a>
-    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;"
+    <a style="float:right;padding-right: 80px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;"
        @click="suspend"
        v-else>暂停</a>
-    <img src="../assets/open.png"
-         style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
+    <img src="../assets/suspend.png" v-if="state===true"
+         style="float:right;padding-right: 0;padding-top: 61px;height: 20px;cursor:pointer;">
+    <img src="../assets/open.png" v-else
+         style="float:right;padding-right: 0;padding-top: 61px;height: 20px;cursor:pointer;">
     <a class="fun" style="float: right;padding-right: 190px;padding-top: 58px" @click="edit"
        @mouseover="mouseOver($event)"
        @mouseleave="mouseLeave($event)">编辑问卷</a>
@@ -106,37 +108,57 @@ export default {
       });
     },
     toResult() {
-      this.$router.push({
-        path: "/result",
-        query: {
-          id: this.id
-        }
-      });
+      if (this.num !== '0') {
+        this.$router.push({
+          path: "/result",
+          query: {
+            id: this.id
+          }
+        });
+      } else {
+        this.$notify({
+          title: '抱歉',
+          message: '暂时没有答卷',
+          position: 'bottom-left',
+          type: "warning"
+        });
+      }
+
     },
     exported() {
+      if (this.num !== '0') {
+        this.$axios.post('/quiz/result', {"ID": this.id})
+            .then(result => {
+              this.json_data = result.data.AnswerList;
+              for (let i = 0; i < this.json_data.length; i++) {
+                this.json_data[i].Qnum = i+1;
+                console.log(this.json_data[i].type === 0)
+                if (this.json_data[i].type === 0)
+                  this.json_data[i].type = '单选';
+                else if (this.json_data[i].type === 1)
+                  this.json_data[i].type = '多选';
+                else if (this.json_data[i].type === 2)
+                  this.json_data[i].type = '填空';
+                else if (this.json_data[i].type === 3)
+                  this.json_data[i].type = '评分';
+              }
+              console.log(this.json_data)
+            });
+        this.json_fields = {
+          'num': 'Qnum',
+          'type': 'type',
+          'answer': 'selection',
+          'input': 'input'
 
-      this.json_fields = {
-        'Complete name': 'name',
-        'City': 'city',
-        'Telephone': 'phone.mobile',
-        'Telephone 2': {
-          field: 'phone.landline',
-          callback: (value) => {
-            return `Landline Phone - ${value}`;
-          }
-        },
-      };
-      this.json_data = [
-        {
-          'name': 'Tony Pena',
-          'city': 'New York',
-          'country': 'United States',
-          'birthdate': '1978-03-15',
-          'phone': {
-            'mobile': '1-541-754-3010',
-            'landline': '(541) 754-3010'
-          }
-        }];
+        };
+      } else {
+        this.$notify({
+          title: '抱歉',
+          message: '暂时没有答卷',
+          position: 'bottom-left',
+          type: "warning"
+        });
+      }
     },
     links() {
       this.$router.push({path: "/sentout", query: {id: this.id}});

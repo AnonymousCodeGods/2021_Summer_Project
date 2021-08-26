@@ -3,9 +3,9 @@
     <div class="head">
       <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:10%;height: 85%;left: 5%">
 
-      <el-badge :value="12" class="item">
-        <el-button size="small">消息</el-button>
-      </el-badge>
+<!--      <el-badge :value="12" class="item">-->
+<!--        <el-button size="small">消息</el-button>-->
+<!--      </el-badge>-->
 
       <div class="demo-type">
         <div>
@@ -335,8 +335,11 @@ export default {
       } else {
         if (this.state === '状态') {
           this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1)
-        } else {
-          this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1 && item.state === this.state)
+        } else if(this.state === '已发布') {
+          this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1 && item.state === true)
+        }
+        else{
+          this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1 && item.state === false)
         }
 
         this.total = this.myList.length;

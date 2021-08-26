@@ -56,11 +56,21 @@ const routes = [
     path: '/showVoteResult' ,
     name: 'ShowVoteResult' ,
     component: () => import('../views/ShowVoteResult')
+  },
+  {
+    path: '/successResult' ,
+    name: 'SuccessResult' ,
+    component: () => import('../views/successResult')
+  },
+  {
+    path: '/failedResult' ,
+    name: 'FailedResult' ,
+    component: () => import('../views/failedResult')
   }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes
 })

@@ -1,101 +1,103 @@
 <template>
-  <div>
+  <div style="height: 100%;width: 100%;position:fixed;overflow:scroll">
     <el-dialog :visible="titleEditDialog" :show-close="false">
       <div slot="title">编辑题目</div>
       <el-input type="textarea" v-model="editingTitle" style="margin-bottom: 30px;width: 80%"/>
       <el-button v-on:click="doneTitleEdit" style="width: 60%" type="success" icon="el-icon-check"></el-button>
     </el-dialog>
-    <el-card style="width: 800px; margin: auto"  v-loading.fullscreen.lock="fullscreenLoading">
-      <div slot="header" class="clearfix">
-        <span style="font-size: larger">{{que.title}}</span>
-      </div>
-      <vuedraggable v-model="que.QList" chosenClass="ghost" handle=".drag" force-fallback="true" animation="400" @start="onStart" @end="onEnd" style="display:table;width:100%">
-        <tbody is="transition-group">
-          <div v-for="item in que.QList"
-               :key="item.qtid" class="move">
-            <el-card style="margin: 15px;cursor: move"
-                     shadow="hover">
-              <el-button type="text" icon="el-icon-rank" class="drag"></el-button>
-              <div style="float: right;margin-right: 12px">
-                <el-button type="text" icon="el-icon-document-copy" v-on:click="copyQuestion(item)"></el-button>
-                <el-button type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
-              </div>
-              <div v-if="item.type===0" class="queLabel">
-                <div>
-                  <span style="line-height: 30px;">
-                  <el-tag size="small">单选</el-tag>
-                  {{item.qtid+1}}.{{item.title}}
-                  <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
-                </span>
-                  <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
-                    <el-input v-for="subItem in item.option"
-                              :key="subItem.oid"
-                              v-model="subItem.content"
-                              maxlength="28"
-                              style="width: 100%;margin-bottom: 10px">
-                      <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
-                    </el-input>
-                    <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
-                  </div>
+    <div style="position:fixed;overflow:scroll;height: 100%;width: 100%">
+      <el-card style="width:800px;margin: auto" v-loading.fullscreen.lock="fullscreenLoading">
+        <div slot="header" class="clearfix">
+          <el-input style="font-size: larger" v-model="que.title"></el-input>
+        </div>
+        <vuedraggable v-model="que.QList" chosenClass="ghost" handle=".drag" :scroll-sensitivity="150" force-fallback="true" animation="400" @start="onStart" @end="onEnd" style="display:table;width:100%">
+          <tbody is="transition-group">
+            <div v-for="item in que.QList"
+                 :key="item.qid" class="move">
+              <el-card style="margin: 15px;cursor: move"
+                       shadow="hover">
+                <el-button type="text" icon="el-icon-rank" class="drag"></el-button>
+                <div style="float: right;margin-right: 12px">
+                  <el-button type="text" icon="el-icon-document-copy" v-on:click="copyQuestion(item)"></el-button>
+                  <el-button type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
                 </div>
-              </div>
-              <div v-if="item.type===1" class="queLabel">
-                <div>
-                  <span style="line-height: 30px;">
-                      <el-tag size="small" type="success">多选</el-tag>
-                      {{item.qtid+1}}.{{item.title}}
-                      <el-link icon="el-icon-edit" :underline="false"  v-on:click="initialTitleEdit(item)"></el-link>
+                <div v-if="item.type===0" class="queLabel">
+                  <div>
+                    <span style="line-height: 30px;">
+                    <el-tag size="small">单选</el-tag>
+                    {{item.qid+1}}.{{item.title}}
+                    <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
                   </span>
-                  <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
-                    <el-input v-for="subItem in item.option"
-                              :key="subItem.oid"
-                              v-model="subItem.content"
-                              maxlength="28"
-                              style="width: 100%;margin-bottom: 10px">
-                      <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
-                    </el-input>
-                    <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
+                    <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
+                      <el-input v-for="subItem in item.option"
+                                :key="subItem.oid"
+                                v-model="subItem.content"
+                                maxlength="28"
+                                style="width: 100%;margin-bottom: 10px">
+                        <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
+                      </el-input>
+                      <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div v-if="item.type===2" class="queLabel">
-                <div style="margin-top: 10px">
-                  <el-tag size="small" type="info">填空</el-tag>
-                  {{item.qtid+1}}.{{item.title}}
-                  <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+                <div v-if="item.type===1" class="queLabel">
+                  <div>
+                    <span style="line-height: 30px;">
+                        <el-tag size="small" type="success">多选</el-tag>
+                        {{item.qid+1}}.{{item.title}}
+                        <el-link icon="el-icon-edit" :underline="false"  v-on:click="initialTitleEdit(item)"></el-link>
+                    </span>
+                    <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
+                      <el-input v-for="subItem in item.option"
+                                :key="subItem.oid"
+                                v-model="subItem.content"
+                                maxlength="28"
+                                style="width: 100%;margin-bottom: 10px">
+                        <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
+                      </el-input>
+                      <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div v-if="item.type===3" class="queLabel">
-                <div style="margin-top: 10px">
-                  <el-tag size="small" type="warning">评分</el-tag>
-                  {{item.qtid+1}}.{{item.title}}
-                  <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+                <div v-if="item.type===2" class="queLabel">
+                  <div style="margin-top: 10px">
+                    <el-tag size="small" type="info">填空</el-tag>
+                    {{item.qid+1}}.{{item.title}}
+                    <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+                  </div>
                 </div>
-              </div>
-            </el-card>
-          </div>
-        </tbody>
-      </vuedraggable>
-      <div style="margin-top: 30px">
-        <el-button plain type="primary" style="width: 15%" icon="el-icon-download" v-on:click="uploadQn(false)"></el-button>
-        <el-popover
-            style="margin: 20px"
-            placement="top"
-            width="150"
-            v-model="addQuestionVisible">
-          <div >
-            <el-button plain type="primary" v-on:click="addSingleChoice">单选</el-button>
-            <el-button plain type="success" style="margin-left: 10px" v-on:click="addMultiChoice">多选</el-button>
-          </div>
-          <div style="margin-top: 10px">
-            <el-button plain type="info" v-on:click="addSpaceFilling">填空</el-button>
-            <el-button plain type="warning" style="margin-left: 10px" v-on:click="addRating">评分</el-button>
-          </div>
-          <el-button plain type="success" style="width: 15%" icon="el-icon-plus" v-on:click="addQuestionDialog=true" slot="reference"></el-button>
-        </el-popover>
-        <el-button plain type="danger" style="width: 15%" icon="el-icon-upload2" v-on:click="uploadQn(true)"></el-button>
-      </div>
-    </el-card>
+                <div v-if="item.type===3" class="queLabel">
+                  <div style="margin-top: 10px">
+                    <el-tag size="small" type="warning">评分</el-tag>
+                    {{item.qid+1}}.{{item.title}}
+                    <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+                  </div>
+                </div>
+              </el-card>
+            </div>
+          </tbody>
+        </vuedraggable>
+        <div style="margin-top: 30px">
+          <el-button plain type="primary" style="width: 15%" icon="el-icon-download" v-on:click="uploadQn(false)"></el-button>
+          <el-popover
+              style="margin: 20px"
+              placement="top"
+              width="150"
+              v-model="addQuestionVisible">
+            <div >
+              <el-button plain type="primary" v-on:click="addSingleChoice">单选</el-button>
+              <el-button plain type="success" style="margin-left: 10px" v-on:click="addMultiChoice">多选</el-button>
+            </div>
+            <div style="margin-top: 10px">
+              <el-button plain type="info" v-on:click="addSpaceFilling">填空</el-button>
+              <el-button plain type="warning" style="margin-left: 10px" v-on:click="addRating">评分</el-button>
+            </div>
+            <el-button plain type="success" style="width: 15%" icon="el-icon-plus" v-on:click="addQuestionDialog=true" slot="reference"></el-button>
+          </el-popover>
+          <el-button plain type="danger" style="width: 15%" icon="el-icon-upload2" v-on:click="uploadQn(true)"></el-button>
+        </div>
+      </el-card>
+    </div>
   </div>
 </template>
 
@@ -106,7 +108,7 @@ export default {
     vuedraggable,
   },
   created() {
-    if(this.$route.query.id !== '0') {
+    if(this.$route.query.id!== '0') {
       this.getQn(this.$route.query.id)
     } else if(this.que.qnid !== 0) {
       this.getQn(this.que.qnid)
@@ -226,6 +228,9 @@ export default {
                 })
               }
             }
+            for(let i = 0; i < this.que.QList.length; i++) {
+        this.que.QList[i].qid=i;
+      }
             this.fullscreenLoading=false
           })
           .catch(() => {
@@ -336,7 +341,6 @@ export default {
       }
       for(let i = num+2; i < this.que.QList.length; i++) {
         this.que.QList[i].qid++
-        this.que.QList[i].qtid++
       }
     },
     uploadQn(flag){
@@ -351,13 +355,13 @@ export default {
           .then(res => {
             this.$notify({
               title: '成功',
-              message: flag?'发布':'保存'+'问卷成功',
+              message: flag?'创建':'保存'+'问卷成功',
               type: 'success',
               position: 'bottom-left'
             });
             this.fullscreenLoading = false
             if(flag) {
-              this.$router.push("/")
+              this.$router.push("/home")
             } else {
               this.getQn(res.data.qnid)
             }
@@ -378,7 +382,7 @@ export default {
     },
     onEnd() {
       for(let i = 0; i < this.que.QList.length; i++) {
-        this.que.QList[i].qid=i
+        this.que.QList[i].qid=i;
       }
       this.drag = false;
     },
@@ -403,6 +407,7 @@ export default {
   margin-left: 12px;
   cursor: move;
 }
+
 
 .ghost {
   opacity: 1;

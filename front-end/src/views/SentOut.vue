@@ -74,7 +74,7 @@ export default {
   },
   created() {
     this.id = this.$route.query.id;
-    this.address = 'localhost:8080/collectingQuestionnaire?id=' + this.id;
+    this.address = 'http://35.229.129.193:8080/#/collectingQuestionnaire?id=' + this.id;
   },
   methods: {
     toInfo: function () {

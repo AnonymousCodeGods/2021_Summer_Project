@@ -3,9 +3,9 @@
     <div class="head">
       <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:10%;height: 80%;left: 5%">
 
-      <el-badge :value="12" class="item">
-        <el-button size="small">消息</el-button>
-      </el-badge>
+<!--      <el-badge :value="12" class="item">-->
+<!--        <el-button size="small">消息</el-button>-->
+<!--      </el-badge>-->
 
       <div class="demo-type">
         <div>
@@ -30,9 +30,8 @@
       <div style="position: absolute;left: 30%;width: 60%;top: 7%">
         <el-descriptions title="个人信息" direction="vertical" :column="4" border>
           <el-descriptions-item label="用户名">{{ username }}</el-descriptions-item>
-          <el-descriptions-item label="手机号">{{ phone }}</el-descriptions-item>
-          <el-descriptions-item label="性别" :span="2">{{ sex=true?'男':'女' }}</el-descriptions-item>
-          <el-descriptions-item label="备注">
+          <el-descriptions-item label="手机号" :span="2">{{ phone }}</el-descriptions-item>
+          <el-descriptions-item label="备注" >
             <el-tag size="small">无</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="邮箱">{{ mail }}</el-descriptions-item>
