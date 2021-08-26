@@ -261,7 +261,7 @@ export default {
         method: "post",
         data: {qnid: this.tableData[index].qnid},
         //todo: url
-        url: "",
+        url: "quiz/clear",
       })
           .then(res => {
             if (res.data.success) {
@@ -284,7 +284,6 @@ export default {
             this.fullscreenLoading = false;
           });
       this.tableData[index].count = 0;
-      this.$set(this.tableData, index, row);
     },
     toInfo: function () {
       this.$router.push("/info");

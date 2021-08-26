@@ -164,7 +164,7 @@ export default {
     msg: String
   },
   created() {
-    console.log(this.$route.query)
+    // console.log(this.$route.query)
     this.username = this.$cookies.get('username')
     this.$axios.post('/user/info', {"userName": this.username})
         .then(result => {
@@ -204,11 +204,11 @@ export default {
   },
   methods: {
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      // console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       this.page = val;
-      console.log(`当前页: ${val}`);
+      // console.log(`当前页: ${val}`);
       this.list = [];
       if (val * 3 > this.total) {
         for (let i = val * 3 - 3; i < this.total; i++)
