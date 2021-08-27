@@ -287,7 +287,7 @@ export default {
           .then(res => {
             this.que.QList = [];
             this.que.qnType = res.data.que.qnType;
-            this.que.endTime = res.data.que.endTime;
+            this.que.showNumbers = res.data.que.showNumbers;
             this.que.qnId = res.data.que.qnId;
             this.que.title = res.data.que.title;
             for (let i = 0; i < res.data.que.QList.length; i++) {

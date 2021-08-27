@@ -86,6 +86,7 @@ export default {
           }
           this.que.QList=[]
           this.que.qnid = res.data.que.qnid;
+          this.que.showNumbers = res.data.showNumbers;
           this.que.title = res.data.que.title;
           for(let i=0;i<res.data.que.QList.length;i++){
             let temp1=res.data.que.QList[i];
