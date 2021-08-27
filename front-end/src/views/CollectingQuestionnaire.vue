@@ -39,7 +39,7 @@
               </el-radio-group>
             </div>
           </div>
-          
+
           <div v-if="item.type===1">
             <div class="queLabel">
               {{ item.qid + 1 }}.{{ item.title }}
@@ -104,6 +104,7 @@ export default {
           console.log(res.data.que)
           this.que.qnid = res.data.que.qnid;
           this.que.Qntype = res.data.que.Qntype;
+          this.que.showNumbers = res.data.showNumbers;
           this.que.title = res.data.que.title;
           for (let i = 0; i < res.data.que.QList.length; i++) {
             let temp1 = res.data.que.QList[i];
