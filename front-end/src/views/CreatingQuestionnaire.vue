@@ -8,7 +8,7 @@
       </el-dialog>
 
       <el-container style="width: 30%; ">
-        <el-aside width="200px" style="background-color: rgb(238, 241, 246);margin:auto">
+        <el-aside width="200px" style="background-color: white;margin-top: 20%;height: 100%">
           <el-menu :default-openeds="['1','2', '3']">
             <el-submenu index="1">
               <template slot="title"><i class="el-icon-s-tools"></i></template>
