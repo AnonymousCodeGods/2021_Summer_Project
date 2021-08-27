@@ -226,7 +226,6 @@ export default {
         showNumbers: true,
         qnType: 0,
         title: "holo",
-        type: 0,
         QList: [{
           qid: 0,
           type: 0,
@@ -503,30 +502,6 @@ export default {
     roll() {
       let temp = document.getElementById("Qn");
       temp.scrollTop = temp.scrollHeight + 1000;
-    },
-    handleClose() {
-      this.$confirm('确认取消创建问卷？')
-          .then(_ => {
-            this.dialogVisible = false
-          })
-          .catch(_ => {
-          });
-    },
-    handleConfirm() {
-      if (this.que.title === '') {
-        this.$notify({
-          title: '创建失败',
-          message: '标题不能为空',
-          position: 'bottom-left',
-          type: "error"
-        });
-      } else {
-        this.uploadQn(this.share)
-        if (this.share === true) {
-          this.$router.push('/');
-        }
-        this.dialogVisible = false
-      }
     }
   }
 }
