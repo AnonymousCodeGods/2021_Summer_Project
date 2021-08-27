@@ -82,9 +82,9 @@
                           active-color="#3292ff"
                           inactive-color="#99a9bf"
                           style="margin-left: 5%"
-                          active-text="人数限制"
-                          v-if="que.type ==='2' "
-                          inactive-text="无"/>
+                          active-text="限制人数"
+                          v-if="que.type ==='2'"
+                          inactive-text="开放填写"/>
                     </span>
 
                   <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
@@ -105,9 +105,9 @@
                       </el-input>
                       <el-input
                           v-if="item.isSumLimit"
-                          v-model="subItem.num"
+                          v-model="subItem.limit"
                           style="width: 17%;margin-bottom: 10px;margin-left: 5%"
-                          placeholder="limit:">
+                          placeholder="Limit:">
                       </el-input>
                     </div>
                     <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
@@ -120,16 +120,39 @@
                         <el-tag size="small" type="success">多选</el-tag>
                         {{ item.qid + 1 }}.{{ item.title }}
                         <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+                      <el-switch
+                          v-model="item.isSumLimit"
+                          active-color="#3292ff"
+                          inactive-color="#99a9bf"
+                          style="margin-left: 5%"
+                          active-text="限制人数"
+                          v-if="que.type ==='2'"
+                          inactive-text="开放填写"/>
                     </span>
                   <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
-                    <el-input v-for="subItem in item.option"
-                              :key="subItem.oid"
-                              v-model="subItem.content"
-                              maxlength="28"
-                              style="width: 100%;margin-bottom: 10px">
-                      <el-button slot="append" icon="el-icon-close"
-                                 v-on:click="deleteOption(item,subItem)"></el-button>
-                    </el-input>
+
+                    <div v-for="subItem in item.option" :key="subItem.oid">
+                      <el-input v-if="item.isSumLimit"
+                                v-model="subItem.content"
+                                maxlength="28"
+                                style="width: 78%;margin-bottom: 10px;">
+                        <el-button slot="append" icon="el-icon-close"
+                                   v-on:click="deleteOption(item,subItem)"></el-button>
+                      </el-input>
+                      <el-input v-else
+                                v-model="subItem.content"
+                                maxlength="28"
+                                style="width: 100%;margin-bottom: 10px;">
+                        <el-button slot="append" icon="el-icon-close"
+                                   v-on:click="deleteOption(item,subItem)"></el-button>
+                      </el-input>
+                      <el-input
+                          v-if="item.isSumLimit"
+                          v-model="subItem.limit"
+                          style="width: 17%;margin-bottom: 10px;margin-left: 5%"
+                          placeholder="Limit:">
+                      </el-input>
+                    </div>
                     <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
                   </div>
                 </div>
@@ -173,43 +196,18 @@ export default {
   },
   created() {
     this.que.type = this.$route.query.type
-    if (this.que.type === '2') {
-      this.que.QList = []
-      this.que.QList.push(
-          {
-            qid: 0,
-            type: 2,
-            title: "姓名:"
-          },
-          {
-            qid: 1,
-            type: 2,
-            title: "手机号:"
-          },
-          {
-            qid: 2,
-            type: 0,
-            title: "请选择你的报名项",
-            isSumLimit: true,
-            sum: 0,
-            option: [{
-              oid: 0,
-              content: "A",
-              num: ''
-            }, {
-              oid: 1,
-              content: "B",
-              num: ''
-            }, {
-              oid: 2,
-              content: "C",
-              num: ''
-            }]
-          },
-      )
-    }
     if (this.$route.query.id !== '0') {
       this.getQn(this.$route.query.id)
+    } else if(this.$route.query.type === '2') {
+      this.que = {
+        qnId: '0',
+        showNumbers: true,
+        qnType: 2,
+        title: "报名问卷",
+        QList: [
+
+        ]
+      }
     }
   },
   name: 'NewQue',
@@ -225,7 +223,7 @@ export default {
         qnId: '0',
         showNumbers: true,
         qnType: 0,
-        title: "holo",
+        title: "测试问卷",
         QList: [{
           qid: 0,
           type: 0,
@@ -298,7 +296,8 @@ export default {
                   let temp2 = temp1.option[j];
                   optionTemp.push({
                     oid: j,
-                    content: temp2.content
+                    content: temp2.content,
+                    limit: 0,
                   })
                 }
                 this.que.QList.push({
@@ -314,7 +313,8 @@ export default {
                   let temp2 = temp1.option[j];
                   optionTemp.push({
                     oid: j,
-                    content: temp2.content
+                    content: temp2.content,
+                    limit: 0,
                   })
                 }
                 this.que.QList.push({
@@ -372,7 +372,8 @@ export default {
     addOption(question) {
       question.option.push({
         oid: question.option.length,
-        content: ""
+        content: "",
+        limit: 0
       })
     },
     addSingleChoice() {
@@ -381,6 +382,7 @@ export default {
       this.que.QList.push({
         qid: i,
         type: 0,
+        isSumLimit: false,
         title: "请输入题干",
         option: []
       })
@@ -392,6 +394,7 @@ export default {
       this.que.QList.push({
         qid: i,
         type: 1,
+        isSumLimit: false,
         title: "请输入题干",
         option: []
       })
