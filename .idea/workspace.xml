@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="new">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/assets/QRcode.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Home.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/Result.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Result.vue" afterDir="false" />
     </list>
     <list id="7a3cd647-e299-426e-8574-ee29d86c3a2e" name="Changes by zhang" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -114,8 +110,16 @@
       <workItem from="1629769065455" duration="1320000" />
       <workItem from="1629771594693" duration="625000" />
       <workItem from="1629772521960" duration="795000" />
-      <workItem from="1630026396369" duration="9623000" />
+      <workItem from="1630026396369" duration="14417000" />
     </task>
+    <task id="LOCAL-00001" summary="new">
+      <created>1630052035233</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1630052035233</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,18 +140,6 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="new" />
     <option name="LAST_COMMIT_MESSAGE" value="new" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue</url>
-          <line>345</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
