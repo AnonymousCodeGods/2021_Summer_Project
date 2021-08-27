@@ -16,10 +16,10 @@
                  :key="item.qid" class="move">
               <el-card style="margin: 15px;cursor: move"
                        shadow="hover">
-                <el-button type="text" icon="el-icon-rank" class="drag"></el-button>
+                <el-button type="text" icon="el-icon-rank" class="drag" ></el-button>
                 <div style="float: right;margin-right: 12px">
-                  <el-button type="text" icon="el-icon-document-copy" v-on:click="copyQuestion(item)"></el-button>
-                  <el-button type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
+                  <el-button type="text" icon="el-icon-document-copy" v-on:click="copyQuestion(item)">复制</el-button>
+                  <el-button type="text" icon="el-icon-delete" style="color: #F56C6C" v-on:click="deleteQuestion(item)">删除</el-button>
                 </div>
                 <div v-if="item.type===0" class="queLabel">
                   <div>
@@ -27,15 +27,37 @@
                     <el-tag size="small">单选</el-tag>
                     {{item.qid+1}}.{{item.title}}
                     <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
-                  </span>
+                      <el-switch
+                        v-model="item.isSumLimit"
+                        active-color="#3292ff"
+                        inactive-color="#99a9bf"
+                        style="margin-left: 5%"
+                        active-text="人数限制"
+                        v-if="que.type ==='2' "
+                        inactive-text="无" />
+                    </span>
+
                     <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
-                      <el-input v-for="subItem in item.option"
-                                :key="subItem.oid"
-                                v-model="subItem.content"
-                                maxlength="28"
-                                style="width: 100%;margin-bottom: 10px">
-                        <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
-                      </el-input>
+                      <div v-for="subItem in item.option" :key="subItem.oid" >
+                        <el-input v-if="item.isSumLimit"
+                                  v-model="subItem.content"
+                                  maxlength="28"
+                                  style="width: 78%;margin-bottom: 10px;">
+                          <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
+                        </el-input>
+                        <el-input v-else
+                                  v-model="subItem.content"
+                                  maxlength="28"
+                                  style="width: 100%;margin-bottom: 10px;">
+                          <el-button slot="append" icon="el-icon-close" v-on:click="deleteOption(item,subItem)"></el-button>
+                        </el-input>
+                        <el-input
+                            v-if="item.isSumLimit"
+                            v-model="subItem.num"
+                            style="width: 17%;margin-bottom: 10px;margin-left: 5%"
+                            placeholder="limit:">
+                        </el-input>
+                      </div>
                       <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
                     </div>
                   </div>
@@ -78,7 +100,7 @@
           </tbody>
         </vuedraggable>
         <div style="margin-top: 30px">
-          <el-button plain type="primary" style="width: 15%" icon="el-icon-download" v-on:click="uploadQn(false)"></el-button>
+          <el-button plain type="primary" style="width: 15%" icon="el-icon-download" v-on:click="uploadQn(false)">保存</el-button>
           <el-popover
               style="margin: 20px"
               placement="top"
@@ -92,9 +114,9 @@
               <el-button plain type="info" v-on:click="addSpaceFilling">填空</el-button>
               <el-button plain type="warning" style="margin-left: 10px" v-on:click="addRating">评分</el-button>
             </div>
-            <el-button plain type="success" style="width: 15%" icon="el-icon-plus" v-on:click="addQuestionDialog=true" slot="reference"></el-button>
+            <el-button plain type="success" style="width: 15%" icon="el-icon-plus" v-on:click="addQuestionDialog=true" slot="reference">添加题目</el-button>
           </el-popover>
-          <el-button plain type="danger" style="width: 15%" icon="el-icon-upload2" v-on:click="uploadQn(true)"></el-button>
+          <el-button plain type="danger" style="width: 18%" icon="el-icon-upload2" v-on:click="uploadQn(true)">返回主菜单</el-button>
         </div>
       </el-card>
     </div>
@@ -108,10 +130,42 @@ export default {
     vuedraggable,
   },
   created() {
-    if(this.$route.query.id!== '0') {
+    this.que.title= this.$route.query.title
+    this.que.type= this.$route.query.type
+    if(this.que.type==='2'){
+      this.que.QList=[]
+      this.que.QList.push(
+          {
+            qid:0,
+            type:2,
+            title: "姓名:" },
+          {
+            qid:1,
+            type:2,
+            title: "手机号:" },
+          {
+            qid:2,
+            type:0,
+            title: "请选择你的报名项",
+            isSumLimit:true,
+            sum: 0,
+            option: [{
+              oid: 0,
+              content: "A",
+              num: ''
+            }, {
+              oid: 1,
+              content: "B",
+              num: ''
+            }, {
+              oid: 2,
+              content: "C",
+              num: ''
+            }] },
+      )
+    }
+    if(this.$route.query.id!=='0') {
       this.getQn(this.$route.query.id)
-    } else if(this.que.qnid !== 0) {
-      this.getQn(this.que.qnid)
     }
   },
   name: 'NewQue',
@@ -120,6 +174,7 @@ export default {
       que: {
         qnid: 0,
         title: "holo",
+        type: 0,
         QList: [{
           qid: 0,
           type: 0,
@@ -386,6 +441,8 @@ export default {
       }
       this.drag = false;
     },
+
+
   }
 }
 </script>
@@ -407,7 +464,6 @@ export default {
   margin-left: 12px;
   cursor: move;
 }
-
 
 .ghost {
   opacity: 1;
