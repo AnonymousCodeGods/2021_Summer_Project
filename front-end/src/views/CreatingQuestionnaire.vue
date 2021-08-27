@@ -171,7 +171,7 @@
                       style="width: 65%"></el-input>
           </el-form-item>
           <el-form-item required label="问卷类型" :label-width="queLabelWidth" style="text-align: left">
-            <el-radio-group v-model="que.type" style="width: 100%">
+            <el-radio-group v-model="que.Qntype" style="width: 100%">
               <el-radio :label=0>普通问卷</el-radio>
               <el-radio :label=1>投票问卷</el-radio>
               <el-radio :label=2>报名问卷</el-radio>
@@ -258,7 +258,6 @@ export default {
         Qntype: 0,
         endTime: '',
         title: "holo",
-        type: 0,
         sum: 0,
         QList: [
           {
@@ -497,7 +496,7 @@ export default {
           "qnid": (this.que.qnid === '0') ? 0 : this.que.qnid,
           "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",
           "que": {
-            "type": this.que.type,
+            "Qntype": this.que.Qntype,
             "title": this.que.title,
             "endTime": flag ? this.que.endTime : null,
             "state": flag,

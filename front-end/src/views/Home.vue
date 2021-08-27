@@ -202,46 +202,6 @@
         </div>
       </el-dialog>
 
-      <!-- menu菜单 -->
-      <button
-          type="button"
-          class="button button--join button--round-x button--text-thick button--beforeinverted button--size"
-          style="
-        position: absolute;
-        left: 5%; top: 150px;
-        width: 200px;
-        height: 60px;
-      "
-      >
-        全部问卷
-      </button>
-      <button
-          type="button"
-          class="button button--join button--round-x button--text-thick button--inverted button--size"
-          style="
-        position: absolute;
-        left: 5%; top: 210px;
-        width: 200px;
-        height: 60px;
-      "
-          @click="bin"
-      >
-        回收站
-      </button>
-      <button
-          type="button"
-          class="button button--join button--round-x button--text-thick button--inverted button--size"
-          style="
-        position: absolute;
-        left: 5%; top: 270px;
-        width: 200px;
-        height: 60px;
-      "
-          @click="toInfo"
-      >
-        个人信息
-      </button>
-
       <!--           问卷信息-->
       <div style="margin-top: 10%; margin-left:20%;margin-right:20%;background: transparent; height: 75%">
         <div
