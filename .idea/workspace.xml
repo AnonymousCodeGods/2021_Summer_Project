@@ -2,14 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/front-end/src/views/endResult.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/views/examQuestionnaire.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/views/main.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/assets/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/assets/logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/components/HelloWorld.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/HelloWorld.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Bin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Bin.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/views/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Home.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Login.vue" afterDir="false" />
     </list>
     <list id="7a3cd647-e299-426e-8574-ee29d86c3a2e" name="Changes by zhang" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Vue Single File Component" />
+      </list>
+    </option>
   </component>
   <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
     <envs>
@@ -95,6 +113,9 @@
       <workItem from="1629769065455" duration="1320000" />
       <workItem from="1629771594693" duration="625000" />
       <workItem from="1629772521960" duration="795000" />
+      <workItem from="1629949717992" duration="18726000" />
+      <workItem from="1629993274124" duration="2141000" />
+      <workItem from="1630032444542" duration="9300000" />
     </task>
     <servers />
   </component>
