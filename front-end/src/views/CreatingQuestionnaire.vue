@@ -278,7 +278,7 @@ export default {
       drag: false,
       titleEditDialog: false,
       queLabelWidth: '20%',
-      share: false
+      moreFunctionVisible: false
     }
   },
   methods: {
