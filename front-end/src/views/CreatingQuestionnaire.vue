@@ -1,12 +1,38 @@
 <template>
-  <div style="height: 100%;width: 100%;position:fixed;overflow:scroll">
-    <el-dialog :visible="titleEditDialog" :show-close="false">
-      <div slot="title">编辑题目</div>
-      <el-input type="textarea" v-model="editingTitle" style="margin-bottom: 30px;width: 80%"/>
-      <el-button v-on:click="doneTitleEdit" style="width: 60%" type="success" icon="el-icon-check"></el-button>
-    </el-dialog>
-    <div style="position:fixed;overflow:scroll;height: 100%;width: 100%">
-      <el-card style="width:800px;margin: auto" v-loading.fullscreen.lock="fullscreenLoading">
+  <div>
+    <el-container>
+      <el-dialog :visible="titleEditDialog" :show-close="false">
+        <div slot="title">编辑题目</div>
+        <el-input type="textarea" v-model="editingTitle" style="margin-bottom: 30px;width: 80%"/>
+        <el-button v-on:click="doneTitleEdit" style="width: 60%" type="success" icon="el-icon-check"></el-button>
+      </el-dialog>
+      <el-container style="width: 30%; margin-top: 5%">
+        <el-aside width="200px" style="background-color: rgb(238, 241, 246);margin:auto">
+        <el-menu :default-openeds="['1','2', '3']">
+        <el-submenu index="1">
+          <template slot="title"><i class="el-icon-s-tools"></i></template>
+          <el-menu-item index="1-1">返回首页</el-menu-item>
+        </el-submenu>
+        <el-submenu index="2">
+          <template slot="title"><i class="el-icon-edit"></i>添加题目</template>
+          <el-menu-item-group>
+            <el-menu-item index="2-1" v-on:click="addSingleChoice"><i class="el-icon-circle-plus"></i>单选题</el-menu-item>
+            <el-menu-item index="2-2" v-on:click="addMultiChoice"><i class="el-icon-circle-plus"></i>多选题</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item index="2-3" v-on:click="addSpaceFilling"><i class="el-icon-circle-plus"></i>填空题</el-menu-item>
+          <el-menu-item index="2-4" v-on:click="addRating"><i class="el-icon-circle-plus"></i>评分题</el-menu-item>
+        </el-submenu>
+        <el-submenu index="3">
+          <template slot="title"><i class="el-icon-setting"></i>问卷操作</template>
+          <el-menu-item index="3-1" v-on:click="beforeUpload(true)"><i class="el-icon-upload"></i>保存并发布</el-menu-item>
+          <el-menu-item index="3-2" v-on:click="beforeUpload(false)"><i class="el-icon-turn-off"></i>保存暂不发布</el-menu-item>
+        </el-submenu>
+      </el-menu>
+      </el-aside>
+      </el-container>
+      <el-container style="width: 70%;">
+        <div id="Qn" style="position:fixed;overflow:scroll;height: 100%;">
+      <el-card style="width:800px;" v-loading.fullscreen.lock="fullscreenLoading">
         <div slot="header" class="clearfix">
           <el-input style="font-size: larger" v-model="que.title"></el-input>
         </div>
@@ -20,8 +46,10 @@
                 <div style="float: right;margin-right: 12px">
                   <el-button type="text" icon="el-icon-document-copy" v-on:click="copyQuestion(item)"></el-button>
                   <el-button type="text" icon="el-icon-delete" v-on:click="deleteQuestion(item)"></el-button>
+                  <el-checkbox v-if="item.type===0||item.type===1" v-model="item.necessary">必选</el-checkbox>
+                  <el-checkbox v-if="item.type===2||item.type===3" v-model="item.necessary">必填</el-checkbox>
                 </div>
-                <div v-if="item.type===0" class="queLabel">
+                <div v-if="item.type===0" class="queLabel" id="singleChoice">
                   <div>
                     <span style="line-height: 30px;">
                     <el-tag size="small">单选</el-tag>
@@ -40,7 +68,7 @@
                     </div>
                   </div>
                 </div>
-                <div v-if="item.type===1" class="queLabel">
+                <div v-if="item.type===1" class="queLabel"  id="multiChoice">
                   <div>
                     <span style="line-height: 30px;">
                         <el-tag size="small" type="success">多选</el-tag>
@@ -59,14 +87,14 @@
                     </div>
                   </div>
                 </div>
-                <div v-if="item.type===2" class="queLabel">
+                <div v-if="item.type===2" class="queLabel"  id="fillInBlank">
                   <div style="margin-top: 10px">
                     <el-tag size="small" type="info">填空</el-tag>
                     {{item.qid+1}}.{{item.title}}
                     <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
                   </div>
                 </div>
-                <div v-if="item.type===3" class="queLabel">
+                <div v-if="item.type===3" class="queLabel"  id="rating">
                   <div style="margin-top: 10px">
                     <el-tag size="small" type="warning">评分</el-tag>
                     {{item.qid+1}}.{{item.title}}
@@ -77,27 +105,37 @@
             </div>
           </tbody>
         </vuedraggable>
-        <div style="margin-top: 30px">
-          <el-button plain type="primary" style="width: 15%" icon="el-icon-download" v-on:click="uploadQn(false)"></el-button>
-          <el-popover
-              style="margin: 20px"
-              placement="top"
-              width="150"
-              v-model="addQuestionVisible">
-            <div >
-              <el-button plain type="primary" v-on:click="addSingleChoice">单选</el-button>
-              <el-button plain type="success" style="margin-left: 10px" v-on:click="addMultiChoice">多选</el-button>
-            </div>
-            <div style="margin-top: 10px">
-              <el-button plain type="info" v-on:click="addSpaceFilling">填空</el-button>
-              <el-button plain type="warning" style="margin-left: 10px" v-on:click="addRating">评分</el-button>
-            </div>
-            <el-button plain type="success" style="width: 15%" icon="el-icon-plus" v-on:click="addQuestionDialog=true" slot="reference"></el-button>
-          </el-popover>
-          <el-button plain type="danger" style="width: 15%" icon="el-icon-upload2" v-on:click="uploadQn(true)"></el-button>
-        </div>
       </el-card>
     </div>
+      </el-container>
+      <el-dialog title="创建问卷" :visible.sync="dialogvis" width="45%" :before-close="handleClose" center style="margin-top: 4%">
+        <el-form :model="que" style="" :label-position=" 'left' " >
+          <el-form-item required label="问卷标题" :label-width="queLabelWidth" style="text-align: left">
+            <el-input v-model="que.title" autocomplete="off" placeholder="请输入标题" maxlength="15" show-word-limit style="width: 65%"></el-input>
+          </el-form-item>
+          <el-form-item required label="问卷类型" :label-width="queLabelWidth" style="text-align: left">
+            <el-radio-group v-model="que.Qntype" style="width: 100%">
+              <el-radio :label=0>普通问卷</el-radio>
+              <el-radio :label=1>投票问卷</el-radio>
+              <el-radio :label=2>报名问卷</el-radio>
+              <el-radio :label=3>考试问卷</el-radio>
+              <el-radio :label=4>疫情打卡问卷</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item v-if="share" required label="问卷截至时间" :label-width="queLabelWidth" style="text-align: left">
+            <el-date-picker
+                v-model="que.endTime"
+                type="datetime"
+                placeholder="选择日期时间">
+            </el-date-picker>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="handleClose(done)">取 消</el-button>
+          <el-button type="primary" @click="handleConfirm(done)">确 定</el-button>
+        </div>
+      </el-dialog>
+    </el-container>
   </div>
 </template>
 
@@ -113,17 +151,21 @@ export default {
     } else if(this.que.qnid !== 0) {
       this.getQn(this.que.qnid)
     }
+
   },
   name: 'NewQue',
   data: function(){
     return {
       que: {
-        qnid: 0,
+        qnid: '0',
+        Qntype:0,
+        endTime:'',
         title: "holo",
         QList: [{
           qid: 0,
           type: 0,
           title: "这是一道单选题，点击右边的按钮可以更改题目",
+          necessary: true,
           option: [{
             oid: 0,
             content: "你好"
@@ -138,6 +180,7 @@ export default {
           qid: 1,
           type: 1,
           title: "这是一道多选题",
+          necessary: false,
           option: [{
             oid: 0,
             content: "你好"
@@ -152,10 +195,12 @@ export default {
           qid: 2,
           type: 2,
           title: "我是一道填空题",
+          necessary: false,
         }, {
           qid: 3,
           type: 3,
           title: "我是一道评分题",
+          necessary: true,
         }]
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
@@ -164,7 +209,10 @@ export default {
       editingTitleQuestion:null,
       editingTitle:'',
       addQuestionVisible: false,
-      drag: false
+      drag: false,
+      dialogvis:false,
+      queLabelWidth: '20%',
+      share:false
     }
   },
   methods: {
@@ -172,7 +220,9 @@ export default {
       this.fullscreenLoading=true
       this.$axios({method:"post", url:"/getQn", data:{"QnId": qnid}})
           .then(res => {
-            this.que.QList=[]
+            this.que.QList=[];
+            this.que.Qntype=res.data.que.Qntype;
+            this.que.endTime=res.data.que.endTime;
             this.que.qnid = res.data.que.qnid;
             this.que.title = res.data.que.title;
             for(let i=0;i<res.data.que.QList.length;i++){
@@ -187,10 +237,10 @@ export default {
                   })
                 }
                 this.que.QList.push({
-                  qtid:i,
-                  qid:temp1.qid,
+                  qid:i,
                   type:temp1.type,
                   title: temp1.title,
+                  necessary: temp1.necessary,
                   option:optionTemp
                 })
               }
@@ -204,25 +254,23 @@ export default {
                   })
                 }
                 this.que.QList.push({
-                  qtid:i,
-                  qid:temp1.qid,
+                  qid:i,
                   type:temp1.type,
                   title: temp1.title,
+                  necessary: temp1.necessary,
                   option:optionTemp
                 })
               }
               else if(temp1.type === 2){
                 this.que.QList.push({
-                  qtid:i,
-                  qid:temp1.qid,
+                  qid:i,
                   type:temp1.type,
                   title: temp1.title
                 })
               }
               else{
                 this.que.QList.push({
-                  qtid:i,
-                  qid:temp1.qid,
+                  qid:i,
                   type:temp1.type,
                   title: temp1.title
                 })
@@ -269,57 +317,55 @@ export default {
       this.addQuestionVisible = false;
       let i = this.que.QList.length
       this.que.QList.push({
-        qtid: i,
         qid: i,
         type: 0,
         title: "请输入题干",
         option: []
       })
+      this.roll("singleChoice");
     },
     addMultiChoice() {
       this.addQuestionVisible = false;
       let i = this.que.QList.length
       this.que.QList.push({
-        qtid: i,
         qid: i,
         type: 1,
         title: "请输入题干",
         option: []
       })
+      this.roll("multiChoice");
     },
     addSpaceFilling() {
       this.addQuestionVisible = false;
       let i = this.que.QList.length
       this.que.QList.push({
-        qtid: i,
         qid: i,
         type: 2,
         title: "请输入题干",
       })
+      this.roll("fillInBlank");
     },
     addRating() {
       this.addQuestionVisible = false;
       let i = this.que.QList.length
       this.que.QList.push({
-        qtid: i,
         qid: i,
         type: 3,
         title: "请输入题干",
       })
+      this.roll("rating");
     },
     deleteQuestion(question) {
       let num = this.que.QList.indexOf(question)
       this.que.QList.splice(num,1)
       for(let i = num; i < this.que.QList.length; i++) {
         this.que.QList[i].qid--
-        this.que.QList[i].qtid--
       }
     },
     copyQuestion(question) {
       let num = this.que.QList.indexOf(question)
       if(question.type === 0 || question.type === 1) {
         this.que.QList.splice(num+1,0,{
-          qtid:num+1,
           qid: num+1,
           type: question.type,
           title: question.title+"（副本）",
@@ -333,7 +379,6 @@ export default {
         }
       } else if(question.type === 2 || question.type === 3) {
         this.que.QList.splice(num+1,0,{
-          qtid:num+1,
           qid: num+1,
           type: question.type,
           title: question.title+"（副本）",
@@ -343,19 +388,27 @@ export default {
         this.que.QList[i].qid++
       }
     },
+    beforeUpload(flag){
+      this.share=flag;
+      this.dialogvis = true;
+    },
     uploadQn(flag){
-      this.fullscreenLoading = true
+      this.fullscreenLoading = true;
+      console.log(this.que.endTime);
       this.$axios({method:"post",url:"/createQn/saveQn", data:{
-          "qnid":this.que.qnid,
-          "userName": this.$cookies.isKey("username")?this.$cookies.get("username"):"wang",
+          "qnid":(this.que.qnid==='0')?0:this.que.qnid,
+          "userName": this.$cookies.isKey("username")?this.$cookies.get("username"):"unLogin",
           "que":{
+            "Qntype":this.que.Qntype,
             "title":this.que.title,
+            "endTime":flag?this.que.endTime:null,
+            "state":flag,
             "QList":this.que.QList
           }}})
           .then(res => {
             this.$notify({
               title: '成功',
-              message: flag?'创建':'保存'+'问卷成功',
+              message: flag?'创建问卷成功':'保存问卷成功',
               type: 'success',
               position: 'bottom-left'
             });
@@ -386,6 +439,33 @@ export default {
       }
       this.drag = false;
     },
+    roll(str){
+      let temp=document.getElementById("Qn");
+      temp.scrollTop= temp.scrollHeight+1000;
+    },
+    handleClose() {
+      this.$confirm('确认取消创建问卷？')
+          .then(_ => {
+            this.dialogvis=false
+          })
+          .catch(_ => {});
+    },
+    handleConfirm() {
+      if (this.que.title === '') {
+        this.$notify({
+          title: '创建失败',
+          message: '标题不能为空',
+          position: 'bottom-left',
+          type: "error"
+        });
+      } else {
+        this.uploadQn(this.share)
+        if(this.share === true){
+          this.$router.push('/');
+        }
+        this.dialogvis=false
+      }
+    }
   }
 }
 </script>
