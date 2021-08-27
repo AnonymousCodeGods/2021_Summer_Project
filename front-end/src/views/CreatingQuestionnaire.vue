@@ -83,7 +83,7 @@
                           inactive-color="#99a9bf"
                           style="margin-left: 5%"
                           active-text="限制人数"
-                          v-if="que.type ==='2'"
+                          v-if="que.qnType ==='2'"
                           inactive-text="开放填写"/>
                     </span>
 
@@ -126,7 +126,7 @@
                           inactive-color="#99a9bf"
                           style="margin-left: 5%"
                           active-text="限制人数"
-                          v-if="que.type ==='2'"
+                          v-if="que.qnType ==='2'"
                           inactive-text="开放填写"/>
                     </span>
                   <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
@@ -195,14 +195,14 @@ export default {
     vuedraggable,
   },
   created() {
-    this.que.type = this.$route.query.type
+    this.que.qnType = this.$route.query.type
     if (this.$route.query.id !== '0') {
       this.getQn(this.$route.query.id)
     } else if(this.$route.query.type === '2') {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        qnType: 2,
+        qnType: '2',
         title: "报名问卷",
         QList: [
 
@@ -226,7 +226,7 @@ export default {
         title: "测试问卷",
         QList: [{
           qid: 0,
-          type: 0,
+          qnType: '0',
           title: "这是一道单选题，点击右边的按钮可以更改题目",
           necessary: true,
           option: [{
