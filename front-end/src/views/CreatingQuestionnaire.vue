@@ -30,11 +30,48 @@
     </el-popover>
     <el-button circle plain type="warning" class="hoverB" style="top:200px;margin-left: 0" icon="el-icon-check" @click="uploadQn"></el-button>
 
+
     <el-dialog :visible="titleEditDialog" :show-close="false">
       <div slot="title">编辑题目</div>
       <el-input v-model="editingTitle" style="margin-bottom: 30px;width: 80%"/>
       <el-button v-on:click="doneTitleEdit" style="width: 60%" type="success" icon="el-icon-check"></el-button>
     </el-dialog>
+
+
+    <el-dialog :visible="singleAnswerEditDialog" :show-close="false">
+      <div slot="title">编辑答案</div>
+      <el-select
+          v-model="editingAnswer"
+          style="margin-right: 20px;width: 80%"
+          placeholder="请选择">
+        <el-option
+            v-for="item in editingAnswerOption"
+            :key="item.oid"
+            :label="'选项'+(item.oid+1)"
+            :value="item.oid">
+        </el-option>
+      </el-select>
+      <el-button circle plain v-on:click="doneAnswerEdit" type="success" icon="el-icon-check"></el-button>
+    </el-dialog>
+
+    <el-dialog :visible="multiAnswerEditDialog" :show-close="false">
+      <div slot="title">编辑答案</div>
+      <el-select
+          multiple
+          collapse-tags
+          v-model="editingAnswers"
+          style="margin-right: 20px;width: 80%"
+          placeholder="请选择">
+        <el-option
+            v-for="item in editingAnswerOption"
+            :key="item.oid"
+            :label="'选项'+(item.oid+1)"
+            :value="item.oid">
+        </el-option>
+      </el-select>
+      <el-button circle plain v-on:click="doneAnswerEdit" type="success" icon="el-icon-check"></el-button>
+    </el-dialog>
+
 
     <div id="Qn" style="height: 100%;width: 100%;overflow-y:scroll;margin: auto">
       <el-card style="margin: 20px 20% ;" v-loading.fullscreen.lock="fullscreenLoading">
@@ -56,7 +93,9 @@
             <el-card style="margin: 15px;cursor: move"
                      shadow="hover">
               <el-button type="text" icon="el-icon-rank" class="drag"></el-button>
-              <div style="float: right;margin-right: 5px;width: 200px  ">
+
+
+              <div style="float: right;margin-right: 0;width: 180px  ">
                 <el-button type="text"
                            icon="el-icon-document-copy"
                            v-on:click="copyQuestion(item)">复制
@@ -66,27 +105,35 @@
                            style="color: #F56C6C;"
                            v-on:click="deleteQuestion(item)">删除
                 </el-button>
-                <el-checkbox
-                             v-model="item.necessary"
-                             style="margin-left: 3%">必填
-                </el-checkbox>
+                <el-popover placement="bottom" width="200">
+                  <el-button circle
+                             plain
+                             icon="el-icon-more"
+                             type=""
+                             style="margin-left: 18px"
+                             slot="reference">
+                  </el-button>
+                  <div style="width:100%;margin: 5px;">
+                    <el-checkbox v-model="item.necessary">必填</el-checkbox>
+                  </div>
+                  <div style="width:100%;margin: 5px;" v-if="que.qnType ==='2'">
+                    <el-checkbox v-model="item.isSumLimit">限制人数</el-checkbox>
+                  </div>
+                  <div style="width:100%;margin: 5px;" v-if="que.qnType ==='3'&&(item.type===0||item.type===1)">
+                    <el-checkbox v-model="item.hasAnswer">正确答案</el-checkbox>
+                    <el-link style="margin-left: 10px" icon="el-icon-edit" :underline="false" :disabled="!item.hasAnswer" v-on:click="initialAnswerEdit(item)"></el-link>
+                  </div>
+                </el-popover>
               </div>
+
+
               <div v-if="item.type===0" class="queLabel" id="singleChoice">
                 <div>
                     <span style="line-height: 30px;">
-                    <el-tag size="small">单选</el-tag>
-                    {{ item.qid + 1 }}.{{ item.title }}
-                    <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
-                      <el-switch
-                          v-model="item.isSumLimit"
-                          active-color="#3292ff"
-                          inactive-color="#99a9bf"
-                          style="margin-left: 5%"
-                          active-text="限制人数"
-                          v-if="que.qnType ==='2'"
-                          inactive-text="开放填写"/>
+                      <el-tag size="small">单选</el-tag>
+                      {{ item.qid + 1 }}.{{ item.title }}
+                      <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
                     </span>
-
                   <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
                     <div v-for="subItem in item.option" :key="subItem.oid">
                       <el-input v-if="item.isSumLimit"
@@ -106,14 +153,17 @@
                       <el-input
                           v-if="item.isSumLimit"
                           v-model="subItem.limit"
-                          style="width: 17%;margin-bottom: 10px;margin-left: 5%"
-                          placeholder="Limit:">
+                          style="width: 19%;margin-bottom: 10px;margin-left: 3%"
+                          placeholder="">
+                        <i class="el-icon-s-custom" slot="prepend"></i>
                       </el-input>
                     </div>
                     <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
                   </div>
                 </div>
               </div>
+
+
               <div v-if="item.type===1" class="queLabel" id="multiChoice">
                 <div>
                     <span style="line-height: 30px;">
@@ -149,14 +199,17 @@
                       <el-input
                           v-if="item.isSumLimit"
                           v-model="subItem.limit"
-                          style="width: 17%;margin-bottom: 10px;margin-left: 5%"
-                          placeholder="Limit:">
+                          style="width: 19%;margin-bottom: 10px;margin-left: 3%"
+                          placeholder="">
+                        <i class="el-icon-s-custom" slot="prepend"></i>
                       </el-input>
                     </div>
                     <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
                   </div>
                 </div>
               </div>
+
+
               <div v-if="item.type===2" class="queLabel" id="fillInBlank">
                 <div style="margin-top: 10px">
                   <el-tag size="small" type="info">填空</el-tag>
@@ -205,7 +258,32 @@ export default {
         qnType: '2',
         title: "报名问卷",
         QList: [
-
+          {
+            qid: 0,
+            type: 2,
+            title: "请输入姓名",
+            necessary: true,
+          }, {
+            qid: 1,
+            type: 2,
+            title: "请输入手机号",
+            necessary:  true,
+          }, {
+            qid: 2,
+            type: 0,
+            title: "请编辑投票题目",
+            hasAnswer: false,
+            necessary: true,
+            isSumLimit:true,
+            answer:[],
+            option:[
+              {
+                oid:0,
+                content:'请输入选项内容',
+                limit:10
+              }
+            ]
+          }
         ]
       }
     }
@@ -226,8 +304,10 @@ export default {
         title: "测试问卷",
         QList: [{
           qid: 0,
-          qnType: '0',
+          type: 0,
           title: "这是一道单选题，点击右边的按钮可以更改题目",
+          hasAnswer: false,
+          answer:0,
           necessary: true,
           option: [{
             oid: 0,
@@ -243,6 +323,8 @@ export default {
           qid: 1,
           type: 1,
           title: "这是一道多选题",
+          hasAnswer: false,
+          answer: [],
           necessary: false,
           option: [{
             oid: 0,
@@ -275,7 +357,13 @@ export default {
       drag: false,
       titleEditDialog: false,
       queLabelWidth: '20%',
-      moreFunctionVisible: false
+      moreFunctionVisible: false,
+      singleAnswerEditDialog:false,
+      multiAnswerEditDialog:false,
+      editingAnswerOption:0,
+      editingAnswers:[],
+      editingAnswer:-1,
+      editingAnswerQuestion:null,
     }
   },
   methods: {
@@ -305,6 +393,8 @@ export default {
                   type: temp1.type,
                   title: temp1.title,
                   necessary: temp1.necessary,
+                  hasAnswer: false,
+                  answer: 0,
                   option: optionTemp
                 })
               } else if (temp1.type === 1) {
@@ -322,6 +412,8 @@ export default {
                   type: temp1.type,
                   title: temp1.title,
                   necessary: temp1.necessary,
+                  hasAnswer: false,
+                  answer: [],
                   option: optionTemp
                 })
               } else if (temp1.type === 2) {
@@ -362,6 +454,32 @@ export default {
       this.editingTitleQuestion.title = this.editingTitle
       this.titleEditDialog = false
     },
+    initialAnswerEdit(question) {
+      this.editingAnswerQuestion = question
+      this.editingAnswerOption = question.option
+      if(question.type === 0){
+        this.editingAnswer = question.answer
+        this.singleAnswerEditDialog = true
+      }
+      else if(question.type === 1){
+        this.editingAnswers = question.answer
+        this.multiAnswerEditDialog = true
+      }
+    },
+    doneAnswerEdit() {
+      if(this.editingAnswerQuestion.type === 0){
+        this.editingAnswerQuestion.answer = this.editingAnswer
+        this.singleAnswerEditDialog = false
+      }
+      else if(this.editingAnswerQuestion.type === 1){
+        this.editingAnswerQuestion.answer = this.editingAnswers
+        this.multiAnswerEditDialog = false
+      }
+      this.singleAnswerEditDialog = false
+      this.multiAnswerEditDialog = false
+      this.editingAnswer = 0
+      this.editingAnswers = []
+    },
     deleteOption(question, option) {
       let num = question.option.indexOf(option)
       question.option.splice(num, 1)
@@ -382,7 +500,10 @@ export default {
       this.que.QList.push({
         qid: i,
         type: 0,
+        necessary: false,
         isSumLimit: false,
+        hasAnswer: false,
+        answer: 0,
         title: "请输入题干",
         option: []
       })
@@ -394,7 +515,10 @@ export default {
       this.que.QList.push({
         qid: i,
         type: 1,
+        necessary: false,
         isSumLimit: false,
+        hasAnswer: false,
+        answer: [],
         title: "请输入题干",
         option: []
       })
@@ -406,6 +530,7 @@ export default {
       this.que.QList.push({
         qid: i,
         type: 2,
+        necessary: false,
         title: "请输入题干",
       })
       this.roll();
@@ -416,6 +541,7 @@ export default {
       this.que.QList.push({
         qid: i,
         type: 3,
+        necessary: false,
         title: "请输入题干",
       })
       this.roll();
@@ -426,6 +552,7 @@ export default {
       this.que.QList.push({
         qid: i,
         type: 4,
+        necessary: false,
         title: "点击获取地理位置",
       })
       this.roll();
@@ -444,19 +571,31 @@ export default {
           qid: num + 1,
           type: question.type,
           title: question.title + "（副本）",
+          isSumLimit: question.isSumLimit,
+          hasAnswer: question.hasAnswer,
+          answer: question.type===0?question.answer:[],
+          necessary: question.necessary,
           option: []
         })
         for (let i = 0; i < question.option.length; i++) {
           this.que.QList[num + 1].option.push({
             oid: question.option[i].oid,
-            content: question.option[i].content
+            content: question.option[i].content,
+            limit: question.option[i].limit
           })
         }
-      } else if (question.type === 2 || question.type === 3) {
+        if (question.type===1) {
+          for (let i = 0; i < question.option.length; i++) {
+            this.que.QList[num + 1].answer.push(question.answer[i])
+          }
+        }
+      } else if (question.type === 2 || question.type === 3 || question.type === 4) {
         this.que.QList.splice(num + 1, 0, {
           qid: num + 1,
           type: question.type,
           title: question.title + "（副本）",
+          isSumLimit: question.isSumLimit,
+          necessary: question.necessary
         })
       }
       for (let i = num + 2; i < this.que.QList.length; i++) {
@@ -547,5 +686,17 @@ export default {
   animation-duration:0.3s;
   animation-iteration-count:1;
   animation-fill-mode: forwards;
+}
+
+@keyframes inputScale{
+  0%{width: 100%}
+  100%{width: 78%}
+}
+.inputOptionPlay{
+  animation-name: inputScale;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
 }
 </style>
