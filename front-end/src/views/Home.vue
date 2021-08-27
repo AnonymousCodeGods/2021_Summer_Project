@@ -1,22 +1,39 @@
 <template>
   <div>
     <div class="head">
-      <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:10%;height: 85%;left: 5%">
+      <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:5%;height: 75%;left: 5%">
 
-<!--      <el-badge :value="12" class="item">-->
-<!--        <el-button size="small">消息</el-button>-->
-<!--      </el-badge>-->
+      <!--      <el-badge :value="12" class="item">-->
+      <!--        <el-button size="small">消息</el-button>-->
+      <!--      </el-badge>-->
+      <el-menu :default-active="activeIndex"
+               class="el-menu-demo"
+               mode="horizontal"
+               @select="handleSelect"
+               text-color="black"
+               active-text-color="#6060ff">
+        <el-menu-item index="1" style="position: absolute;left: 36%;">我的问卷</el-menu-item>
+        <!--        <el-submenu index="2" style="position: absolute;left: 60%;">-->
+        <!--          <template slot="title">我的工作台</template>-->
+        <!--          <el-menu-item index="2-1">选项1</el-menu-item>-->
+        <!--          <el-menu-item index="2-2">选项2</el-menu-item>-->
+        <!--          <el-menu-item index="2-3">选项3</el-menu-item>-->
+        <!--        </el-submenu>-->
+        <el-menu-item index="2" style="position: absolute;left: 45%;" @click="createQuiz">创建问卷</el-menu-item>
+        <el-menu-item index="3" style="position: absolute;left: 54%;" @click="bin">回收站</el-menu-item>
+      </el-menu>
 
-      <div class="demo-type">
+
+      <div class="demo-type" >
         <div>
-          <el-avatar icon="el-icon-user-solid"></el-avatar>
+          <el-avatar icon="el-icon-user-solid" size="small"></el-avatar>
         </div>
         <!--        <div>-->
         <!--          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
         <!--        </div>-->
       </div>
 
-      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 90%" @command="logout">
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%" @command="logout">
       <span class="el-dropdown-link">
         {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
@@ -27,17 +44,16 @@
     </div>
 
     <div class="body">
-      <a
-          style="
+      <a style="
         position: absolute;
         font-size: 20px;
         font-weight: bold;
         top: 7%;
-        left: 30%;
+        left: 20%;
         color: black;
       "
       >问卷列表</a>
-      <el-dropdown style="position: absolute;left: 45%;top: 8%" @command="sorted">
+      <el-dropdown style="position: absolute;left: 35%;top: 8%" @command="sorted">
       <span class="el-dropdown-link">
         {{ sort }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
@@ -47,7 +63,7 @@
           <el-dropdown-item command="回收量">回收量</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-dropdown style="position: absolute;left: 60%;top: 8%" @command="stated">
+      <el-dropdown style="position: absolute;left: 50%;top: 8%" @command="stated">
       <span class="el-dropdown-link">
         {{ state }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
@@ -58,7 +74,7 @@
         </el-dropdown-menu>
       </el-dropdown>
 
-      <el-dropdown style="position: absolute;left: 53%;top: 8%" @command="handleCommand">
+      <el-dropdown style="position: absolute;left: 43%;top: 8%" @command="handleCommand">
       <span class="el-dropdown-link">
         {{ value }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
@@ -67,20 +83,59 @@
           <el-dropdown-item command="倒序">倒序</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <div style="position: absolute;left: 66%;top:6%;width: 18%">
-        <img src="../assets/search.png" style="position:absolute;top:0;height: 40px;left: 0" @click="search">
-        <el-input v-model="input" placeholder="请输入关键字" style="position: absolute;left: 20%"></el-input>
+      <div style="position: absolute;left: 56%;top:6%;width: 22%">
+        <img src="../assets/search.png" style="position:absolute;top:0;height: 40px;left: 90%;cursor: pointer" @click="search">
+        <el-input v-model="input" placeholder="请输入关键字" style="position: absolute;left: 10%;width: 80%"></el-input>
       </div>
 
 
-      <button
-          type="button"
-          class="button button--login button--round-s button--text-thick button--inverted button--size"
-          style="position:absolute;left: 5%; top: 7%;width: 200px; height: 60px"
-          @click="createQuiz"
-      >创建问卷
-      </button>
+      <!--      <button-->
+      <!--          type="button"-->
+      <!--          class="button button&#45;&#45;login button&#45;&#45;round-s button&#45;&#45;text-thick button&#45;&#45;inverted button&#45;&#45;size"-->
+      <!--          style="position:absolute;left: 5%; top: 7%;width: 200px; height: 60px"-->
+      <!--          @click="createQuiz"-->
+      <!--      >创建问卷-->
+      <!--      </button>-->
 
+      <!--      &lt;!&ndash; menu菜单 &ndash;&gt;-->
+      <!--      <button-->
+      <!--          type="button"-->
+      <!--          class="button button&#45;&#45;join button&#45;&#45;round-x button&#45;&#45;text-thick button&#45;&#45;beforeinverted button&#45;&#45;size"-->
+      <!--          style="-->
+      <!--        position: absolute;-->
+      <!--        left: 5%; top: 150px;-->
+      <!--        width: 200px;-->
+      <!--        height: 60px;-->
+      <!--      "-->
+      <!--      >-->
+      <!--        全部问卷-->
+      <!--      </button>-->
+      <!--      <button-->
+      <!--          type="button"-->
+      <!--          class="button button&#45;&#45;join button&#45;&#45;round-x button&#45;&#45;text-thick button&#45;&#45;inverted button&#45;&#45;size"-->
+      <!--          style="-->
+      <!--        position: absolute;-->
+      <!--        left: 5%; top: 210px;-->
+      <!--        width: 200px;-->
+      <!--        height: 60px;-->
+      <!--      "-->
+      <!--          @click="bin"-->
+      <!--      >-->
+      <!--        回收站-->
+      <!--      </button>-->
+      <!--      <button-->
+      <!--          type="button"-->
+      <!--          class="button button&#45;&#45;join button&#45;&#45;round-x button&#45;&#45;text-thick button&#45;&#45;inverted button&#45;&#45;size"-->
+      <!--          style="-->
+      <!--        position: absolute;-->
+      <!--        left: 5%; top: 270px;-->
+      <!--        width: 200px;-->
+      <!--        height: 60px;-->
+      <!--      "-->
+      <!--          @click="toInfo"-->
+      <!--      >-->
+      <!--        个人信息-->
+      <!--      </button>-->
       <el-dialog
         title="创建问卷"
         :visible.sync="dialog1"
@@ -188,7 +243,7 @@
       </button>
 
       <!--           问卷信息-->
-      <div style="margin-top: 10%; margin-left:30%;margin-right:10%;background: transparent; height: 75%">
+      <div style="margin-top: 10%; margin-left:20%;margin-right:20%;background: transparent; height: 75%">
         <div
             v-for="it in list"
             :key="it.index"
@@ -202,6 +257,9 @@
               :state="it.state"
           ></each-quiz>
         </div>
+        <!--没有问卷-->
+        <img src="../assets/empty.png" v-if="this.list.length===0">
+        <p style="color: #a5a5a5" v-if="this.list.length===0">快去创建一个问卷吧</p>
         <!--分页-->
         <div class="block">
           <el-pagination
@@ -272,15 +330,16 @@ export default {
         type: 0,
       },
       formLabelWidth: '20%',
+      activeIndex: '1'
     }
   },
   methods: {
     handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`);
+      console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       this.page = val;
-      // console.log(`当前页: ${val}`);
+      console.log(`当前页: ${val}`);
       this.list = [];
       if (val * 3 > this.total) {
         for (let i = val * 3 - 3; i < this.total; i++)
@@ -303,14 +362,14 @@ export default {
         this.myList.sort(function (a, b) {
           return a.num - b.num;
         });
-      }else if(command === "发布日期"){
+      } else if (command === "发布日期") {
         this.allList.sort(function (a, b) {
           return Date.parse(a.pubDate) - Date.parse(b.pubDate);
         });
         this.myList.sort(function (a, b) {
           return Date.parse(a.pubDate) - Date.parse(b.pubDate);
         });
-      }else{
+      } else {
         this.allList.sort(function (a, b) {
           return Date.parse(a.createDate) - Date.parse(b.createDate);
         });
@@ -407,10 +466,9 @@ export default {
       } else {
         if (this.state === '状态') {
           this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1)
-        } else if(this.state === '已发布') {
+        } else if (this.state === '已发布') {
           this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1 && item.state === true)
-        }
-        else{
+        } else {
           this.myList = this.allList.filter(item => item.name.indexOf(this.input) !== -1 && item.state === false)
         }
 
@@ -470,20 +528,21 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  height: 8%;
+  height: 62px;
+  min-height: 60px;
   width: 100%;
   background-color: #ffffff;
-  //border:2px solid #000000;
+  //background-color:#545c64
 }
 
 .body {
   position: absolute;
   min-width: 1300px;
-  top: 8%;
+  top: 62px;
   left: 0;
   height: 92%;
   width: 100%;
-  background-color: #f5f4f4;
+  background-color: #f5f5f8;
   border-top: 1px transparent solid;
   box-shadow: #c6c5c5;
   border-image: linear-gradient(0deg, #979696, #e7e7e7) 1 10;
@@ -492,7 +551,7 @@ export default {
 .block {
   position: absolute;
   margin-top: 45px;
-  right: 12%;
+  right: 17%;
 }
 
 .item {
@@ -504,9 +563,8 @@ export default {
 
 .demo-type {
   position: absolute;
-  left: 86%;
-  top: 25%;
-  height: 40%;
+  left: 90%;
+  top: 30%;
 }
 
 .el-dropdown-link {

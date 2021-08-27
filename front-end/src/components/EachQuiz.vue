@@ -1,24 +1,24 @@
 <template>
   <div class="quiz">
-    <a style="float: left;padding-left: 40px;padding-top: 20px;width: 300px;text-align:left;">{{ type }}</a>
+    <a style="float: left;padding-left: 45px;padding-top: 20px;width: 300px;text-align:left;">{{ type }}</a>
     <a class="bas" style="float: left;padding-left: 50px;padding-top: 20px">ID：{{ id }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px;">状态：{{ state === true ? '已发布' : '未发布' }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">创建日期：{{ date.substring(0, 10) }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">回收量：{{ num }}</a>
     <!--分割线-->
     <div class="midText"></div>
-    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;cursor:pointer;" @click="del">删除</a>
-    <img src="../assets/del.png" style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
-    <a style="float:right;padding-right: 80px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="pub"
+    <a style="float:right;padding-right: 70px;padding-top: 52px;height: 20px;cursor:pointer;" @click="del">删除</a>
+    <img src="../assets/del.png" style="float:right;padding-right: 10px;padding-top: 52px;height: 20px;cursor:pointer;">
+    <a style="float:right;padding-right: 80px;padding-top: 52px;height: 20px;width: 60px;cursor:pointer;" @click="pub"
        v-if="state===false">发布</a>
-    <a style="float:right;padding-right: 80px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;"
+    <a style="float:right;padding-right: 80px;padding-top: 52px;height: 20px;width: 60px;cursor:pointer;"
        @click="suspend"
        v-else>暂停</a>
     <img src="../assets/suspend.png" v-if="state===true"
-         style="float:right;padding-right: 0;padding-top: 61px;height: 20px;cursor:pointer;">
+         style="float:right;padding-right: 0;padding-top: 53px;height: 20px;cursor:pointer;">
     <img src="../assets/open.png" v-else
-         style="float:right;padding-right: 0;padding-top: 61px;height: 20px;cursor:pointer;">
-    <a class="fun" style="float: right;padding-right: 190px;padding-top: 58px" @click="edit"
+         style="float:right;padding-right: 0;padding-top: 53px;height: 20px;cursor:pointer;">
+    <a class="fun" style="float: right;padding-right: 190px;padding-top: 50px" @click="edit"
        @mouseover="mouseOver($event)"
        @mouseleave="mouseLeave($event)">编辑问卷</a>
     <!--    暂时先写成导出结果-->
@@ -29,16 +29,16 @@
         worksheet="My Worksheet"
         type="excel"
         name="filename.xls">
-      <a class="fun" style="float: right;padding-right: 30px;padding-top: 58px"
+      <a class="fun" style="float: right;padding-right: 30px;padding-top: 50px"
          @mouseover="mouseOver($event)"
          @mouseleave="mouseLeave($event)"
          @click="exported">导出数据</a>
     </download-excel>
 
-    <a class="fun" style="float: right;padding-right: 30px;padding-top: 58px" @click="toResult"
+    <a class="fun" style="float: right;padding-right: 30px;padding-top: 50px" @click="toResult"
        @mouseover="mouseOver($event)"
        @mouseleave="mouseLeave($event)">查看结果</a>
-    <a class="fun" style="float: right;padding-right: 30px;padding-top: 58px" @click="links"
+    <a class="fun" style="float: right;padding-right: 30px;padding-top: 50px" @click="links"
        @mouseover="mouseOver($event)"
        @mouseleave="mouseLeave($event)">发送链接</a>
 
@@ -161,6 +161,7 @@ export default {
         });
       }
     },
+
     links() {
       this.$router.push({path: "/sentout", query: {id: this.id}});
     }
@@ -176,13 +177,15 @@ export default {
   width: 100%;
   height: 130px;
   background-color: white;
-  border: #d5d5d5 solid 1px;
+  border: #e5e5e5 solid 1px;
+  border-radius: 10px;
+  box-shadow:0px 0px  2px 1px #e5e5e5;
 }
 
 .midText {
   position: absolute;
   margin-top: 60px;
-  left: 31%;
+  left: 22%;
   width: 850px;
   height: 2px;
   max-width: 800px;
