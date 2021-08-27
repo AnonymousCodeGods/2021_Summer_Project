@@ -1,7 +1,7 @@
 <template>
   <div :style="heightAndWidth">
 
-    <el-button circle plain type="primary" class="hoverB" style="top:50px" icon="el-icon-back"></el-button>
+    <el-button circle plain type="primary" class="hoverB" style="top:50px" icon="el-icon-back" v-on:click="$router.push('/home')"></el-button>
     <el-popover
         placement="right"
         width="325"
@@ -26,7 +26,7 @@
             v-model="que.showNumbers">
         </el-switch>
       </div>
-      <el-button circle plain type="info" class="hoverB" style="top:150px" icon="el-icon-more" slot="reference"></el-button>
+      <el-button circle plain type="info" class="hoverB" style="top:150px" icon="el-icon-s-tools" slot="reference"></el-button>
     </el-popover>
     <el-button circle plain type="warning" class="hoverB" style="top:200px;margin-left: 0" icon="el-icon-check" @click="uploadQn"></el-button>
 
@@ -116,7 +116,7 @@
                   <div style="width:100%;margin: 5px;">
                     <el-checkbox v-model="item.necessary">必填</el-checkbox>
                   </div>
-                  <div style="width:100%;margin: 5px;" v-if="que.qnType ==='2'">
+                  <div style="width:100%;margin: 5px;" v-if="que.qnType ==='2'&&(item.type===0||item.type===1)">
                     <el-checkbox v-model="item.isSumLimit">限制人数</el-checkbox>
                   </div>
                   <div style="width:100%;margin: 5px;" v-if="que.qnType ==='3'&&(item.type===0||item.type===1)">
@@ -154,8 +154,7 @@
                           v-if="item.isSumLimit"
                           v-model="subItem.limit"
                           style="width: 19%;margin-bottom: 10px;margin-left: 3%"
-                          placeholder="">
-                        <i class="el-icon-s-custom" slot="prepend"></i>
+                          placeholder="" suffix-icon="el-icon-s-custom">
                       </el-input>
                     </div>
                     <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
@@ -200,8 +199,7 @@
                           v-if="item.isSumLimit"
                           v-model="subItem.limit"
                           style="width: 19%;margin-bottom: 10px;margin-left: 3%"
-                          placeholder="">
-                        <i class="el-icon-s-custom" slot="prepend"></i>
+                          placeholder=""  suffix-icon="el-icon-s-custom">
                       </el-input>
                     </div>
                     <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
@@ -251,6 +249,31 @@ export default {
     this.que.qnType = this.$route.query.type
     if (this.$route.query.id !== '0') {
       this.getQn(this.$route.query.id)
+    } else if(this.$route.query.type === '1') {
+      this.que = {
+        qnId: '0',
+        showNumbers: true,
+        qnType: '1',
+        title: "投票问卷",
+        QList: [
+            {
+            qid: 0,
+            type: 0,
+            title: "请编辑投票题目",
+            hasAnswer: false,
+            necessary: true,
+            isSumLimit: false,
+            answer:[],
+            option:[
+              {
+                oid:0,
+                content:'请输入选项内容',
+                limit:0
+              }
+            ]
+          }
+        ]
+      }
     } else if(this.$route.query.type === '2') {
       this.que = {
         qnId: '0',
@@ -271,7 +294,7 @@ export default {
           }, {
             qid: 2,
             type: 0,
-            title: "请编辑投票题目",
+            title: "请编辑报名题目",
             hasAnswer: false,
             necessary: true,
             isSumLimit:true,
@@ -283,6 +306,89 @@ export default {
                 limit:10
               }
             ]
+          }
+        ]
+      }
+    } else if(this.$route.query.type === '3') {
+      this.que = {
+        qnId: '0',
+        showNumbers: true,
+        qnType: '3',
+        title: "考试问卷",
+        QList: [
+          {
+            qid: 0,
+            type: 2,
+            title: "请输入姓名",
+            necessary: true,
+          }, {
+            qid: 1,
+            type: 2,
+            title: "请输入学号",
+            necessary: true,
+          }
+        ]
+      }
+    } else if(this.$route.query.type === '4') {
+      this.que = {
+        qnId: '0',
+        showNumbers: true,
+        qnType: '4',
+        title: "疫情上报问卷",
+        QList: [
+          {
+            qid: 0,
+            type: 2,
+            title: "请输入姓名",
+            necessary: true,
+          }, {
+            qid: 1,
+            type: 2,
+            title: "请输入学号",
+            necessary: true,
+          }, {
+            qid: 2,
+            type: 0,
+            title: "请选择体温",
+            necessary: true,
+            isSumLimit: false,
+            hasAnswer: false,
+            option:[
+              {
+                oid:0,
+                content: "36°以下"
+              },
+              {
+                oid:1,
+                content: "36°~37.3°"
+              },
+              {
+                oid:2,
+                content: "37.3°以上"
+              }
+            ]
+          }, {
+            qid: 3,
+            type: 0,
+            title: "是否去过高风险地区",
+            necessary: true,
+            isSumLimit: false,
+            hasAnswer: false,
+            option:[
+              {
+                oid:0,
+                content: "否"
+              },
+              {
+                oid:1,
+                content: "是"
+              }
+            ]
+          },{
+            qid: 4,
+            type: 4,
+            title: "请点击定位",
+            necessary: true,
           }
         ]
       }
@@ -301,7 +407,7 @@ export default {
         qnId: '0',
         showNumbers: true,
         qnType: 0,
-        title: "测试问卷",
+        title: "普通问卷",
         QList: [{
           qid: 0,
           type: 0,
@@ -604,10 +710,8 @@ export default {
     },
     uploadQn() {
       this.fullscreenLoading = true;
-      console.log(this.que.endTime);
       this.$axios({
         method: "post", url: "/createQn/saveQn", data: {
-          "qnId": (this.que.qnId === '0') ? 0 : this.que.qnId,
           "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",
           "que": this.que
         }
@@ -620,6 +724,7 @@ export default {
               position: 'bottom-left'
             });
             this.fullscreenLoading = false
+            this.$router.push('/home');
           })
           .catch(() => {
             this.$notify({
@@ -629,7 +734,6 @@ export default {
               position: 'bottom-left'
             });
             this.fullscreenLoading = false
-            //this.$router.push('/');
           })
     },
     onStart() {
