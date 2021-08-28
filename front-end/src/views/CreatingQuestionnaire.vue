@@ -246,14 +246,14 @@ export default {
     vuedraggable,
   },
   created() {
-    this.que.qnType = this.$route.query.type
+    this.que.qnType = this.$route.query.type;
     if (this.$route.query.id !== '0') {
       this.getQn(this.$route.query.id)
     } else if(this.$route.query.type === '1') {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        qnType: '1',
+        qnType: 1,
         title: "投票问卷",
         QList: [
             {
@@ -278,7 +278,7 @@ export default {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        qnType: '2',
+        qnType: 2,
         title: "报名问卷",
         QList: [
           {
@@ -313,7 +313,7 @@ export default {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        qnType: '3',
+        qnType: 3,
         title: "考试问卷",
         QList: [
           {
@@ -333,7 +333,7 @@ export default {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        qnType: '4',
+        qnType: 4,
         title: "疫情上报问卷",
         QList: [
           {
@@ -473,14 +473,14 @@ export default {
     }
   },
   methods: {
-    getQn(qnid) {
+    getQn(qnId) {
       this.fullscreenLoading = true
-      this.$axios({method: "post", url: "/getQn", data: {"QnId": qnid}})
+      this.$axios({method: "post", url: "/getQn", data: {"QnId": qnId}})
           .then(res => {
             this.que.QList = [];
             this.que.qnType = res.data.que.qnType;
             this.que.showNumbers = res.data.que.showNumbers;
-            this.que.qnId = res.data.que.qnId;
+            this.que.qnId = res.data.que.qnid;
             this.que.title = res.data.que.title;
             for (let i = 0; i < res.data.que.QList.length; i++) {
               let temp1 = res.data.que.QList[i];
@@ -710,6 +710,7 @@ export default {
     },
     uploadQn() {
       this.fullscreenLoading = true;
+      console.log(this.que.qnType);
       this.$axios({
         method: "post", url: "/createQn/saveQn", data: {
           "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",

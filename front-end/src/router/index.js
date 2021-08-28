@@ -53,6 +53,11 @@ const routes = [
     component: () => import('../views/CreatingQuestionnaire')
   },
   {
+    path: '/votingQuestionnaire' ,
+    name: 'VotingQuestionnaire' ,
+    component: () => import('../views/VotingQuestionnaire')
+  },
+  {
     path: '/showVoteResult' ,
     name: 'ShowVoteResult' ,
     component: () => import('../views/ShowVoteResult')

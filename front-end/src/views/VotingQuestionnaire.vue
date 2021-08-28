@@ -1,70 +1,70 @@
 <template>
   <div :style="heightAndWidth">
     <el-card style="width: 800px; margin: auto"  v-loading.fullscreen.lock="fullscreenLoading">
-    <div class="row" id="pdfDom">
-      <div slot="header" class="clearfix">
-        <span style="font-size: larger">{{que.title}}</span>
-      </div>
-      <div v-for="item in que.QList"
-           :key="item.qid" style="margin: 15px">
-        <div style="float: left;margin-left: 12px">
-          <el-tag type="warning" size="small" v-if="(item.type===0||item.type===1)&&(item.necessary === true)">必选</el-tag>
-          <el-tag type="warning" size="small" v-if="(item.type === 2||item.type === 3)&&(item.necessary === true)">必填</el-tag>
+      <div class="row" id="pdfDom">
+        <div slot="header" class="clearfix">
+          <span style="font-size: larger">{{que.title}}</span>
         </div>
-        <div v-if="item.type===0">
-          <div class="queLabel">
-            {{item.qid+1}}.{{item.title}}
+        <div v-for="item in que.QList"
+             :key="item.qid" style="margin: 15px">
+          <div style="float: left;margin-left: 12px">
+            <el-tag type="warning" size="small" v-if="(item.type===0||item.type===1)&&(item.necessary === true)">必选</el-tag>
+            <el-tag type="warning" size="small" v-if="(item.type === 2||item.type === 3)&&(item.necessary === true)">必填</el-tag>
           </div>
-          <div style="margin-left: 10%;margin-right: 10%">
-            <el-radio-group
-                v-model="item.selection" style="width: 100%">
-              <el-radio
-                  v-for="subItem in item.option"
-                  :key="subItem.oid"
-                  :label="subItem.oid"
-                  style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
-                <span style="font-size: medium;">{{subItem.content}}</span>
-              </el-radio>
-            </el-radio-group>
+          <div v-if="item.type===0">
+            <div class="queLabel">
+              {{item.qid+1}}.{{item.title}}
+            </div>
+            <div style="margin-left: 10%;margin-right: 10%">
+              <el-radio-group
+                  v-model="item.selection" style="width: 100%">
+                <el-radio
+                    v-for="subItem in item.option"
+                    :key="subItem.oid"
+                    :label="subItem.oid"
+                    style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
+                  <span style="font-size: medium;">{{subItem.content}}</span>
+                </el-radio>
+              </el-radio-group>
+            </div>
+          </div>
+          <div v-if="item.type===1">
+            <div class="queLabel">
+              {{item.qid+1}}.{{item.title}}
+            </div>
+            <div style="margin-left: 10%;margin-right: 10%">
+              <el-checkbox-group
+                  v-model="item.selections" style="width: 100%">
+                <el-checkbox
+                    v-for="subItem in item.option"
+                    :key="subItem.oid"
+                    :label="subItem.oid"
+                    style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
+                  <span style="font-size: medium;">{{subItem.content}}</span>
+                </el-checkbox>
+              </el-checkbox-group>
+            </div>
+          </div>
+          <div v-if="item.type===2">
+            <div class="queLabel">
+              {{item.qid+1}}.{{item.title}}
+            </div>
+            <div style="margin: 7px 10%;">
+              <el-input v-model="item.input"/>
+            </div>
+          </div>
+          <div v-if="item.type===3">
+            <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
+              {{item.qid+1}}.{{item.title}}
+            </div>
+            <div class="queLabel">
+              <el-rate
+                  v-model="item.rating"
+                  :colors="colors">
+              </el-rate>
+            </div>
           </div>
         </div>
-        <div v-if="item.type===1">
-          <div class="queLabel">
-            {{item.qid+1}}.{{item.title}}
-          </div>
-          <div style="margin-left: 10%;margin-right: 10%">
-            <el-checkbox-group
-                v-model="item.selections" style="width: 100%">
-              <el-checkbox
-                  v-for="subItem in item.option"
-                  :key="subItem.oid"
-                  :label="subItem.oid"
-                  style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
-                <span style="font-size: medium;">{{subItem.content}}</span>
-              </el-checkbox>
-            </el-checkbox-group>
-          </div>
-        </div>
-        <div v-if="item.type===2">
-          <div class="queLabel">
-            {{item.qid+1}}.{{item.title}}
-          </div>
-          <div style="margin: 7px 10%;">
-            <el-input v-model="item.input"/>
-          </div>
-        </div>
-        <div v-if="item.type===3">
-          <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
-            {{item.qid+1}}.{{item.title}}
-          </div>
-          <div class="queLabel">
-            <el-rate
-                v-model="item.rating"
-                :colors="colors">
-            </el-rate>
-          </div>
-        </div>
-      </div>
       </div>
       <div style="margin-top: 30px">
         <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="submitQn">提交</el-button>
@@ -206,10 +206,10 @@ export default {
       }
       this.$axios({method:"post",url:"/quiz/submitQn", data:{
           "qnId": this.que.qnId,
-          "qnType":0,
+          "qnType":2,
           "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",
           "AnswerList":AnswerListTemp
-      }})
+        }})
           .then(res => {
             if(res.data.success === true){
               this.$notify({
@@ -239,7 +239,13 @@ export default {
             this.fullscreenLoading=false
             this.$router.push('/');
           })
-      this.$router.push('/successResult');
+      this.$router.push({
+        path:'/showVoteResult',
+        query:{
+          id:this.que.qnId
+        }
+      });
+
     }
   }
 }
