@@ -9,7 +9,6 @@
       <el-menu :default-active="activeIndex"
                class="el-menu-demo"
                mode="horizontal"
-               @select="handleSelect"
                text-color="black"
                active-text-color="#6060ff">
         <el-menu-item index="1" style="position: absolute;left: 36%;">我的问卷</el-menu-item>
@@ -26,7 +25,7 @@
 
       <div class="demo-type" >
         <div>
-          <el-avatar icon="el-icon-user-solid" size="small"></el-avatar>
+          <el-avatar icon="el-icon-user-solid" size="small" ></el-avatar>
         </div>
         <!--        <div>-->
         <!--          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
@@ -253,17 +252,17 @@ export default {
         });
       } else if (command === "发布日期") {
         this.allList.sort(function (a, b) {
-          return Date.parse(a.pubDate) - Date.parse(b.pubDate);
+          return Date.parse(b.pubDate) - Date.parse(a.pubDate);
         });
         this.myList.sort(function (a, b) {
-          return Date.parse(a.pubDate) - Date.parse(b.pubDate);
+          return Date.parse(b.pubDate) - Date.parse(a.pubDate);
         });
       } else {
         this.allList.sort(function (a, b) {
-          return Date.parse(a.createDate) - Date.parse(b.createDate);
+          return Date.parse(b.createDate) - Date.parse(a.createDate);
         });
         this.myList.sort(function (a, b) {
-          return Date.parse(a.createDate) - Date.parse(b.createDate);
+          return Date.parse(b.createDate) - Date.parse(a.createDate);
         });
       }
       this.list = [];

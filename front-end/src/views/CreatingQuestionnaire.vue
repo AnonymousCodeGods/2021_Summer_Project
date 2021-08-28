@@ -713,7 +713,7 @@ export default {
       this.$axios({
         method: "post", url: "/createQn/saveQn", data: {
           "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",
-          "que": this.que
+          "que": this.que,
         }
       })
           .then(res => {
