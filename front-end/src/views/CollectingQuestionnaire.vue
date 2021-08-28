@@ -13,7 +13,12 @@
         </div>
         <div v-if="item.type===0">
           <div class="queLabel">
-            {{item.qid+1}}.{{item.title}}
+            <span v-if="que.showNumbers">
+              {{item.qid+1}}.
+            </span>
+            <span>
+              {{item.title}}
+            </span>
           </div>
           <div style="margin-left: 10%;margin-right: 10%">
             <el-radio-group
@@ -30,7 +35,12 @@
         </div>
         <div v-if="item.type===1">
           <div class="queLabel">
-            {{item.qid+1}}.{{item.title}}
+            <span v-if="que.showNumbers">
+              {{item.qid+1}}.
+            </span>
+            <span>
+              {{item.title}}
+            </span>
           </div>
           <div style="margin-left: 10%;margin-right: 10%">
             <el-checkbox-group
@@ -47,21 +57,55 @@
         </div>
         <div v-if="item.type===2">
           <div class="queLabel">
-            {{item.qid+1}}.{{item.title}}
+            <span v-if="que.showNumbers">
+              {{item.qid+1}}.
+            </span>
+            <span>
+              {{item.title}}
+            </span>
           </div>
           <div style="margin: 7px 10%;">
             <el-input v-model="item.input"/>
           </div>
         </div>
         <div v-if="item.type===3">
-          <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
-            {{item.qid+1}}.{{item.title}}
+          <div class="queLabel">
+            <span v-if="que.showNumbers">
+              {{item.qid+1}}.
+            </span>
+            <span>
+              {{item.title}}
+            </span>
           </div>
           <div class="queLabel">
             <el-rate
                 v-model="item.rating"
                 :colors="colors">
             </el-rate>
+          </div>
+        </div>
+        <div v-if="item.type===4">
+          <div class="queLabel">
+            <span v-if="que.showNumbers">
+              {{item.qid+1}}.
+            </span>
+            <span>
+              {{item.title}}
+            </span>
+          </div>
+          <div class="queLabel">
+            <el-input v-model="item.location" disabled style="width: 75%">
+
+            </el-input>
+            <el-popover placement="top"
+                        title="确定要获取您的当前位置吗"
+                        v-model="item.dialogVisible">
+              <el-button plain type="warning" icon="el-icon-map-location" slot="reference" style="margin-left: 5%;width: 20%">
+                定位
+              </el-button>
+              <el-button plain type="warning" icon="el-icon-check"  size="mini" style="margin-left:15%;width: 30%" v-on:click="getMapLocation(item)"/>
+              <el-button plain type="" icon="el-icon-close"  size="mini" style="margin-left:10%;width: 30%" v-on:click="item.dialogVisible=false"/>
+            </el-popover>
           </div>
         </div>
       </div>
@@ -75,6 +119,7 @@
 </template>
 
 <script>
+import AMap from 'AMap'
 export default {
   name: 'CQue',
   created() {
@@ -85,6 +130,7 @@ export default {
             this.$router.push('/failedResult');
           }
           this.que.QList=[]
+          this.que.qnType = res.data.que.qnType
           this.que.qnId = res.data.que.qnid;
           this.que.showNumbers = res.data.showNumbers;
           this.que.title = res.data.que.title;
@@ -134,12 +180,20 @@ export default {
                 input : ""
               })
             }
-            else{
+            else if(temp1.type === 3){
               this.que.QList.push({
                 qid:i,
                 type:temp1.type,
                 title: temp1.title,
                 rating : 0
+              })
+            } else {
+              this.que.QList.push({
+                qid:i,
+                type:temp1.type,
+                title: temp1.title,
+                location : '',
+                dialogVisible: false
               })
             }
           }
@@ -167,15 +221,109 @@ export default {
           'position:fixed;overflow:scroll',
       que: {
         qnId: '0',
+        qnType: 0,
+        showNumbers: true,
         title: "测试问卷",
-        QList: []
+        QList: [{
+          qid: 0,
+          type: 0,
+          title: "这是一道单选题，点击右边的按钮可以更改题目",
+          hasAnswer: false,
+          answer:0,
+          necessary: true,
+          selection: -1,
+          option: [{
+            oid: 0,
+            content: "你好"
+          }, {
+            oid: 1,
+            content: "hello"
+          }, {
+            oid: 2,
+            content: "这是一个选项，点击下方按钮可以增加新的选项"
+          }],
+        }, {
+          qid: 1,
+          type: 1,
+          title: "这是一道多选题",
+          hasAnswer: false,
+          answer: [],
+          necessary: false,
+          selections: [],
+          option: [{
+            oid: 0,
+            content: "你好"
+          }, {
+            oid: 1,
+            content: "hello"
+          }, {
+            oid: 2,
+            content: "hi"
+          }],
+        }, {
+          qid: 2,
+          type: 2,
+          title: "我是一道填空题",
+          necessary: false,
+          input:''
+        }, {
+          qid: 3,
+          type: 3,
+          title: "我是一道评分题",
+          necessary: true,
+          rating:0
+        }, {
+          qid: 4,
+          type: 4,
+          title: "我是一道定位题",
+          necessary: false,
+          location:'',
+          dialogVisible: false
+        }]
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       fullscreenLoading: false
     }
   },
   methods: {
+    getMapLocation(item) {
+      let temp = this
+      AMap.plugin('AMap.Geolocation', function() {
+        let geolocation = new AMap.Geolocation({
+          // 是否使用高精度定位，默认：true
+          enableHighAccuracy: true,
+          // 设置定位超时时间，默认：无穷大
+          timeout: 10000,
+
+        })
+
+        geolocation.getCurrentPosition()
+        AMap.event.addListener(geolocation, 'complete', onComplete)
+        AMap.event.addListener(geolocation, 'error', onError)
+
+        function onComplete (data) {
+          temp.$notify({
+            title: '成功',
+            message: '定位成功',
+            type: 'success',
+            position: 'bottom-left'
+          });
+          item.location = data.formattedAddress
+        }
+
+        function onError () {
+          temp.$notify({
+            title: '失败',
+            message: '定位失败',
+            type: 'error',
+            position: 'bottom-left'
+          });
+        }
+      })
+      item.dialogVisible =false
+    },
     submitQn(){
+      this.fullscreenLoading = true
       for(let i=0;i<this.que.QList.length;i++){
         if(this.que.QList[i].necessary) {
           if((this.que.QList[i].type === 0 && this.que.QList[i].selection===-1)
@@ -187,6 +335,7 @@ export default {
               message: '请填写所有必填项',
               type: 'warning'
             });
+            this.fullscreenLoading = false
             return
           }
         }
@@ -212,20 +361,26 @@ export default {
             answer : temp1.input
           })
         }
-        else{
+        else if(temp1.type ===3) {
           AnswerListTemp.push({
             type: temp1.type,
             answer : temp1.rating
+          })
+        }else {
+          AnswerListTemp.push({
+            type: temp1.type,
+            answer : temp1.location
           })
         }
       }
       this.$axios({method:"post",url:"/quiz/submitQn", data:{
           "qnId": this.que.qnId,
-          "qnType":0,
+          "qnType": this.que.qnType,
           "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",
           "AnswerList":AnswerListTemp
       }})
           .then(res => {
+            this.fullscreenLoading = false
             if(res.data.success === true){
               this.$notify({
                 title: '成功',
@@ -233,6 +388,16 @@ export default {
                 type: 'success',
                 position: 'bottom-left'
               });
+              if(this.que.qnType === 2) {
+                this.$router.push({
+                  path:'/showVoteResult',
+                  query:{
+                    id:this.que.qnId
+                  }
+                });
+              } else {
+                this.$router.push('/successResult');
+              }
             }
             else {
               this.$notify({
@@ -241,7 +406,7 @@ export default {
                 type: 'error',
                 position: 'bottom-left'
               });
-              this.$router.push('/');
+              this.fullscreenLoading=false
             }
           })
           .catch(() => {
@@ -252,9 +417,7 @@ export default {
               position: 'bottom-left'
             });
             this.fullscreenLoading=false
-            this.$router.push('/');
           })
-      this.$router.push('/successResult');
     }
   }
 }
