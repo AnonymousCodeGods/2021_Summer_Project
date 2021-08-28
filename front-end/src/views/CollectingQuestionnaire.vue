@@ -176,6 +176,21 @@ export default {
   },
   methods: {
     submitQn(){
+      for(let i=0;i<this.que.QList.length;i++){
+        if(this.que.QList[i].necessary) {
+          if((this.que.QList[i].type === 0 && this.que.QList[i].selection===-1)
+              ||(this.que.QList[i].type === 1 && this.que.QList[i].selections.length===0)
+              ||(this.que.QList[i].type===2&&this.que.QList[i].input==='')
+              ||(this.que.QList[i].type===3&&this.que.QList[i].rating===0)
+              ||(this.que.QList[i].type===4&&this.que.QList[i].location==='') ) {
+            this.$message({
+              message: '请填写所有必填项',
+              type: 'warning'
+            });
+            return
+          }
+        }
+      }
       let AnswerListTemp = [];
       for(let i=0;i<this.que.QList.length;i++){
         let temp1=this.que.QList[i];
