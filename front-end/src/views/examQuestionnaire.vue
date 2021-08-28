@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span style="font-size: 20px">考试结束倒计时:{{
+    <span style="font-size: 20px;margin-left: 1100px;margin-top: 100px" class="box_fixed" id="boxFixed" :class="{'is_fixed' : isFixed}">考试结束倒计时:{{
         hour ? hourString + ':' + minuteString + ':' + secondString : minuteString + ':' + secondString
       }}</span>
     <el-card style="width: 800px; margin: auto" v-loading.fullscreen.lock="fullscreenLoading">
@@ -80,7 +80,7 @@ export default {
   name: 'CQue',
   created() {
     this.fullscreenLoading = true;
-    this.$axios({method: "post", url: "/getQn", data: {"QnId": 4}})
+    this.$axios({method: "post", url: "/getQn", data: {"QnId": 87}})
         // data: {"QnId": this.$route.query.id}
         .then(res => {
           if (res.data.que.state === false) {
@@ -165,10 +165,16 @@ export default {
       timer: '',
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       fullscreenLoading: false,
-      remainTime: '15'
+      remainTime: '150',
+      isFixed: false,
+      offsetTop: 0
     }
   },
   mounted() {
+    window.addEventListener('scroll', this.initHeight);
+    this.$nextTick(() => {
+      this.offsetTop = document.querySelector('#boxFixed').offsetTop;
+    })
     if (this.remainTime > 0) {
       this.hour = Math.floor((this.remainTime / 3600) % 24)
       this.minute = Math.floor((this.remainTime / 60) % 60)
@@ -179,6 +185,13 @@ export default {
     }
   },
   methods: {
+    initHeight() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.isFixed = scrollTop > this.offsetTop;
+    },
+    destroyed() {
+      window.removeEventListener('scroll', this.handleScroll)
+    },
     countDowm() {
       var self = this
       clearInterval(this.timer)
@@ -274,14 +287,17 @@ export default {
           })
       this.$router.push('/successResult');
     }
-  },
+  }
+  ,
   computed: {
     hourString() {
       return this.formatNum(this.hour)
-    },
+    }
+    ,
     minuteString() {
       return this.formatNum(this.minute)
-    },
+    }
+    ,
     secondString() {
       return this.formatNum(this.second)
     }
@@ -290,6 +306,24 @@ export default {
 </script>
 
 <style>
+.box_fixed {
+  width: 500px;
+  height: 40px;
+  border: 2px solid #eee;
+  border-radius: 10px;
+  margin: 0 auto;
+  line-height: 40px;
+  background: #eee;
+}
+
+.is_fixed {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  margin-left: -250px;
+  z-index: 999;
+}
+
 .queLabel {
   margin-left: 10%;
   margin-bottom: 8px;
