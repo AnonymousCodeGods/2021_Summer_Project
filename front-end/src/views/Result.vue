@@ -13,12 +13,12 @@
       </div>
       <a style="position:absolute;top:25%;height: 80%;left: 90%">{{ this.$store.state.username }}</a>
     </div>
-    <div class="body" style="overflow-y:scroll">
+    <div class="body" style="overflow-y:scroll" >
       <el-col :span="6" style="height: 100%">
       </el-col>
       <el-col :span="18">
         <div style="display: flex;justify-content: left;margin-top: 60px; ">
-          <el-card style="width: 1200px;height: 100%" :body-style="{ padding: '0px' }">
+          <el-card style="width: 1200px;height: 100%" :body-style="{ padding: '0px' }"  >
             <div slot="header" class="clearfix">
               <span> {{ this.que.title }} </span>
 <!--              <el-button style="float: right;" type="primary" @click="ExportData">导出数据</el-button>-->
@@ -157,7 +157,6 @@ export default {
     msg: String
   },
   created() {
-    this.fullscreenLoading=true;
     this.que.qid=this.$route.query.id
     this.$axios({
       method:"post",
@@ -196,12 +195,9 @@ export default {
               }
             }
           }
-          this.fullscreenLoading=false
         })
         .catch(() => {
-          this.fullscreenLoading=false
         })
-
 
     this.$axios({
           method:"post",
@@ -233,11 +229,8 @@ export default {
             }
           }
         }
-
-        this.fullscreenLoading=false
       })
       .catch(() => {
-        this.fullscreenLoading=false
       })
 
 
@@ -250,7 +243,6 @@ export default {
         title: "",
         QList: []
       },
-      fullscreenLoading: false,
       AnswerList: [
 
       ],

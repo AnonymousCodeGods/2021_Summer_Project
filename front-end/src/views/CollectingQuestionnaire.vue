@@ -7,6 +7,10 @@
       </div>
       <div v-for="item in que.QList"
            :key="item.qid" style="margin: 15px">
+        <div style="float: left;margin-left: 12px">
+          <el-tag type="warning" size="small" v-if="(item.type===0||item.type===1)&&(item.necessary === true)">必选</el-tag>
+          <el-tag type="warning" size="small" v-if="(item.type === 2||item.type === 3)&&(item.necessary === true)">必填</el-tag>
+        </div>
         <div v-if="item.type===0">
           <div class="queLabel">
             {{item.qid+1}}.{{item.title}}
@@ -82,6 +86,7 @@ export default {
           }
           this.que.QList=[]
           this.que.qnid = res.data.que.qnid;
+          this.que.showNumbers = res.data.showNumbers;
           this.que.title = res.data.que.title;
           for(let i=0;i<res.data.que.QList.length;i++){
             let temp1=res.data.que.QList[i];
@@ -99,6 +104,7 @@ export default {
                 type:temp1.type,
                 title: temp1.title,
                 option:optionTemp,
+                necessary: false,
                 selection:-1
               })
             }
@@ -116,6 +122,7 @@ export default {
                 type:temp1.type,
                 title: temp1.title,
                 option:optionTemp,
+                necessary: temp1.necessary,
                 selections: []
               })
             }
@@ -152,7 +159,7 @@ export default {
   data: function(){
     return {
       que: {
-        qnid: 0,
+        qnid: '0',
         title: "测试问卷",
         QList: []
       },
