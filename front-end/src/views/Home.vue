@@ -149,6 +149,7 @@
               :id="it.ID.toString()"
               :num="it.num.toString()"
               :state="it.state"
+              :Qsum="it.Qsum.toString()"
           ></each-quiz>
         </div>
         <!--没有问卷-->
@@ -402,6 +403,12 @@ export default {
   //background-color:#545c64
 }
 
+.demo-type {
+  position: absolute;
+  left: 90%;
+  top: 30%;
+}
+
 .body {
   position: absolute;
   min-width: 1300px;
@@ -426,12 +433,6 @@ export default {
   left: 80%;
   top: 30%;
   height: 50%;
-}
-
-.demo-type {
-  position: absolute;
-  left: 90%;
-  top: 30%;
 }
 
 .el-dropdown-link {

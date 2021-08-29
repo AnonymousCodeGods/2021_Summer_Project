@@ -1,34 +1,42 @@
 <template>
   <div>
     <div class="head">
-      <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:10%;height: 80%;left: 5%">
+      <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:5%;height: 75%;left: 5%">
 
-<!--      <el-badge :value="12" class="item">-->
-<!--        <el-button size="small">消息</el-button>-->
-<!--      </el-badge>-->
       <div class="demo-type">
         <div>
-          <el-avatar icon="el-icon-user-solid"></el-avatar>
+          <el-avatar icon="el-icon-user-solid" size="small"></el-avatar>
         </div>
+        <!--        <div>-->
+        <!--          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
+        <!--        </div>-->
       </div>
-      <a style="position:absolute;top:25%;height: 80%;left: 90%">{{ this.$store.state.username }}</a>
+
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%" @command="logout">
+      <span class="el-dropdown-link">
+        {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="退出">退出</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
-    <div class="body" style="overflow-y:scroll" >
+    <div class="body" style="overflow-y:scroll">
       <el-col :span="6" style="height: 100%">
       </el-col>
       <el-col :span="18">
         <div style="display: flex;justify-content: left;margin-top: 60px; ">
-          <el-card style="width: 1200px;height: 100%" :body-style="{ padding: '0px' }"  >
+          <el-card style="width: 1200px;height: 100%" :body-style="{ padding: '0px' }">
             <div slot="header" class="clearfix">
               <span> {{ this.que.title }} </span>
-<!--              <el-button style="float: right;" type="primary" @click="ExportData">导出数据</el-button>-->
+              <!--              <el-button style="float: right;" type="primary" @click="ExportData">导出数据</el-button>-->
             </div>
             <div v-for="(item,index) in que.QList" :key="item.qid" style="margin: 20px;">
-              <div >
+              <div>
                 <div class="queLabel">
                   {{ index + 1 }}.{{ item.title }}
                 </div>
-<!--                单选多选-->
+                <!--                单选多选-->
                 <div v-if="item.type===0||item.type===1" style="margin-left: 5%;margin-right: 5%;text-align: center">
                   <el-row style="margin-top:1%">
                     <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
@@ -67,7 +75,7 @@
                     </el-col>
                   </el-row>
                 </div>
-<!--                填空-->
+                <!--                填空-->
                 <div v-else-if="item.type===2" style="margin-left: 5%;margin-right: 5%;text-align: center">
                   <el-row style="margin-top:1%">
                     <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
@@ -94,7 +102,7 @@
                     </el-col>
                   </el-row>
                 </div>
-<!--                评分-->
+                <!--                评分-->
                 <div v-else-if="item.type===3" style="margin-left: 5%;margin-right: 5%;text-align: center">
                   <el-row style="margin-top:1%">
                     <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
@@ -125,9 +133,9 @@
                             prop="percentage"
                             align="center"
                             label="比例"
-                            >
+                        >
                           <template slot-scope="scope">
-                            <el-progress :percentage="scope.row.percentage" :format="format" ></el-progress>
+                            <el-progress :percentage="scope.row.percentage" :format="format"></el-progress>
                           </template>
                         </el-table-column>
                       </el-table>
@@ -157,41 +165,42 @@ export default {
     msg: String
   },
   created() {
-    this.que.qid=this.$route.query.id
+    this.que.qid = this.$route.query.id
+    this.username = this.$cookies.get('username')
     this.$axios({
-      method:"post",
+      method: "post",
       //todo: url
-      url:"/getQn",
-      data:{"QnId": this.que.qid}
+      url: "/getQn",
+      data: {"QnId": this.que.qid}
     })
         .then(res => {
-          this.que.title=res.data.que.title
+          this.que.title = res.data.que.title
           for (let i = 0; i < res.data.que.QList.length; i++) {
-            if(res.data.que.QList[i].type===0||res.data.que.QList[i].type===1){
+            if (res.data.que.QList[i].type === 0 || res.data.que.QList[i].type === 1) {
               this.que.QList.push({
-                qid:res.data.que.QList[i].qid,
-                total:0,
-                type:res.data.que.QList[i].type,
-                title:res.data.que.QList[i].title,
-                option:res.data.que.QList[i].option
+                qid: res.data.que.QList[i].qid,
+                total: 0,
+                type: res.data.que.QList[i].type,
+                title: res.data.que.QList[i].title,
+                option: res.data.que.QList[i].option
               })
-            }else if(res.data.que.QList[i].type===2){
+            } else if (res.data.que.QList[i].type === 2) {
               this.que.QList.push({
-                qid:res.data.que.QList[i].qid,
-                type:res.data.que.QList[i].type,
-                title:res.data.que.QList[i].title,
-                Inputlist:[]
+                qid: res.data.que.QList[i].qid,
+                type: res.data.que.QList[i].type,
+                title: res.data.que.QList[i].title,
+                Inputlist: []
               })
-            }else{
+            } else {
               this.que.QList.push({
-                qid:res.data.que.QList[i].qid,
-                total:0,
-                type:res.data.que.QList[i].type,
-                title:res.data.que.QList[i].title,
-                option:[]
+                qid: res.data.que.QList[i].qid,
+                total: 0,
+                type: res.data.que.QList[i].type,
+                title: res.data.que.QList[i].title,
+                option: []
               })
               for (let j = 0; j < 6; j++) {
-                this.que.QList[i].option.push({content:j+1,count:0,percentage:0})
+                this.que.QList[i].option.push({content: j + 1, count: 0, percentage: 0})
               }
             }
           }
@@ -200,39 +209,38 @@ export default {
         })
 
     this.$axios({
-          method:"post",
-          //todo: url
-          url:"/quiz/result",
-          data:{"ID": this.que.qid}
+      method: "post",
+      //todo: url
+      url: "/quiz/result",
+      data: {"ID": this.que.qid}
     })
-      .then(res => {
-        this.AnswerList=JSON.parse(JSON.stringify(res.data.AnswerList))
-        for (let i = 0; i < this.AnswerList.length; i++) {
-          if (this.AnswerList[i].type === 0 || this.AnswerList[i].type === 1 || this.AnswerList[i].type === 3) {
-            for (let j = 0; j < this.AnswerList[i].selection.length; j++) {
+        .then(res => {
+          this.AnswerList = JSON.parse(JSON.stringify(res.data.AnswerList))
+          for (let i = 0; i < this.AnswerList.length; i++) {
+            if (this.AnswerList[i].type === 0 || this.AnswerList[i].type === 1 || this.AnswerList[i].type === 3) {
+              for (let j = 0; j < this.AnswerList[i].selection.length; j++) {
 
-              this.que.QList[i].option[j].count = this.AnswerList[i].selection[j];
-              this.que.QList[i].total += this.AnswerList[i].selection[j]
-            }
-          } else if (this.AnswerList[i].type === 2) {
-            for (let j = 0; j < this.AnswerList[i].input.length; j++)
-              this.que.QList[i].Inputlist.push({index:j+1,content:this.AnswerList[i].input[j]})
-          }
-        }
-
-        console.log(this.AnswerList)
-        console.log(this.que.QList)
-        for (let i = 0; i < this.AnswerList.length; i++) {
-          if(this.AnswerList[i].type===0||this.AnswerList[i].type===1||this.AnswerList[i].type===3){
-            for (let j = 0; j <this.que.QList[i].option.length; j++) {
-              this.que.QList[i].option[j].percentage=this.que.QList[i].option[j].count*100.0/this.que.QList[i].total
+                this.que.QList[i].option[j].count = this.AnswerList[i].selection[j];
+                this.que.QList[i].total += this.AnswerList[i].selection[j]
+              }
+            } else if (this.AnswerList[i].type === 2) {
+              for (let j = 0; j < this.AnswerList[i].input.length; j++)
+                this.que.QList[i].Inputlist.push({index: j + 1, content: this.AnswerList[i].input[j]})
             }
           }
-        }
-      })
-      .catch(() => {
-      })
 
+          console.log(this.AnswerList)
+          console.log(this.que.QList)
+          for (let i = 0; i < this.AnswerList.length; i++) {
+            if (this.AnswerList[i].type === 0 || this.AnswerList[i].type === 1 || this.AnswerList[i].type === 3) {
+              for (let j = 0; j < this.que.QList[i].option.length; j++) {
+                this.que.QList[i].option[j].percentage = this.que.QList[i].option[j].count * 100.0 / this.que.QList[i].total
+              }
+            }
+          }
+        })
+        .catch(() => {
+        })
 
 
   },
@@ -243,20 +251,23 @@ export default {
         title: "",
         QList: []
       },
-      AnswerList: [
-
-      ],
+      AnswerList: [],
     }
   },
   methods: {
+    logout(command) {
+      console.log(command);
+      this.$cookies.remove('username');
+      this.$router.push("/");
+    },
     getSummaries(param) {
-      const { columns, data } = param;
+      const {columns, data} = param;
       const sums = [];
       columns.forEach((column, index) => {
         if (index === 0) {
           sums[index] = '总计 ';
           return;
-        }else if(index === 2){
+        } else if (index === 2) {
           sums[index] = '';
           return;
         }
@@ -278,7 +289,7 @@ export default {
       return sums;
     },
     format(percentage) {
-      return parseFloat(percentage).toFixed(2)+"%";
+      return parseFloat(percentage).toFixed(2) + "%";
     }
     ,
     toHome: function () {
@@ -302,10 +313,17 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  height: 8%;
+  height: 62px;
+  min-height: 60px;
   width: 100%;
   background-color: #ffffff;
-  //border:2px solid #000000;
+  //background-color:#545c64
+}
+
+.demo-type {
+  position: absolute;
+  left: 90%;
+  top: 30%;
 }
 
 .body {
@@ -327,12 +345,6 @@ export default {
   height: 50%;
 }
 
-.demo-type {
-  position: absolute;
-  left: 86%;
-  top: 25%;
-  height: 40%;
-}
 
 .el-dropdown-link {
   cursor: pointer;

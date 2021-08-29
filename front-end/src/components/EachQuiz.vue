@@ -9,22 +9,31 @@
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">回收量：{{ num }}</a>
     <!--分割线-->
     <div class="midText"></div>
-    <a style="float:right;padding-right: 70px;padding-top: 52px;height: 20px;cursor:pointer;" @click="del">删除</a>
+    <a class="on" style="float:right;padding-right: 70px;padding-top: 52px;height: 20px;cursor:pointer;" @click="del"
+       @mouseover="Over($event)"
+       @mouseleave="Leave($event)">删除</a>
     <img src="../assets/del.png" style="float:right;padding-right: 10px;padding-top: 52px;height: 20px;cursor:pointer;">
 
-    <a style="float:right;padding-right: 30px;padding-top: 52px;height: 20px;width: 60px;cursor:pointer;"
+    <a class="on" style="float:right;padding-right: 30px;padding-top: 52px;height: 20px;width: 60px;cursor:pointer;"
        @click="dialogFormVisible = true"
-       v-if="state===false">发布</a>
-    <a style="float:right;padding-right: 30px;padding-top: 52px;height: 20px;width: 60px;cursor:pointer;"
+       v-if="state===false"
+       @mouseover="Over($event)"
+       @mouseleave="Leave($event)">发布</a>
+    <a class="on" style="float:right;padding-right: 30px;padding-top: 52px;height: 20px;width: 60px;cursor:pointer;"
        @click="suspend"
-       v-else>暂停</a>
+       v-else
+       @mouseover="Over($event)"
+       @mouseleave="Leave($event)"
+    >暂停</a>
     <img src="../assets/suspend.png" v-if="state===true"
          style="float:right;padding-right: 0;padding-top: 53px;height: 20px;cursor:pointer;">
     <img src="../assets/open.png" v-else
          style="float:right;padding-right: 0;padding-top: 53px;height: 20px;cursor:pointer;">
 
-    <a style="float:right;padding-right: 30px;padding-top: 52px;height: 20px;width: 60px;cursor:pointer;"
+    <a class="on" style="float:right;padding-right: 30px;padding-top: 52px;height: 20px;width: 60px;cursor:pointer;"
        @click="copy"
+       @mouseover="Over($event)"
+       @mouseleave="Leave($event)"
     >拷贝</a>
     <img src="../assets/copy.png"
          style="float:right;padding-right: 0px;padding-top: 53px;height: 20px;cursor:pointer;">
@@ -81,10 +90,12 @@ export default {
     state: Boolean,
     date: String,
     num: String,
+    Qsum: String
   },
   data() {
     return {
       json_fields: {},
+      letter: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
       json_data: [],
       dialogTableVisible: false,
       dialogFormVisible: false,
@@ -98,7 +109,7 @@ export default {
         resource: '',
         desc: ''
       },
-      value:'',
+      value: '',
       formLabelWidth: '120px'
     }
 
@@ -109,6 +120,12 @@ export default {
     },
     mouseLeave($event) {
       $event.currentTarget.className = 'fun';
+    },
+    Over($event) {
+      $event.currentTarget.className = 'off';
+    },
+    Leave($event) {
+      $event.currentTarget.className = 'on';
     },
     del() {
       const formData = new FormData();
@@ -125,7 +142,7 @@ export default {
     },
     pub() {
       this.dialogFormVisible = false
-      this.$axios.post('/user/set_end', {"qnid": this.id,"endTime":this.value})
+      this.$axios.post('/user/set_end', {"qnid": this.id, "endTime": this.value})
           .then(result => {
             console.log(result)
           })
@@ -182,28 +199,44 @@ export default {
     },
     exported() {
       if (this.num !== '0') {
-        this.$axios.post('/quiz/result', {"ID": this.id})
+        this.json_fields = {
+          '编号': 'Qnum',
+          '用户名': 'username',
+        };
+        for (let i = 0; i < this.Qsum; i++) {
+          let x = (i + 1).toString();
+          this.json_fields[x] = 'num' + i;
+        }
+        this.$axios.post('/quiz/idp_result', {"qnid": this.id})
             .then(result => {
-              this.json_data = result.data.AnswerList;
-              for (let i = 0; i < this.json_data.length; i++) {
-                this.json_data[i].Qnum = i + 1;
-                console.log(this.json_data[i].type === 0)
-                if (this.json_data[i].type === 0)
-                  this.json_data[i].type = '单选';
-                else if (this.json_data[i].type === 1)
-                  this.json_data[i].type = '多选';
-                else if (this.json_data[i].type === 2)
-                  this.json_data[i].type = '填空';
-                else if (this.json_data[i].type === 3)
-                  this.json_data[i].type = '评分';
+              this.json_data = [];
+              for (let i = 0; i < result.data.resultList.length; i++) {
+                let line = {'Qnum': i + 1};
+                line['username'] = result.data.resultList[i].userName;
+                for (let k = 0; k < this.Qsum; k++) {
+                  if (result.data.resultList[i].AnswerList[k].answer !== null) {
+                    if (result.data.resultList[i].AnswerList[k].type === 0) {
+                      line['num' + k] = this.letter[result.data.resultList[i].AnswerList[k].answer];
+                    } else if (result.data.resultList[i].AnswerList[k].type === 1) {
+                      let ans = '';
+                      for (let j = 0; j < result.data.resultList[i].AnswerList[k].answer.length; j++)
+                        ans += this.letter[result.data.resultList[i].AnswerList[k].answer]
+                      line['num' + k] = ans;
+                    } else if (result.data.resultList[i].AnswerList[k].type === 2) {
+                      line['num' + k] = result.data.resultList[i].AnswerList[k].answer;
+                    } else if (result.data.resultList[i].AnswerList[k].type === 3) {
+                      line['num' + k] = result.data.resultList[i].AnswerList[k].answer;
+                    } else {
+                      line['num' + k] = result.data.resultList[i].AnswerList[k].answer;
+                    }
+                  } else
+                    line['num' + k] = '未填'
+                }
+                this.json_data.push(line)
               }
+              console.log('x')
               console.log(this.json_data)
             });
-        this.json_fields = {
-          'num': 'Qnum',
-          'type': 'type',
-          'answer': 'selection',
-        };
       } else {
         this.$notify({
           title: '抱歉',
@@ -259,6 +292,19 @@ export default {
   color: #0b92e8;
   font-size: 15px;
   font-weight: bold;
+  cursor: pointer;
+  height: 50px;
+}
+
+.on {
+  font-size: 15px;
+  cursor: pointer;
+  height: 50px;
+}
+
+.off {
+  color: #0b92e8;
+  font-size: 15px;
   cursor: pointer;
   height: 50px;
 }
