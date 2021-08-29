@@ -139,13 +139,14 @@
 
 <!--      弹框-->
       <el-dialog
-          title="创建问卷"
-          :visible.sync="dialog1"
-          width="800px"
-          :before-close="handleClose"
-          center
-          style="margin-top: 5%">
+        title="创建问卷"
+        :visible.sync="dialog1"
+        width="800px"
+        :before-close="handleClose"
+        center
+        style="margin-top: 5%">
         <el-form :model="form" style="" :label-position=" 'left' " >
+
           <el-form-item
               required
               label="问卷类型"

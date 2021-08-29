@@ -554,6 +554,7 @@ export default {
       this.fullscreenLoading = true
       this.$axios({method: "post", url: "/getQn", data: {"QnId": qnId}})
           .then(res => {
+            console.log(res.data.que)
             this.que.QList = [];
             this.que.qnType = res.data.que.qnType + '';
             this.que.showNumbers = res.data.que.showNumbers;
@@ -568,7 +569,7 @@ export default {
                   optionTemp.push({
                     oid: j,
                     content: temp2.content,
-                    limit: 0,
+                    limit: temp2.limit,
                   })
                 }
                 this.que.QList.push({
@@ -579,7 +580,8 @@ export default {
                   belongTo: {qid: -1, option: -1},
                   hasAnswer: false,
                   answer: 0,
-                  option: optionTemp
+                  option: optionTemp,
+                  isSumLimit:temp1.isSumLimit,
                 })
               } else if (temp1.type === 1) {
                 let optionTemp = [];
@@ -588,7 +590,7 @@ export default {
                   optionTemp.push({
                     oid: j,
                     content: temp2.content,
-                    limit: 0,
+                    limit: temp2.limit,
                   })
                 }
                 this.que.QList.push({
@@ -599,7 +601,8 @@ export default {
                   belongTo: {qid: -1, option: -1},
                   hasAnswer: false,
                   answer: [],
-                  option: optionTemp
+                  option: optionTemp,
+                  isSumLimit:temp1.isSumLimit,
                 })
               } else if (temp1.type === 2) {
                 this.que.QList.push({
