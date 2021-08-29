@@ -1,38 +1,50 @@
 <template>
   <div :style="heightAndWidth">
-    <el-card style="width: 800px; margin: auto"  v-loading.fullscreen.lock="fullscreenLoading">
+    <el-card style="width: 800px; margin: auto" v-loading.fullscreen.lock="fullscreenLoading">
       <div class="row" id="pdfDom">
         <div slot="header" class="clearfix">
-          <span style="font-size: larger">{{que.title}}</span>
+          <span style="font-size: larger">{{ que.title }}</span>
         </div>
+
         <div v-for="item in que.QList"
              :key="item.qid" style="margin: 15px">
           <div style="float: left;margin-left: 12px">
-            <el-tag type="warning" size="small" v-if="(item.type===0||item.type===1)&&(item.necessary === true)">必选</el-tag>
-            <el-tag type="warning" size="small" v-if="(item.type === 2||item.type === 3)&&(item.necessary === true)">必填</el-tag>
+            <el-tag type="warning" size="small" v-if="(item.type===0||item.type===1)&&(item.necessary === true)">必选
+            </el-tag>
+            <el-tag type="warning" size="small" v-if="(item.type === 2||item.type === 3)&&(item.necessary === true)">
+              必填
+            </el-tag>
           </div>
+
           <div v-if="item.type===0">
             <div class="queLabel">
               <span v-if="que.showNumbers">
                 {{item.qid+1}}.
               </span>
-              <span>
+                <span>
                 {{item.title}}
               </span>
             </div>
             <div style="margin-left: 10%;margin-right: 10%">
               <el-radio-group
                   v-model="item.selection" style="width: 100%">
+
                 <el-radio
+                    :disabled="subItem.num===0"
                     v-for="subItem in item.option"
                     :key="subItem.oid"
                     :label="subItem.oid"
-                    style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
-                  <span style="font-size: medium;">{{subItem.content}}</span>
+                    style="width: 100%;margin: 10px;display: flex;align-items: flex-start;" >
+                  <div style="font-size: medium;">
+                    {{ subItem.content }}
+                    <el-tag type="info" style="margin-left: 20%">剩余:{{subItem.num}}</el-tag>
+                  </div>
                 </el-radio>
+
               </el-radio-group>
             </div>
           </div>
+
           <div v-if="item.type===1">
             <div class="queLabel">
               <span v-if="que.showNumbers">
@@ -46,15 +58,20 @@
               <el-checkbox-group
                   v-model="item.selections" style="width: 100%">
                 <el-checkbox
+                    :disabled="subItem.num===0"
                     v-for="subItem in item.option"
                     :key="subItem.oid"
                     :label="subItem.oid"
                     style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
-                  <span style="font-size: medium;">{{subItem.content}}</span>
+                  <div style="font-size: medium;">
+                    {{ subItem.content }}
+                    <el-tag type="info" style="margin-left: 20%">剩余:{{subItem.num}}</el-tag>
+                  </div>
                 </el-checkbox>
               </el-checkbox-group>
             </div>
           </div>
+
           <div v-if="item.type===2">
             <div class="queLabel">
               <span v-if="que.showNumbers">
@@ -68,12 +85,13 @@
               <el-input v-model="item.input"/>
             </div>
           </div>
+
           <div v-if="item.type===3">
             <div class="queLabel">
               <span v-if="que.showNumbers">
                 {{item.qid+1}}.
               </span>
-              <span>
+                <span>
                 {{item.title}}
               </span>
             </div>
@@ -108,12 +126,16 @@
               </el-popover>
             </div>
           </div>
-        </div>
       </div>
+      </div>
+
       <div style="margin-top: 30px">
-        <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="submitQn">提交</el-button>
-        <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="getPdf('问卷')">导出pdf</el-button>
+        <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="submitSignUpQn">提交
+        </el-button>
+        <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="getPdf('问卷')">导出pdf
+        </el-button>
       </div>
+
     </el-card>
   </div>
 </template>
@@ -123,69 +145,100 @@ import AMap from 'AMap'
 export default {
   name: 'CQue',
   created() {
-    this.fullscreenLoading=true;
-    this.$axios({method:"post",url:"/getQn", data:{"QnId": this.$route.query.id}})
+    // this.userName=this.$route.query.userName
+    // if(this.userName === ''){
+    //   this.$router.push({
+    //     path: "/login2",
+    //     query: {
+    //       id: this.$route.query.id
+    //       }
+    //    });
+    // }
+    this.fullscreenLoading = true;
+    this.$axios({method: "post", url: "/getQn", data: {"QnId": this.$route.query.id}})
         .then(res => {
-          if(res.data.que.state === false){
-            this.$router.push('/failedResult');
+          console.log(res.data.que)
+          if (res.data.que.isSumLimit && res.data.que.sum === 0 ){
+            this.isReachLimit = true
           }
-          this.que.QList=[]
+          for (let i = 0; i < res.data.que.QList.length; i++) {
+            let temp1 = res.data.que.QList[i];
+            if ( (temp1.type === 0 || temp1.type === 1) && temp1.isSumLimit ){
+              let j
+              for (j = 0; j < temp1.option.length; j++) {
+                if(temp1.option[j].num>0) break
+              }
+              if (j === temp1.option.length)
+                this.isReachLimit = true
+            }
+          }
+
+          if (res.data.que.state === false) {
+            this.$router.push('/failedResult');
+          }else if(this.isReachLimit){
+            this.$router.push('/failedResult2');
+          }
+
+          this.que.QList = []
           this.que.qnType = res.data.que.qnType
           this.que.qnId = res.data.que.qnid;
           this.que.showNumbers = res.data.showNumbers;
           this.que.title = res.data.que.title;
-          for(let i=0;i<res.data.que.QList.length;i++){
-            let temp1=res.data.que.QList[i];
-            if(temp1.type === 0){
-              let optionTemp=[];
-              for(let j=0;j<temp1.option.length;j++){
-                let temp2=temp1.option[j];
+          for (let i = 0; i < res.data.que.QList.length; i++) {
+            let temp1 = res.data.que.QList[i];
+            if (temp1.type === 0) {
+              let optionTemp = [];
+              for (let j = 0; j < temp1.option.length; j++) {
+                let temp2 = temp1.option[j];
+                // console.log(temp2.num)
                 optionTemp.push({
-                  oid:j,
-                  content:temp2.content
+                  oid: j,
+                  content: temp2.content,
+                  num: temp2.num
                 })
               }
               this.que.QList.push({
-                qid:i,
-                type:temp1.type,
+                qid: i,
+                type: temp1.type,
                 title: temp1.title,
-                option:optionTemp,
-                necessary: false,
-                selection:-1
+                option: optionTemp,
+                necessary: temp1.necessary,
+                selection: -1
               })
-            }
-            else if(temp1.type === 1){
-              let optionTemp=[];
-              for(let j=0;j<temp1.option.length;j++){
-                let temp2=temp1.option[j];
+            } else if (temp1.type === 1) {
+              let optionTemp = [];
+              for (let j = 0; j < temp1.option.length; j++) {
+                let temp2 = temp1.option[j];
                 optionTemp.push({
-                  oid:j,
-                  content:temp2.content
+                  oid: j,
+                  content: temp2.content,
+                  num: temp2.num
                 })
               }
               this.que.QList.push({
-                qid:i,
-                type:temp1.type,
+                qid: i,
+                type: temp1.type,
                 title: temp1.title,
-                option:optionTemp,
+                option: optionTemp,
                 necessary: temp1.necessary,
                 selections: []
               })
-            }
-            else if(temp1.type === 2){
+            } else if (temp1.type === 2) {
               this.que.QList.push({
-                qid:i,
-                type:temp1.type,
+                qid: i,
+                type: temp1.type,
                 title: temp1.title,
-                input : ""
+                input: "",
+                necessary: temp1.necessary
               })
             }
             else if(temp1.type === 3){
               this.que.QList.push({
-                qid:i,
-                type:temp1.type,
+                qid: i,
+                type: temp1.type,
                 title: temp1.title,
-                rating : 0
+                rating: 0,
+                necessary: temp1.necessary
               })
             } else {
               this.que.QList.push({
@@ -197,7 +250,7 @@ export default {
               })
             }
           }
-          this.fullscreenLoading=false
+          this.fullscreenLoading = false
         })
         .catch(() => {
           this.$notify({
@@ -206,11 +259,11 @@ export default {
             type: 'error',
             position: 'bottom-left'
           });
-          this.fullscreenLoading=false
+          this.fullscreenLoading = false
           this.$router.push('/');
         })
   },
-  data: function(){
+  data: function () {
     return {
       heightAndWidth: 'margin:0; height:'+
           (window.innerHeight).toString()+
@@ -224,65 +277,13 @@ export default {
         qnType: 0,
         showNumbers: true,
         title: "测试问卷",
-        QList: [{
-          qid: 0,
-          type: 0,
-          title: "这是一道单选题，点击右边的按钮可以更改题目",
-          hasAnswer: false,
-          answer:0,
-          necessary: true,
-          selection: -1,
-          option: [{
-            oid: 0,
-            content: "你好"
-          }, {
-            oid: 1,
-            content: "hello"
-          }, {
-            oid: 2,
-            content: "这是一个选项，点击下方按钮可以增加新的选项"
-          }],
-        }, {
-          qid: 1,
-          type: 1,
-          title: "这是一道多选题",
-          hasAnswer: false,
-          answer: [],
-          necessary: false,
-          selections: [],
-          option: [{
-            oid: 0,
-            content: "你好"
-          }, {
-            oid: 1,
-            content: "hello"
-          }, {
-            oid: 2,
-            content: "hi"
-          }],
-        }, {
-          qid: 2,
-          type: 2,
-          title: "我是一道填空题",
-          necessary: false,
-          input:''
-        }, {
-          qid: 3,
-          type: 3,
-          title: "我是一道评分题",
-          necessary: true,
-          rating:0
-        }, {
-          qid: 4,
-          type: 4,
-          title: "我是一道定位题",
-          necessary: false,
-          location:'',
-          dialogVisible: false
-        }]
+        sum:'',
+        QList: []
       },
+      userName: 'wang',
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      isReachLimit: false
     }
   },
   methods: {
@@ -322,8 +323,9 @@ export default {
       })
       item.dialogVisible =false
     },
-    submitQn(){
+    submitSignUpQn() {
       this.fullscreenLoading = true
+      console.log(this.que)
       for(let i=0;i<this.que.QList.length;i++){
         if(this.que.QList[i].necessary) {
           if((this.que.QList[i].type === 0 && this.que.QList[i].selection===-1)
@@ -341,30 +343,28 @@ export default {
         }
       }
       let AnswerListTemp = [];
-      for(let i=0;i<this.que.QList.length;i++){
-        let temp1=this.que.QList[i];
-        if(temp1.type === 0){
+      for (let i = 0; i < this.que.QList.length; i++) {
+        let temp1 = this.que.QList[i];
+        if (temp1.type === 0) {
           AnswerListTemp.push({
             type: temp1.type,
-            answer:temp1.selection
+            answer: temp1.selection
           })
-        }
-        else if(temp1.type === 1){
+        } else if (temp1.type === 1) {
           AnswerListTemp.push({
             type: temp1.type,
             answer: temp1.selections
           })
-        }
-        else if(temp1.type === 2){
+        } else if (temp1.type === 2) {
           AnswerListTemp.push({
             type: temp1.type,
-            answer : temp1.input
+            answer: temp1.input
           })
         }
         else if(temp1.type ===3) {
           AnswerListTemp.push({
             type: temp1.type,
-            answer : temp1.rating
+            answer: temp1.rating
           })
         }else {
           AnswerListTemp.push({
@@ -374,10 +374,11 @@ export default {
         }
       }
 
-      this.$axios({method:"post",url:"/quiz/submitQn", data:{
-          "qnId": this.que.qnId,
+      this.$axios({method:"post",url: "/quiz/submitSignUpQn", data:{
+          "qnid": this.que.qnId,
           "qnType": this.que.qnType,
-          "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",
+          // "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",
+          "userName" : this.userName,
           "AnswerList":AnswerListTemp
       }})
           .then(res => {
@@ -389,24 +390,25 @@ export default {
                 type: 'success',
                 position: 'bottom-left'
               });
-              if(this.que.qnType === 2) {
-                this.$router.push({
-                  path:'/showVoteResult',
-                  query:{
-                    id:this.que.qnId
-                  }
-                });
-              } else {
-                this.$router.push('/successResult');
-              }
-            }
-            else {
+              this.$router.push('/successResult');
+            } else if(res.data.msg === 0) {
               this.$notify({
                 title: '失败',
                 message: '提交问卷失败',
                 type: 'error',
                 position: 'bottom-left'
               });
+              this.$router.push('/failedResult2');
+              this.fullscreenLoading=false
+            }
+            else{
+              this.$notify({
+                title: '失败',
+                message: '提交问卷失败',
+                type: 'error',
+                position: 'bottom-left'
+              });
+              this.$router.push('/failedResult3');
               this.fullscreenLoading=false
             }
           })
@@ -417,9 +419,9 @@ export default {
               type: 'error',
               position: 'bottom-left'
             });
-            this.fullscreenLoading=false
+            this.fullscreenLoading = false
           })
-    }
+    },
   }
 }
 </script>
