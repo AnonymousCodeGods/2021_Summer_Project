@@ -55,8 +55,11 @@
 
     <a class="fun" style="float: right;padding-right: 130px;padding-top: 50px" @click="edit"
        @mouseover="mouseOver($event)"
-       @mouseleave="mouseLeave($event)">编辑问卷</a>
+       @mouseleave="mouseLeave($event)" v-if="this.hasBranch === false">编辑问卷</a>
     <!--    暂时先写成导出结果-->
+
+    <a class="funx" style="float: right;padding-right: 130px;padding-top: 50px"
+        v-else>编辑问卷</a>
 
     <download-excel
         :data="json_data"
@@ -91,7 +94,8 @@ export default {
     state: Boolean,
     date: String,
     num: String,
-    Qsum: String
+    Qsum: String,
+    hasBranch: Boolean,
   },
   data() {
     return {
@@ -110,6 +114,7 @@ export default {
         resource: '',
         desc: ''
       },
+
       value: '',
       formLabelWidth: '120px'
     }
@@ -288,6 +293,14 @@ export default {
 }
 
 .fun {
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  height: 50px;
+}
+
+.funx {
+  color: #bababa;
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;

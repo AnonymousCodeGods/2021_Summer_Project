@@ -19,6 +19,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/main')
     },
     {
+        path: '/resultForm',
+        name: 'resultForm',
+        component: () => import(/* webpackChunkName: "about" */ '../views/resultForm')
+    },
+    {
         path: '/examQuestionnaire',
         name: 'Test',
         component: () => import(/* webpackChunkName: "about" */ '../views/examQuestionnaire')

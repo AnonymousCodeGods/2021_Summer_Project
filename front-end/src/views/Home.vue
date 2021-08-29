@@ -199,12 +199,13 @@
         >
           <each-quiz
               :name="it.name"
-              :type="it.type"
+              :type="it.type.toString()"
               :date="it.createDate"
               :id="it.ID.toString()"
               :num="it.num.toString()"
               :state="it.state"
               :Qsum="it.Qsum.toString()"
+              :hasBranch="it.hasBranch"
           ></each-quiz>
         </div>
         <!--没有问卷-->

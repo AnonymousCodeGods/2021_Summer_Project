@@ -33,12 +33,18 @@
               <!--              <el-button style="float: right;" type="primary" @click="ExportData">导出数据</el-button>-->
             </div>
             <div v-for="(item,index) in que.QList" :key="item.qid" style="margin: 20px;">
-              <div>
-                <div class="queLabel">
-                  {{ index + 1 }}.{{ item.title }}
-                </div>
+              <div style="margin-bottom: 30px">
+                <el-row style="margin-bottom: 10px">
+                  <div class="queLabel" style="float: left">
+                    {{ index + 1 }}.{{ item.title }}
+                  </div>
+                  <el-button type="primary" style="float: right;margin-right: 100px;margin-top: 30px" @click="img(item)"
+                             v-if="item.type===0||item.type===1||item.type===3">图表展示
+                  </el-button>
+                </el-row>
                 <!--                单选多选-->
-                <div v-if="item.type===0||item.type===1" style="margin-left: 5%;margin-right: 5%;text-align: center">
+                <div v-if="item.type===0||item.type===1"
+                     style="margin-left: 5%;margin-right: 5%;text-align: center">
                   <el-row style="margin-top:1%">
                     <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
                       <el-table
@@ -299,6 +305,10 @@ export default {
     toHome: function () {
       this.$router.push("/home");
     },
+    img(item) {
+      console.log(item);
+      this.$router.push("/resultForm");
+    }
   }
 }
 </script>
@@ -478,8 +488,9 @@ export default {
 
 .queLabel {
   margin-left: 5%;
-  margin-bottom: 8px;
+  margin-top: 50px;
   margin-right: 5%;
+  width: 300px;
   text-align: start;
 }
 
