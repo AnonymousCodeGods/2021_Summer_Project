@@ -4,7 +4,7 @@
     <el-button circle plain type="primary" class="hoverB" style="top:50px" icon="el-icon-back" v-on:click="$router.push('/home')"></el-button>
     <el-popover
         placement="right"
-        width="325"
+        width="390"
         v-model="addQuestionVisible">
       <div style="text-align: right; margin: 0">
         <el-button plain type="primary" size="mini"  @click="addSingleChoice">单选</el-button>
@@ -12,6 +12,7 @@
         <el-button plain type="info" size="mini"  @click="addSpaceFilling">填空</el-button>
         <el-button plain type="warning" size="mini" @click="addRating">评分</el-button>
         <el-button plain type="danger" size="mini" @click="addLocating">定位</el-button>
+        <el-button plain type="danger" size="mini" @click="addBranch">分支</el-button>
       </div>
       <el-button circle plain type="success" class="hoverB" style="top:100px" icon="el-icon-plus" slot="reference"></el-button>
     </el-popover>
@@ -268,7 +269,7 @@
                       </vuedraggable>
                     </div>
                   </div>
-                  <el-button style="width: 100%;margin-top:20px" icon="el-icon-plus" v-on:click="addBranch(item)"></el-button>
+                  <el-button style="width: 100%;margin-top:20px" icon="el-icon-plus" v-on:click="addABranch(item)"></el-button>
                 </div>
               </div>
             </el-card>
@@ -556,7 +557,7 @@ export default {
       this.$axios({method: "post", url: "/getQn", data: {"QnId": qnId}})
           .then(res => {
             this.que.QList = [];
-            this.que.qnType = res.data.que.qnType;
+            this.que.qnType = res.data.que.qnType+'';
             this.que.showNumbers = res.data.que.showNumbers;
             this.que.qnId = res.data.que.qnid;
             this.que.title = res.data.que.title;
@@ -676,7 +677,7 @@ export default {
         limit: 0
       })
     },
-    addBranch(question) {
+    addABranch(question) {
       question.option.push({
         oid: question.option.length,
         content: "",
@@ -696,6 +697,7 @@ export default {
         title: "请输入题干",
         option: []
       })
+      this.reorder()
       this.roll();
     },
     addMultiChoice() {
@@ -711,6 +713,7 @@ export default {
         title: "请输入题干",
         option: []
       })
+      this.reorder()
       this.roll();
     },
     addSpaceFilling() {
@@ -722,6 +725,7 @@ export default {
         necessary: false,
         title: "请输入题干",
       })
+      this.reorder()
       this.roll();
     },
     addRating() {
@@ -733,6 +737,7 @@ export default {
         necessary: false,
         title: "请输入题干",
       })
+      this.reorder()
       this.roll();
     },
     addLocating() {
@@ -744,6 +749,20 @@ export default {
         necessary: false,
         title: "点击获取地理位置",
       })
+      this.reorder()
+      this.roll();
+    },
+    addBranch() {
+      this.addQuestionVisible = false;
+      let i = this.que.QList.length
+      this.que.QList.push({
+        qid: i,
+        type: 5,
+        necessary: false,
+        title: "分支名称",
+        option:[]
+      })
+      this.reorder()
       this.roll();
     },
     deleteQuestion(question) {
