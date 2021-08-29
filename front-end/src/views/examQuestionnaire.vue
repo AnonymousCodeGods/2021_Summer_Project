@@ -4,7 +4,8 @@
     <!--        hour ? hourString + ':' + minuteString + ':' + secondString : minuteString + ':' + secondString-->
     <!--      }}</span>-->
     <div style="position:fixed;font-size: 30px;font-weight:50;left: 80%;top: 40%;
-        border: 1px solid #bbc1ce;border-radius: 10px;height: 100px;background-color: #dee0e3">
+        border: 1px solid #bbc1ce;border-radius: 10px;height: 100px;background-color: #dee0e3"
+    v-if="this.remainTime === ''">
 
 
       <div class="time-card" data-type="hours" data-max="24">
@@ -194,7 +195,7 @@ export default {
       timer: '',
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       fullscreenLoading: false,
-      remainTime: '15000',
+      remainTime: '',
       isFixed: false,
       offsetTop: 0
     }
@@ -271,7 +272,7 @@ export default {
       }
       this.$axios({
         method: "post", url: "/quiz/submitQn", data: {
-          "qnid": this.que.qnid,
+          "qnId": this.que.qnid,
           "AnswerList": AnswerListTemp
         }
       })

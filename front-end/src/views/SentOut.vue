@@ -87,11 +87,11 @@ export default {
     this.id = this.$route.query.id;
     this.type = this.$route.query.type;
     if(this.type === '2')
-    this.address = 'http://35.229.129.193:8080/#/collectingSignUpQuestionnaire?id=' + this.id;
+    this.address = 'http://localhost:8080/#/collectingSignUpQuestionnaire?id=' + this.id;
     else if(this.type === '3'){
-      this.address = 'http://35.229.129.193:8080/#/examQuestionnaire?id=' + this.id;
+      this.address = 'http://localhost:8080/#/examQuestionnaire?id=' + this.id;
     }else{
-      this.address = 'http://35.229.129.193:8080/#/collectingQuestionnaire2?type='+this.type+'id=' + this.id;
+      this.address = 'http://localhost:8080/#/collectingQuestionnaire?type='+this.type+'&id=' + this.id;
     }
   },
   methods: {
