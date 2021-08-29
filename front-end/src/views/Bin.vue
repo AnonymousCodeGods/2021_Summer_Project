@@ -182,8 +182,8 @@ export default {
     })
         .then(res => {
           console.log(res.data)
-          let binlist = [];
-          binlist = res.data.info.quizs//todo:bug
+          let binlist;
+          binlist = res.data.info.quizs
           for (let i = 0; i < binlist.length; i++) {
             this.tableData.push({
               qnid: binlist[i].ID,
@@ -219,7 +219,6 @@ export default {
       this.$axios({
         method: "post",
         data: {qnid: this.tableData[index].qnid},
-        //todo: url
         url: "user_b/del",
       })
           .then(res => {
@@ -259,7 +258,6 @@ export default {
       this.$axios({
         method: "post",
         data: {ID: this.tableData[index].qnid},
-        //todo: url
         url: "quiz/recover",
       })
           .then(res => {
@@ -289,7 +287,6 @@ export default {
       this.$axios({
         method: "post",
         data: {qnid: this.tableData[index].qnid},
-        //todo: url
         url: "quiz/clear",
       })
           .then(res => {
@@ -352,12 +349,6 @@ export default {
   border-image: linear-gradient(0deg, #979696, #e7e7e7) 1 10;
 }
 
-.item {
-  position: absolute;
-  left: 80%;
-  top: 30%;
-  height: 50%;
-}
 
 .demo-type {
   position: absolute;
@@ -375,132 +366,9 @@ export default {
   font-size: 6px;
 }
 
-.button {
-  float: left;
-  min-width: 150px;
-  max-width: 500px;
-  display: block;
-  margin: 1em;
-  padding: 1em 2em;
-  border: none;
-  background: none;
-  color: inherit;
-  position: relative;
-  z-index: 1;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.button:focus {
-  outline: none;
-}
-
 .button > span {
   vertical-align: middle;
 }
 
-/* Sizes */
-.button--size {
-  font-size: 14px;
 
-}
-
-.button--size-x {
-  font-size: 15px;
-}
-
-/* Typography and Roundedness */
-.button--text-thick {
-  font-weight: 300;
-}
-
-.button--round-s {
-  border-radius: 2px;
-}
-
-.button--round-x {
-  border-radius: 0px;
-}
-
-/* Wapasha */
-.button.button--login {
-  background: #176c97;
-  color: #fff;
-  -webkit-transition: background-color 0.3s, color 0.3s;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.button.button--join {
-  background: #d2d1d1;
-  color: #000000;
-  -webkit-transition: background-color 0.3s, color 0.3s;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.button--login.button--inverted {
-  background: #0b92e8;
-  color: #fdfeff;
-}
-
-.button--login::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  border-radius: inherit;
-  opacity: 0;
-  -webkit-transform: scale3d(0.6, 0.6, 1);
-  transform: scale3d(0.6, 0.6, 1);
-  -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
-  transition: transform 0.3s, opacity 0.3s;
-  -webkit-transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
-  transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
-}
-
-.button--login:hover {
-  background-color: #fff;
-  color: #3f51b5;
-}
-
-.button--login.button--inverted:hover {
-  background-color: #0d78ad;
-  color: #fcfcfd;
-}
-
-/*  加入按钮*/
-.button--join.button--inverted {
-  background: #adadad;
-  border: 1px solid #adadad;
-  color: #000000;
-}
-
-.button--join::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  border-radius: inherit;
-  opacity: 0;
-  -webkit-transform: scale3d(0.6, 0.6, 1);
-  transform: scale3d(0.6, 0.6, 1);
-  -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
-  transition: transform 0.3s, opacity 0.3s;
-  -webkit-transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
-  transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
-}
-
-.button--join:hover {
-  background-color: #dcd8d8;
-  color: #000000;
-}
-
-.button--join.button--inverted:hover {
-  background-color: #55646d;
-  color: #fcfcfd;
-}
 </style>

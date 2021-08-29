@@ -30,6 +30,10 @@
     </el-popover>
     <el-button circle plain type="warning" class="hoverB" style="top:200px;margin-left: 0" icon="el-icon-check" @click="uploadQn"></el-button>
 
+    <el-tooltip v-if="que.qnType===2 " effect="dark" content="设置问卷次数限制" placement="right">
+      <el-button circle plain type="primary" class="hoverB" style="top:250px;margin-left: 0;" icon="el-icon-setting" @click="setQnSum"></el-button>
+    </el-tooltip>
+
 
     <el-dialog :visible="titleEditDialog" :show-close="false">
       <div slot="title">编辑题目</div>
@@ -72,6 +76,40 @@
       <el-button circle plain v-on:click="doneAnswerEdit" type="success" icon="el-icon-check"></el-button>
     </el-dialog>
 
+
+    <el-dialog
+        title="设置问卷填写上限"
+        :visible.sync="SumEditDialog"
+        width="45%"
+        :before-close="handleClose"
+        center
+        style="margin-top: 5%">
+      <el-form :model="form" style="" :label-position=" 'left' " >
+        <el-form-item
+            :required="form.isSumLimit"
+            label="问卷填写次数设置"
+            :label-width="formLabelWidth"
+            style="text-align: left">
+          <el-switch
+              v-model="form.isSumLimit"
+              active-color="#3292ff"
+              inactive-color="#99a9bf"
+              active-text="限制人数"
+              inactive-text="开放填写" />
+          <el-input
+              v-if="form.isSumLimit"
+              v-model.number="form.sum"
+              autocomplete="off"
+              placeholder="请输入填写次数上限"
+              style="width: 55%;margin-left: 5%"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleClose(done)">取 消</el-button>
+        <el-button type="primary" @click="handleConfirm(done)">确 定</el-button>
+      </div>
+    </el-dialog>
 
     <div id="Qn" style="height: 100%;width: 100%;overflow-y:scroll;margin: auto">
       <el-card style="margin: 20px 20% ;" v-loading.fullscreen.lock="fullscreenLoading">
@@ -116,7 +154,7 @@
                   <div style="width:100%;margin: 5px;">
                     <el-checkbox v-model="item.necessary">必填</el-checkbox>
                   </div>
-                  <div style="width:100%;margin: 5px;" v-if="que.qnType ==='2'&&(item.type===0||item.type===1)">
+                  <div style="width:100%;margin: 5px;" v-if="que.qnType ===2 &&(item.type===0||item.type===1)">
                     <el-checkbox v-model="item.isSumLimit">限制人数</el-checkbox>
                   </div>
                   <div style="width:100%;margin: 5px;" v-if="que.qnType ==='3'&&(item.type===0||item.type===1)">
@@ -130,9 +168,9 @@
               <div v-if="item.type===0" class="queLabel" id="singleChoice">
                 <div>
                     <span style="line-height: 30px;">
-                      <el-tag size="small">单选</el-tag>
+                    <el-tag size="small">单选</el-tag>
                       {{ item.qid + 1 }}.{{ item.title }}
-                      <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+                    <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
                     </span>
                   <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
                     <div v-for="subItem in item.option" :key="subItem.oid">
@@ -279,6 +317,8 @@ export default {
         qnId: '0',
         showNumbers: true,
         qnType: 2,
+        sum: 0,
+        isSumLimit: false,
         title: "报名问卷",
         QList: [
           {
@@ -408,6 +448,8 @@ export default {
         showNumbers: true,
         qnType: 0,
         title: "普通问卷",
+        sum: 0,
+        isSumLimit:false,
         QList: [{
           qid: 0,
           type: 0,
@@ -470,6 +512,12 @@ export default {
       editingAnswers:[],
       editingAnswer:-1,
       editingAnswerQuestion:null,
+      SumEditDialog:false,
+      form:{
+        isSumLimit:false,
+        sum:0
+      },
+      formLabelWidth: '20%',
     }
   },
   methods: {
@@ -480,7 +528,7 @@ export default {
             this.que.QList = [];
             this.que.qnType = res.data.que.qnType;
             this.que.showNumbers = res.data.que.showNumbers;
-            this.que.qnId = res.data.que.qnid;
+            this.que.qnId = res.data.que.qnId;
             this.que.title = res.data.que.title;
             for (let i = 0; i < res.data.que.QList.length; i++) {
               let temp1 = res.data.que.QList[i];
@@ -491,7 +539,7 @@ export default {
                   optionTemp.push({
                     oid: j,
                     content: temp2.content,
-                    limit: 0,
+                    limit: temp2.limit,
                   })
                 }
                 this.que.QList.push({
@@ -501,7 +549,8 @@ export default {
                   necessary: temp1.necessary,
                   hasAnswer: false,
                   answer: 0,
-                  option: optionTemp
+                  option: optionTemp,
+                  isSumLimit:temp1.isSumLimit,
                 })
               } else if (temp1.type === 1) {
                 let optionTemp = [];
@@ -510,7 +559,7 @@ export default {
                   optionTemp.push({
                     oid: j,
                     content: temp2.content,
-                    limit: 0,
+                    limit: temp2.limit,
                   })
                 }
                 this.que.QList.push({
@@ -520,7 +569,8 @@ export default {
                   necessary: temp1.necessary,
                   hasAnswer: false,
                   answer: [],
-                  option: optionTemp
+                  option: optionTemp,
+                  isSumLimit:temp1.isSumLimit,
                 })
               } else if (temp1.type === 2) {
                 this.que.QList.push({
@@ -749,6 +799,34 @@ export default {
     roll() {
       let temp = document.getElementById("Qn");
       temp.scrollTop = temp.scrollHeight + 1000;
+    },
+    setQnSum(){
+      this.form.isSumLimit=this.que.isSumLimit
+      this.form.sum=this.que.sum
+      this.SumEditDialog=true
+    },
+    handleClose() {
+      this.$confirm('确认取消设置？')
+          .then(_ => {
+            this.SumEditDialog=false
+            this.form.isSumLimit=this.que.isSumLimit
+            this.form.sum=this.que.sum
+          })
+          .catch(_ => {});
+    },
+    handleConfirm(done) {
+      if(this.form.isSumLimit && this.form.sum === 0){
+        this.$notify({
+          title: '设置失败',
+          message: '人数不能为0',
+          position: 'bottom-left',
+          type: "error"
+        });
+      }else{
+        this.que.isSumLimit=this.form.isSumLimit
+        this.que.sum = this.form.sum
+        this.SumEditDialog=false
+      }
     }
   }
 }

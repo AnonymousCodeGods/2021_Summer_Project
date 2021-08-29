@@ -85,7 +85,7 @@ export default {
   },
   created() {
     this.id = this.$route.query.id;
-    this.address = 'http://35.229.129.193:8080/#/collectingQuestionnaire?id=' + this.id;
+    this.address = 'http://35.229.129.193:8080/#/collectingQuestionnaire2?id=' + this.id;
   },
   methods: {
     toInfo: function () {

@@ -32,6 +32,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
     },
     {
+        path: '/login2',
+        name: 'Login2',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '../views/Login_SignUp.vue')
+    },
+    {
         path: '/register',
         name: 'Register',
         component: () => import(/* webpackChunkName: "about" */ '../views/Register.vue')
@@ -40,6 +48,11 @@ const routes = [
         path: '/collectingQuestionnaire',
         name: 'Collect',
         component: () => import('../views/CollectingQuestionnaire')
+    },
+    {
+        path: '/collectingQuestionnaire2',
+        name: 'CollectSignUp',
+        component: () => import('../views/CollectingSignUpQuestionnaire')
     },
     {
         path: '/bin',
@@ -80,6 +93,16 @@ const routes = [
         path: '/failedResult',
         name: 'FailedResult',
         component: () => import('../views/failedResult')
+    },
+    {
+        path: '/failedResult2',
+        name: 'FailedResult2',
+        component: () => import('../views/failedResult_SignUpQ')
+    },
+    {
+        path: '/failedResult3',
+        name: 'FailedResult3',
+        component: () => import('../views/failedResult_SignUpQ2')
     },
     {
         path: '/endResult',
