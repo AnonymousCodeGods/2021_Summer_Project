@@ -389,7 +389,7 @@ export default {
                 type: 'success',
                 position: 'bottom-left'
               });
-              if(this.que.qnType === 2) {
+              if(this.que.qnType === 1) {
                 this.$router.push({
                   path:'/showVoteResult',
                   query:{
