@@ -1,7 +1,7 @@
 <template>
   <div :style="heightAndWidth">
 
-    <el-button circle plain type="primary" class="hoverB" style="top:50px" icon="el-icon-back"></el-button>
+    <el-button circle plain type="primary" class="hoverB" style="top:50px" icon="el-icon-back" @click="backHome"></el-button>
     <el-popover
         placement="right"
         width="325"
@@ -30,10 +30,49 @@
     </el-popover>
     <el-button circle plain type="warning" class="hoverB" style="top:200px;margin-left: 0" icon="el-icon-check" @click="uploadQn"></el-button>
 
+    <el-tooltip v-if="que.qnType===2 " effect="dark" content="设置问卷次数限制" placement="right">
+      <el-button circle plain type="primary" class="hoverB" style="top:250px;margin-left: 0;" icon="el-icon-setting" @click="setQnSum"></el-button>
+    </el-tooltip>
+
+
     <el-dialog :visible="titleEditDialog" :show-close="false">
       <div slot="title">编辑题目</div>
       <el-input v-model="editingTitle" style="margin-bottom: 30px;width: 80%"/>
       <el-button v-on:click="doneTitleEdit" style="width: 60%" type="success" icon="el-icon-check"></el-button>
+    </el-dialog>
+
+    <el-dialog
+        title="设置问卷填写上限"
+        :visible.sync="SumEditDialog"
+        width="45%"
+        :before-close="handleClose"
+        center
+        style="margin-top: 5%">
+      <el-form :model="form" style="" :label-position=" 'left' " >
+        <el-form-item
+            :required="form.isSumLimit"
+            label="问卷填写次数设置"
+            :label-width="formLabelWidth"
+            style="text-align: left">
+          <el-switch
+              v-model="form.isSumLimit"
+              active-color="#3292ff"
+              inactive-color="#99a9bf"
+              active-text="限制人数"
+              inactive-text="开放填写" />
+          <el-input
+              v-if="form.isSumLimit"
+              v-model.number="form.sum"
+              autocomplete="off"
+              placeholder="请输入填写次数上限"
+              style="width: 55%;margin-left: 5%"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleClose(done)">取 消</el-button>
+        <el-button type="primary" @click="handleConfirm(done)">确 定</el-button>
+      </div>
     </el-dialog>
 
     <div id="Qn" style="height: 100%;width: 100%;overflow-y:scroll;margin: auto">
@@ -83,7 +122,7 @@
                           inactive-color="#99a9bf"
                           style="margin-left: 5%"
                           active-text="限制人数"
-                          v-if="que.qnType ==='2'"
+                          v-if="que.qnType ===2 "
                           inactive-text="开放填写"/>
                     </span>
 
@@ -105,7 +144,7 @@
                       </el-input>
                       <el-input
                           v-if="item.isSumLimit"
-                          v-model="subItem.limit"
+                          v-model="subItem.num"
                           style="width: 17%;margin-bottom: 10px;margin-left: 5%"
                           placeholder="Limit:">
                       </el-input>
@@ -148,7 +187,7 @@
                       </el-input>
                       <el-input
                           v-if="item.isSumLimit"
-                          v-model="subItem.limit"
+                          v-model="subItem.num"
                           style="width: 17%;margin-bottom: 10px;margin-left: 5%"
                           placeholder="Limit:">
                       </el-input>
@@ -198,11 +237,13 @@ export default {
     this.que.qnType = this.$route.query.type
     if (this.$route.query.id !== '0') {
       this.getQn(this.$route.query.id)
-    } else if(this.$route.query.type === '2') {
+    }else if(this.$route.query.type === '2') {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        qnType: '2',
+        qnType: 2,
+        sum: 0,
+        isSumLimit: false,
         title: "报名问卷",
         QList: [
 
@@ -212,18 +253,21 @@ export default {
           {
             qid: 0,
             type: 2,
-            title: "姓名:"
+            title: "姓名:",
+            necessary: true,
           },
           {
             qid: 1,
             type: 2,
-            title: "手机号:"
+            title: "手机号:",
+            necessary: true,
           },
           {
             qid: 2,
             type: 0,
             title: "请选择你的报名项",
             isSumLimit: true,
+            necessary: true,
             option: [{
               oid: 0,
               content: "A",
@@ -255,49 +299,51 @@ export default {
         showNumbers: true,
         qnType: 0,
         title: "测试问卷",
-        sum: '',
+        sum: 0,
         isSumLimit:false,
-        QList: [{
-          qid: 0,
-          qnType: '0',
-          title: "这是一道单选题，点击右边的按钮可以更改题目",
-          necessary: true,
-          option: [{
-            oid: 0,
-            content: "你好"
-          }, {
-            oid: 1,
-            content: "hello"
-          }, {
-            oid: 2,
-            content: "这是一个选项，点击下方按钮可以增加新的选项"
-          }],
-        }, {
-          qid: 1,
-          type: 1,
-          title: "这是一道多选题",
-          necessary: false,
-          option: [{
-            oid: 0,
-            content: "你好"
-          }, {
-            oid: 1,
-            content: "hello"
-          }, {
-            oid: 2,
-            content: "hi"
-          }],
-        }, {
-          qid: 2,
-          type: 2,
-          title: "我是一道填空题",
-          necessary: false,
-        }, {
-          qid: 3,
-          type: 3,
-          title: "我是一道评分题",
-          necessary: true,
-        }]
+        QList: [
+        //     {
+        //   qid: 0,
+        //   qnType: '0',
+        //   title: "这是一道单选题，点击右边的按钮可以更改题目",
+        //   necessary: true,
+        //   option: [{
+        //     oid: 0,
+        //     content: "你好"
+        //   }, {
+        //     oid: 1,
+        //     content: "hello"
+        //   }, {
+        //     oid: 2,
+        //     content: "这是一个选项，点击下方按钮可以增加新的选项"
+        //   }],
+        // }, {
+        //   qid: 1,
+        //   type: 1,
+        //   title: "这是一道多选题",
+        //   necessary: false,
+        //   option: [{
+        //     oid: 0,
+        //     content: "你好"
+        //   }, {
+        //     oid: 1,
+        //     content: "hello"
+        //   }, {
+        //     oid: 2,
+        //     content: "hi"
+        //   }],
+        // }, {
+        //   qid: 2,
+        //   type: 2,
+        //   title: "我是一道填空题",
+        //   necessary: false,
+        // }, {
+        //   qid: 3,
+        //   type: 3,
+        //   title: "我是一道评分题",
+        //   necessary: true,
+        // }
+        ]
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       fullscreenLoading: false,
@@ -308,7 +354,13 @@ export default {
       drag: false,
       titleEditDialog: false,
       queLabelWidth: '20%',
-      moreFunctionVisible: false
+      moreFunctionVisible: false,
+      SumEditDialog:false,
+      form:{
+        isSumLimit:false,
+        sum:0
+      },
+      formLabelWidth: '20%',
     }
   },
   methods: {
@@ -316,6 +368,7 @@ export default {
       this.fullscreenLoading = true
       this.$axios({method: "post", url: "/getQn", data: {"QnId": qnid}})
           .then(res => {
+            console.log(res.data.que)
             this.que.QList = [];
             this.que.qnType = res.data.que.qnType;
             this.que.showNumbers = res.data.que.showNumbers;
@@ -330,7 +383,7 @@ export default {
                   optionTemp.push({
                     oid: j,
                     content: temp2.content,
-                    limit: temp2.num,
+                    num: temp2.num,
                   })
                 }
                 this.que.QList.push({
@@ -338,7 +391,8 @@ export default {
                   type: temp1.type,
                   title: temp1.title,
                   necessary: temp1.necessary,
-                  option: optionTemp
+                  option: optionTemp,
+                  isSumLimit:temp1.isSumLimit,
                 })
               } else if (temp1.type === 1) {
                 let optionTemp = [];
@@ -347,7 +401,7 @@ export default {
                   optionTemp.push({
                     oid: j,
                     content: temp2.content,
-                    limit: temp2.num,
+                    num: temp2.num,
                   })
                 }
                 this.que.QList.push({
@@ -355,7 +409,8 @@ export default {
                   type: temp1.type,
                   title: temp1.title,
                   necessary: temp1.necessary,
-                  option: optionTemp
+                  option: optionTemp,
+                  isSumLimit:temp1.isSumLimit,
                 })
               } else if (temp1.type === 2) {
                 this.que.QList.push({
@@ -406,7 +461,7 @@ export default {
       question.option.push({
         oid: question.option.length,
         content: "",
-        limit: ''
+        num: ''
       })
     },
     addSingleChoice() {
@@ -417,6 +472,7 @@ export default {
         type: 0,
         isSumLimit: false,
         title: "请输入题干",
+        necessary: false,
         option: []
       })
       this.roll();
@@ -428,6 +484,7 @@ export default {
         qid: i,
         type: 1,
         isSumLimit: false,
+        necessary: false,
         title: "请输入题干",
         option: []
       })
@@ -439,6 +496,7 @@ export default {
       this.que.QList.push({
         qid: i,
         type: 2,
+        necessary: false,
         title: "请输入题干",
       })
       this.roll();
@@ -449,6 +507,7 @@ export default {
       this.que.QList.push({
         qid: i,
         type: 3,
+        necessary: false,
         title: "请输入题干",
       })
       this.roll();
@@ -459,6 +518,7 @@ export default {
       this.que.QList.push({
         qid: i,
         type: 4,
+        necessary: false,
         title: "点击获取地理位置",
       })
       this.roll();
@@ -538,6 +598,36 @@ export default {
     roll() {
       let temp = document.getElementById("Qn");
       temp.scrollTop = temp.scrollHeight + 1000;
+    },
+    backHome(){
+      this.$router.push("./home")
+    },
+    setQnSum(){
+      this.form.isSumLimit=this.que.isSumLimit
+      this.form.sum=this.que.sum
+      this.SumEditDialog=true
+    },
+    handleClose() {
+      this.$confirm('确认取消设置？')
+          .then(_ => {
+            this.SumEditDialog=false
+            this.form.isSumLimit=this.que.isSumLimit
+            this.form.sum=this.que.sum
+          })
+          .catch(_ => {});
+    },
+    handleConfirm() {
+      if(this.form.isSumLimit && this.form.sum === 0){
+        this.$notify({
+          title: '设置失败',
+          message: '人数不能为0',
+          position: 'bottom-left',
+          type: "error"
+        });
+      }else{
+        this.que.isSumLimit=this.form.isSumLimit
+        this.que.sum = this.form.sum
+      }
     }
   }
 }

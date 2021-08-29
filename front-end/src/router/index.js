@@ -82,6 +82,16 @@ const routes = [
         component: () => import('../views/failedResult')
     },
     {
+        path: '/failedResult2',
+        name: 'FailedResult2',
+        component: () => import('../views/failedResult_SignUpQ')
+    },
+    {
+        path: '/failedResult3',
+        name: 'FailedResult3',
+        component: () => import('../views/failedResult_SignUpQ2')
+    },
+    {
         path: '/endResult',
         name: 'EndResult',
         component: () => import('../views/endResult')

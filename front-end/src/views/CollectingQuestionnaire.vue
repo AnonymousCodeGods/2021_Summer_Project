@@ -48,15 +48,20 @@
               <el-checkbox-group
                   v-model="item.selections" style="width: 100%">
                 <el-checkbox
+                    :disabled="subItem.num===0"
                     v-for="subItem in item.option"
                     :key="subItem.oid"
                     :label="subItem.oid"
                     style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
-                  <span style="font-size: medium;">{{ subItem.content }}</span>
+                  <div style="font-size: medium;">
+                    {{ subItem.content }}
+                    <el-tag type="info" style="margin-left: 20%">剩余:{{subItem.num}}</el-tag>
+                  </div>
                 </el-checkbox>
               </el-checkbox-group>
             </div>
           </div>
+
           <div v-if="item.type===2">
             <div class="queLabel">
               {{ item.qid + 1 }}.{{ item.title }}
@@ -65,6 +70,7 @@
               <el-input v-model="item.input"/>
             </div>
           </div>
+
           <div v-if="item.type===3">
             <div style="margin-left: 10%;margin-bottom:8px;text-align: start;">
               {{ item.qid + 1 }}.{{ item.title }}
@@ -80,7 +86,7 @@
       </div>
 
       <div style="margin-top: 30px">
-        <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="submitQn">提交
+        <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="submitSignUpQn">提交
         </el-button>
         <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="getPdf('问卷')">导出pdf
         </el-button>
@@ -95,10 +101,28 @@ export default {
   name: 'CQue',
   created() {
     this.fullscreenLoading = true;
+
     this.$axios({method: "post", url: "/getQn", data: {"QnId": this.$route.query.id}})
         .then(res => {
+          if (res.data.que.isSumLimit && res.data.que.sum === 0 ){
+            this.isReachLimit = true
+          }
+          for (let i = 0; i < res.data.que.QList.length; i++) {
+            let temp1 = res.data.que.QList[i];
+            if ( (temp1.type === 0 || temp1.type === 1) && temp1.isSumLimit ){
+              let j
+              for (j = 0; j < temp1.option.length; j++) {
+                if(temp1.option[j].num>0) break
+              }
+              if (j === temp1.option.length)
+                this.isReachLimit = true
+            }
+          }
+
           if (res.data.que.state === false) {
             this.$router.push('/failedResult');
+          }else if(this.isReachLimit){
+            this.$router.push('/failedResult2');
           }
           this.que.QList = []
           console.log(res.data.que)
@@ -112,7 +136,7 @@ export default {
               let optionTemp = [];
               for (let j = 0; j < temp1.option.length; j++) {
                 let temp2 = temp1.option[j];
-                console.log(temp2.num)
+                // console.log(temp2.num)
                 optionTemp.push({
                   oid: j,
                   content: temp2.content,
@@ -124,7 +148,7 @@ export default {
                 type: temp1.type,
                 title: temp1.title,
                 option: optionTemp,
-                necessary: false,
+                necessary: temp1.necessary,
                 selection: -1
               })
             } else if (temp1.type === 1) {
@@ -133,7 +157,8 @@ export default {
                 let temp2 = temp1.option[j];
                 optionTemp.push({
                   oid: j,
-                  content: temp2.content
+                  content: temp2.content,
+                  num: temp2.num
                 })
               }
               this.que.QList.push({
@@ -149,14 +174,16 @@ export default {
                 qid: i,
                 type: temp1.type,
                 title: temp1.title,
-                input: ""
+                input: "",
+                necessary: temp1.necessary
               })
             } else {
               this.que.QList.push({
                 qid: i,
                 type: temp1.type,
                 title: temp1.title,
-                rating: 0
+                rating: 0,
+                necessary: temp1.necessary
               })
             }
           }
@@ -183,11 +210,28 @@ export default {
         QList: []
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      isReachLimit: false
     }
   },
   methods: {
-    submitQn() {
+    submitSignUpQn() {
+      for(let i=0;i<this.que.QList.length;i++){
+        if(this.que.QList[i].necessary) {
+          if((this.que.QList[i].type === 0 && this.que.QList[i].selection===-1)
+              ||(this.que.QList[i].type === 1 && this.que.QList[i].selections.length===0)
+              ||(this.que.QList[i].type===2&&this.que.QList[i].input==='')
+              ||(this.que.QList[i].type===3&&this.que.QList[i].rating===0)
+              ||(this.que.QList[i].type===4&&this.que.QList[i].location==='') ) {
+            this.$message({
+              message: '请填写所有必填项',
+              type: 'warning'
+            });
+            return
+          }
+        }
+      }
+
       let AnswerListTemp = [];
       for (let i = 0; i < this.que.QList.length; i++) {
         let temp1 = this.que.QList[i];
@@ -213,8 +257,9 @@ export default {
           })
         }
       }
+
       this.$axios({
-        method: "post", url: "/quiz/submitQn", data: {
+        method: "post", url: "/quiz/submitSignUpQn", data: {
           "qnid": this.que.qnid,
           "AnswerList": AnswerListTemp
         }
@@ -227,14 +272,23 @@ export default {
                 type: 'success',
                 position: 'bottom-left'
               });
-            } else {
+              this.$router.push('/successResult');
+            } else if(res.data.msg === 0) {
               this.$notify({
                 title: '失败',
                 message: '提交问卷失败',
                 type: 'error',
                 position: 'bottom-left'
               });
-              this.$router.push('/');
+              this.$router.push('/failedResult2');
+            }else{
+              this.$notify({
+                title: '失败',
+                message: '提交问卷失败',
+                type: 'error',
+                position: 'bottom-left'
+              });
+              this.$router.push('/failedResult3');
             }
           })
           .catch(() => {
@@ -247,8 +301,9 @@ export default {
             this.fullscreenLoading = false
             this.$router.push('/');
           })
-      this.$router.push('/successResult');
-    }
+
+    },
+
   }
 }
 </script>

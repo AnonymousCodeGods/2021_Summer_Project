@@ -157,12 +157,13 @@ export default {
     msg: String
   },
   created() {
-    this.que.qid=this.$route.query.id
+    this.que.qnid=this.$route.query.id
+    // console.log(this.$route.query.id)
+    // console.log(this.que.qnid)
     this.$axios({
       method:"post",
-      //todo: url
       url:"/getQn",
-      data:{"QnId": this.que.qid}
+      data:{"QnId": this.que.qnid}
     })
         .then(res => {
           this.que.title=res.data.que.title
@@ -191,7 +192,7 @@ export default {
                 option:[]
               })
               for (let j = 0; j < 6; j++) {
-                this.que.QList[i].option.push({content:j+1,count:0,percentage:0})
+                this.que.QList[i].option.push({content:j,count:0,percentage:0})
               }
             }
           }
@@ -201,9 +202,8 @@ export default {
 
     this.$axios({
           method:"post",
-          //todo: url
           url:"/quiz/result",
-          data:{"ID": this.que.qid}
+          data:{"ID": this.que.qnid}
     })
       .then(res => {
         this.AnswerList=JSON.parse(JSON.stringify(res.data.AnswerList))
@@ -232,14 +232,11 @@ export default {
       })
       .catch(() => {
       })
-
-
-
   },
   data() {
     return {
       que: {
-        qid: '',
+        qnid: '',
         title: "",
         QList: []
       },
@@ -284,15 +281,6 @@ export default {
     toHome: function () {
       this.$router.push("/home");
     },
-    ExportData() {
-      //TODO:导出数据
-      this.$notify({
-        title: '导出成功',
-        message: null,
-        position: 'bottom-left',
-        type: "success"
-      })
-    }
   }
 }
 </script>

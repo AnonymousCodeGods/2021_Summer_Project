@@ -163,7 +163,11 @@ export default {
     },
 
     links() {
-      this.$router.push({path: "/sentout", query: {id: this.id}});
+      this.$router.push({
+        path: "/sentout",
+        query: {
+          id: this.id}}
+      );
     }
   }
 }

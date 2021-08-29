@@ -324,17 +324,17 @@ export default {
         });
       } else if (command === "发布日期") {
         this.allList.sort(function (a, b) {
-          return Date.parse(a.pubDate) - Date.parse(b.pubDate);
+          return Date.parse(b.pubDate) - Date.parse(a.pubDate);
         });
         this.myList.sort(function (a, b) {
-          return Date.parse(a.pubDate) - Date.parse(b.pubDate);
+          return Date.parse(b.pubDate) - Date.parse(a.pubDate);
         });
       } else {
         this.allList.sort(function (a, b) {
-          return Date.parse(a.createDate) - Date.parse(b.createDate);
+          return Date.parse(b.createDate) - Date.parse(a.createDate);
         });
         this.myList.sort(function (a, b) {
-          return Date.parse(a.createDate) - Date.parse(b.createDate);
+          return Date.parse(b.createDate) - Date.parse(a.createDate);
         });
       }
       this.list = [];
