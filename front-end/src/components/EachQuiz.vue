@@ -1,27 +1,65 @@
 <template>
   <div class="quiz">
-    <a style="float: left;padding-left: 40px;padding-top: 20px;width: 300px;text-align:left;">{{ type }}</a>
-    <a class="bas" style="float: left;padding-left: 50px;padding-top: 20px">ID：{{ id }}</a>
-    <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px;">状态：{{ state === true ? '已发布' : '未发布' }}</a>
+    <a style="float: left;padding-left: 45px;padding-top: 20px;width: 400px;text-align:left;">{{ name }}</a>
+    <!--    <a class="bas" style="float: left;padding-left: 50px;padding-top: 20px">ID：{{ id }}</a>-->
+    <a class="bas" style="float: left;padding-left: 40px;padding-top: 20px;">状态：{{
+        state === true ? '已发布' : '未发布'
+      }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">创建日期：{{ date.substring(0, 10) }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">回收量：{{ num }}</a>
     <!--分割线-->
     <div class="midText"></div>
-    <a style="float:right;padding-right: 70px;padding-top: 60px;height: 20px;cursor:pointer;" @click="del">删除</a>
-    <img src="../assets/del.png" style="float:right;padding-right: 10px;padding-top: 60px;height: 20px;cursor:pointer;">
-    <a style="float:right;padding-right: 80px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;" @click="pub"
-       v-if="state===false">发布</a>
-    <a style="float:right;padding-right: 80px;padding-top: 60px;height: 20px;width: 60px;cursor:pointer;"
+    <a class="on" style="float:right;padding-right: 70px;padding-top: 52px;height: 20px;cursor:pointer;" @click="del"
+       @mouseover="Over($event)"
+       @mouseleave="Leave($event)">删除</a>
+    <img src="../assets/del.png" style="float:right;padding-right: 10px;padding-top: 52px;height: 20px;cursor:pointer;">
+
+    <a class="on" style="float:right;padding-right: 30px;padding-top: 52px;height: 20px;width: 60px;cursor:pointer;"
+       @click="dialogFormVisible = true"
+       v-if="state===false"
+       @mouseover="Over($event)"
+       @mouseleave="Leave($event)">发布</a>
+    <a class="on" style="float:right;padding-right: 30px;padding-top: 52px;height: 20px;width: 60px;cursor:pointer;"
        @click="suspend"
-       v-else>暂停</a>
+       v-else
+       @mouseover="Over($event)"
+       @mouseleave="Leave($event)"
+    >暂停</a>
     <img src="../assets/suspend.png" v-if="state===true"
-         style="float:right;padding-right: 0;padding-top: 61px;height: 20px;cursor:pointer;">
+         style="float:right;padding-right: 0;padding-top: 53px;height: 20px;cursor:pointer;">
     <img src="../assets/open.png" v-else
-         style="float:right;padding-right: 0;padding-top: 61px;height: 20px;cursor:pointer;">
-    <a class="fun" style="float: right;padding-right: 190px;padding-top: 58px" @click="edit"
+         style="float:right;padding-right: 0;padding-top: 53px;height: 20px;cursor:pointer;">
+
+    <a class="on" style="float:right;padding-right: 30px;padding-top: 52px;height: 20px;width: 60px;cursor:pointer;"
+       @click="copy"
+       @mouseover="Over($event)"
+       @mouseleave="Leave($event)"
+    >拷贝</a>
+    <img src="../assets/copy.png"
+         style="float:right;padding-right: 0px;padding-top: 53px;height: 20px;cursor:pointer;">
+
+    <el-dialog title="问卷截止日期" :visible.sync="dialogFormVisible">
+      <el-date-picker
+          v-model="value"
+          type="datetime"
+          placeholder="选择日期时间"
+          default-time="12:00:00">
+      </el-date-picker>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="pub">不 限</el-button>
+        <el-button v-if="this.value !== ''" type="primary" @click="pub">提 交</el-button>
+        <el-button v-else type="primary" disabled>提 交</el-button>
+      </div>
+    </el-dialog>
+
+
+    <a class="fun" style="float: right;padding-right: 130px;padding-top: 50px" @click="edit"
        @mouseover="mouseOver($event)"
-       @mouseleave="mouseLeave($event)">编辑问卷</a>
+       @mouseleave="mouseLeave($event)" v-if="this.hasBranch === false">编辑问卷</a>
     <!--    暂时先写成导出结果-->
+
+    <a class="funx" style="float: right;padding-right: 130px;padding-top: 50px"
+        v-else>编辑问卷</a>
 
     <download-excel
         :data="json_data"
@@ -29,16 +67,16 @@
         worksheet="My Worksheet"
         type="excel"
         name="filename.xls">
-      <a class="fun" style="float: right;padding-right: 30px;padding-top: 58px"
+      <a class="fun" style="float: right;padding-right: 30px;padding-top: 50px"
          @mouseover="mouseOver($event)"
          @mouseleave="mouseLeave($event)"
          @click="exported">导出数据</a>
     </download-excel>
 
-    <a class="fun" style="float: right;padding-right: 30px;padding-top: 58px" @click="toResult"
+    <a class="fun" style="float: right;padding-right: 30px;padding-top: 50px" @click="toResult"
        @mouseover="mouseOver($event)"
        @mouseleave="mouseLeave($event)">查看结果</a>
-    <a class="fun" style="float: right;padding-right: 30px;padding-top: 58px" @click="links"
+    <a class="fun" style="float: right;padding-right: 30px;padding-top: 50px" @click="links"
        @mouseover="mouseOver($event)"
        @mouseleave="mouseLeave($event)">发送链接</a>
 
@@ -50,16 +88,35 @@
 export default {
   name: "EachQuiz",
   props: {
+    name: String,
     type: String,
     id: String,
     state: Boolean,
     date: String,
     num: String,
+    Qsum: String,
+    hasBranch: Boolean,
   },
   data() {
     return {
       json_fields: {},
+      letter: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
       json_data: [],
+      dialogTableVisible: false,
+      dialogFormVisible: false,
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+
+      value: '',
+      formLabelWidth: '120px'
     }
 
   },
@@ -70,6 +127,12 @@ export default {
     mouseLeave($event) {
       $event.currentTarget.className = 'fun';
     },
+    Over($event) {
+      $event.currentTarget.className = 'off';
+    },
+    Leave($event) {
+      $event.currentTarget.className = 'on';
+    },
     del() {
       const formData = new FormData();
       formData.append("ID", this.id)
@@ -79,9 +142,16 @@ export default {
             this.$router.go(0);
           })
     },
+    deadline() {
+
+
+    },
     pub() {
-      const formData = new FormData();
-      formData.append("ID", this.id)
+      this.dialogFormVisible = false
+      this.$axios.post('/user/set_end', {"qnid": this.id, "endTime": this.value})
+          .then(result => {
+            console.log(result)
+          })
       this.$axios.post('/quiz/publish', {"ID": this.id})
           .then(result => {
             console.log(result)
@@ -104,6 +174,7 @@ export default {
         path: "/creatingQuestionnaire",
         query: {
           id: this.id,
+          type: this.type
         }
       });
     },
@@ -125,32 +196,53 @@ export default {
       }
 
     },
+    copy() {
+      this.$axios.post('/createQn/copy', {"qnid": this.id})
+          .then(result => {
+            console.log(result)
+            this.$router.go(0);
+          })
+    },
     exported() {
       if (this.num !== '0') {
-        this.$axios.post('/quiz/result', {"ID": this.id})
+        this.json_fields = {
+          '编号': 'Qnum',
+          '用户名': 'username',
+        };
+        for (let i = 0; i < this.Qsum; i++) {
+          let x = (i + 1).toString();
+          this.json_fields[x] = 'num' + i;
+        }
+        this.$axios.post('/quiz/idp_result', {"qnid": this.id})
             .then(result => {
-              this.json_data = result.data.AnswerList;
-              for (let i = 0; i < this.json_data.length; i++) {
-                this.json_data[i].Qnum = i+1;
-                console.log(this.json_data[i].type === 0)
-                if (this.json_data[i].type === 0)
-                  this.json_data[i].type = '单选';
-                else if (this.json_data[i].type === 1)
-                  this.json_data[i].type = '多选';
-                else if (this.json_data[i].type === 2)
-                  this.json_data[i].type = '填空';
-                else if (this.json_data[i].type === 3)
-                  this.json_data[i].type = '评分';
+              this.json_data = [];
+              for (let i = 0; i < result.data.resultList.length; i++) {
+                let line = {'Qnum': i + 1};
+                line['username'] = result.data.resultList[i].userName;
+                for (let k = 0; k < this.Qsum; k++) {
+                  if (result.data.resultList[i].AnswerList[k].answer !== null) {
+                    if (result.data.resultList[i].AnswerList[k].type === 0) {
+                      line['num' + k] = this.letter[result.data.resultList[i].AnswerList[k].answer];
+                    } else if (result.data.resultList[i].AnswerList[k].type === 1) {
+                      let ans = '';
+                      for (let j = 0; j < result.data.resultList[i].AnswerList[k].answer.length; j++)
+                        ans += this.letter[result.data.resultList[i].AnswerList[k].answer]
+                      line['num' + k] = ans;
+                    } else if (result.data.resultList[i].AnswerList[k].type === 2) {
+                      line['num' + k] = result.data.resultList[i].AnswerList[k].answer;
+                    } else if (result.data.resultList[i].AnswerList[k].type === 3) {
+                      line['num' + k] = result.data.resultList[i].AnswerList[k].answer;
+                    } else {
+                      line['num' + k] = result.data.resultList[i].AnswerList[k].answer;
+                    }
+                  } else
+                    line['num' + k] = '未填'
+                }
+                this.json_data.push(line)
               }
+              console.log('x')
               console.log(this.json_data)
             });
-        this.json_fields = {
-          'num': 'Qnum',
-          'type': 'type',
-          'answer': 'selection',
-          'input': 'input'
-
-        };
       } else {
         this.$notify({
           title: '抱歉',
@@ -160,8 +252,14 @@ export default {
         });
       }
     },
+
     links() {
-      this.$router.push({path: "/sentout", query: {id: this.id}});
+      this.$router.push({
+        path: "/sentout",
+        query: {
+          id: this.id,
+          type: this.type}}
+      );
     }
   }
 }
@@ -175,13 +273,15 @@ export default {
   width: 100%;
   height: 130px;
   background-color: white;
-  border: #d5d5d5 solid 1px;
+  border: #e5e5e5 solid 1px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 2px 1px #e5e5e5;
 }
 
 .midText {
   position: absolute;
   margin-top: 60px;
-  left: 31%;
+  left: 22%;
   width: 850px;
   height: 2px;
   max-width: 800px;
@@ -199,10 +299,31 @@ export default {
   height: 50px;
 }
 
+.funx {
+  color: #bababa;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  height: 50px;
+}
+
 .active {
   color: #0b92e8;
   font-size: 15px;
   font-weight: bold;
+  cursor: pointer;
+  height: 50px;
+}
+
+.on {
+  font-size: 15px;
+  cursor: pointer;
+  height: 50px;
+}
+
+.off {
+  color: #0b92e8;
+  font-size: 15px;
   cursor: pointer;
   height: 50px;
 }

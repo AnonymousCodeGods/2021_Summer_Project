@@ -20,10 +20,10 @@ python manage.py startapp appname
 python manage.py makemigrations
 
 #创建表
-0.0.0.0:8000
+python manage.py migrate
 
 #后台管理员注册
 python manage.py createsuperuser
 
 #启动程序
-python manage.py runserver
+python manage.py runserver  0.0.0.0:8000

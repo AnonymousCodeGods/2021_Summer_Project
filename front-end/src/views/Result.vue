@@ -1,18 +1,27 @@
-<template>
+<template xmlns:margin-left="">
   <div>
     <div class="head">
-      <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:10%;height: 80%;left: 5%">
+      <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:5%;height: 75%;left: 5%">
 
-<!--      <el-badge :value="12" class="item">-->
-<!--        <el-button size="small">消息</el-button>-->
-<!--      </el-badge>-->
       <div class="demo-type">
         <div>
-          <el-avatar icon="el-icon-user-solid"></el-avatar>
+          <el-avatar icon="el-icon-user-solid" size="small"></el-avatar>
         </div>
+        <!--        <div>-->
+        <!--          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
+        <!--        </div>-->
       </div>
-      <a style="position:absolute;top:25%;height: 80%;left: 90%">{{ this.$store.state.username }}</a>
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%">
+      <span class="el-dropdown-link">
+        {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="退出">退出</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
+
+
     <div class="body" style="overflow-y:scroll">
       <el-col :span="6" style="height: 100%">
       </el-col>
@@ -21,15 +30,21 @@
           <el-card style="width: 1200px;height: 100%" :body-style="{ padding: '0px' }">
             <div slot="header" class="clearfix">
               <span> {{ this.que.title }} </span>
-<!--              <el-button style="float: right;" type="primary" @click="ExportData">导出数据</el-button>-->
+              <!--              <el-button style="float: right;" type="primary" @click="ExportData">导出数据</el-button>-->
             </div>
             <div v-for="(item,index) in que.QList" :key="item.qid" style="margin: 20px;">
-              <div >
-                <div class="queLabel">
-                  {{ index + 1 }}.{{ item.title }}
-                </div>
-<!--                单选多选-->
-                <div v-if="item.type===0||item.type===1" style="margin-left: 5%;margin-right: 5%;text-align: center">
+              <div style="margin-bottom: 30px">
+                <el-row style="margin-bottom: 10px">
+                  <div class="queLabel" style="float: left">
+                    {{ index + 1 }}.{{ item.title }}
+                  </div>
+                  <el-button type="primary" style="float: right;margin-right: 100px;margin-top: 30px" @click="img(item)"
+                             v-if="item.type===0||item.type===1||item.type===3">图表展示
+                  </el-button>
+                </el-row>
+                <!--                单选多选-->
+                <div v-if="item.type===0||item.type===1"
+                     style="margin-left: 5%;margin-right: 5%;text-align: center">
                   <el-row style="margin-top:1%">
                     <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
                       <el-table
@@ -67,7 +82,7 @@
                     </el-col>
                   </el-row>
                 </div>
-<!--                填空-->
+                <!--                填空-->
                 <div v-else-if="item.type===2" style="margin-left: 5%;margin-right: 5%;text-align: center">
                   <el-row style="margin-top:1%">
                     <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
@@ -79,22 +94,34 @@
                           style="width: 100%">
                         <el-table-column
                             align="center"
-                            prop="index"
-                            label="序号"
-                            width="200%"
-                            sortable>
-                        </el-table-column>
-                        <el-table-column
-                            align="center"
                             prop="content"
                             mid-width="50%"
-                            label="内容">
+                            label="">
                         </el-table-column>
                       </el-table>
                     </el-col>
                   </el-row>
                 </div>
-<!--                评分-->
+                <div v-else-if="item.type===4" style="margin-left: 5%;margin-right: 5%;text-align: center">
+                  <el-row style="margin-top:1%">
+                    <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
+                      <el-table
+                          margin-left: fill
+                          border
+                          stripe
+                          :data="item.Inputlist"
+                          style="width: 100%">
+                        <el-table-column
+                            align="center"
+                            prop="content"
+                            mid-width="50%"
+                            label="">
+                        </el-table-column>
+                      </el-table>
+                    </el-col>
+                  </el-row>
+                </div>
+                <!--                评分-->
                 <div v-else-if="item.type===3" style="margin-left: 5%;margin-right: 5%;text-align: center">
                   <el-row style="margin-top:1%">
                     <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
@@ -125,9 +152,9 @@
                             prop="percentage"
                             align="center"
                             label="比例"
-                            >
+                        >
                           <template slot-scope="scope">
-                            <el-progress :percentage="scope.row.percentage" :format="format" ></el-progress>
+                            <el-progress :percentage="scope.row.percentage" :format="format"></el-progress>
                           </template>
                         </el-table-column>
                       </el-table>
@@ -157,114 +184,100 @@ export default {
     msg: String
   },
   created() {
-    this.fullscreenLoading=true;
-    this.que.qid=this.$route.query.id
+    this.que.qnid = this.$route.query.id
+    this.username = this.$cookies.get('username')
+    // console.log(this.$route.query.id)
+    // console.log(this.que.qnid)
     this.$axios({
-      method:"post",
-      //todo: url
-      url:"/getQn",
-      data:{"QnId": this.que.qid}
+      method: "post",
+      url: "/getQn",
+      data: {"QnId": this.que.qnid}
     })
         .then(res => {
-          this.que.title=res.data.que.title
+          console.log(res.data.que)
+
+          this.que.title = res.data.que.title
           for (let i = 0; i < res.data.que.QList.length; i++) {
-            if(res.data.que.QList[i].type===0||res.data.que.QList[i].type===1){
+            if (res.data.que.QList[i].type === 0 || res.data.que.QList[i].type === 1) {
               this.que.QList.push({
-                qid:res.data.que.QList[i].qid,
-                total:0,
-                type:res.data.que.QList[i].type,
-                title:res.data.que.QList[i].title,
-                option:res.data.que.QList[i].option
+                qid: res.data.que.QList[i].qid,
+                total: 0,
+                type: res.data.que.QList[i].type,
+                title: res.data.que.QList[i].title,
+                option: res.data.que.QList[i].option
               })
-            }else if(res.data.que.QList[i].type===2){
+            } else if (res.data.que.QList[i].type === 2 || res.data.que.QList[i].type === 4) {
               this.que.QList.push({
-                qid:res.data.que.QList[i].qid,
-                type:res.data.que.QList[i].type,
-                title:res.data.que.QList[i].title,
-                Inputlist:[]
+                qid: res.data.que.QList[i].qid,
+                type: res.data.que.QList[i].type,
+                title: res.data.que.QList[i].title,
               })
-            }else{
+            } else if (res.data.que.QList[i].type === 3) {
               this.que.QList.push({
-                qid:res.data.que.QList[i].qid,
-                total:0,
-                type:res.data.que.QList[i].type,
-                title:res.data.que.QList[i].title,
-                option:[]
+                qid: res.data.que.QList[i].qid,
+                total: 0,
+                type: res.data.que.QList[i].type,
+                title: res.data.que.QList[i].title,
+                option: []
               })
               for (let j = 0; j < 6; j++) {
-                this.que.QList[i].option.push({content:j+1,count:0,percentage:0})
+                this.que.QList[i].option.push({content: j, count: 0, percentage: 0})
               }
             }
           }
-          this.fullscreenLoading=false
         })
         .catch(() => {
-          this.fullscreenLoading=false
         })
 
+    console.log(this.que)
 
     this.$axios({
-          method:"post",
-          //todo: url
-          url:"/quiz/result",
-          data:{"ID": this.que.qid}
+      method: "post",
+      url: "/quiz/result",
+      data: {"ID": this.que.qnid}
     })
-      .then(res => {
-        this.AnswerList=JSON.parse(JSON.stringify(res.data.AnswerList))
-        for (let i = 0; i < this.AnswerList.length; i++) {
-          if (this.AnswerList[i].type === 0 || this.AnswerList[i].type === 1 || this.AnswerList[i].type === 3) {
-            for (let j = 0; j < this.AnswerList[i].selection.length; j++) {
+        .then(res => {
+          this.AnswerList = JSON.parse(JSON.stringify(res.data.AnswerList))
+          for (let i = 0; i < this.AnswerList.length; i++) {
+            if (this.AnswerList[i].type === 0 || this.AnswerList[i].type === 1 || this.AnswerList[i].type === 3) {
+              for (let j = 0; j < this.AnswerList[i].selection.length; j++) {
 
-              this.que.QList[i].option[j].count = this.AnswerList[i].selection[j];
-              this.que.QList[i].total += this.AnswerList[i].selection[j]
-            }
-          } else if (this.AnswerList[i].type === 2) {
-            for (let j = 0; j < this.AnswerList[i].input.length; j++)
-              this.que.QList[i].Inputlist.push({index:j+1,content:this.AnswerList[i].input[j]})
-          }
-        }
-
-        console.log(this.AnswerList)
-        console.log(this.que.QList)
-        for (let i = 0; i < this.AnswerList.length; i++) {
-          if(this.AnswerList[i].type===0||this.AnswerList[i].type===1||this.AnswerList[i].type===3){
-            for (let j = 0; j <this.que.QList[i].option.length; j++) {
-              this.que.QList[i].option[j].percentage=this.que.QList[i].option[j].count*100.0/this.que.QList[i].total
+                this.que.QList[i].option[j].count = this.AnswerList[i].selection[j];
+                this.que.QList[i].total += this.AnswerList[i].selection[j]
+              }
             }
           }
-        }
-
-        this.fullscreenLoading=false
-      })
-      .catch(() => {
-        this.fullscreenLoading=false
-      })
-
-
-
+          for (let i = 0; i < this.AnswerList.length; i++) {
+            if (this.AnswerList[i].type === 0 || this.AnswerList[i].type === 1 || this.AnswerList[i].type === 3) {
+              for (let j = 0; j < this.que.QList[i].option.length; j++) {
+                this.que.QList[i].option[j].percentage = this.que.QList[i].option[j].count * 100.0 / this.que.QList[i].total
+              }
+            }
+          }
+        })
+        .catch(() => {
+        })
   },
   data() {
     return {
       que: {
-        qid: '',
+        qnid: '',
         title: "",
         QList: []
       },
-      fullscreenLoading: false,
-      AnswerList: [
-
-      ],
+      AnswerList: [],
+      username: ''
     }
   },
   methods: {
     getSummaries(param) {
-      const { columns, data } = param;
+      const {columns, data} = param;
       const sums = [];
       columns.forEach((column, index) => {
         if (index === 0) {
           sums[index] = '总计 ';
           return;
-        }else if(index === 2){
+        } else if (index === 2) {
           sums[index] = '';
           return;
         }
@@ -286,20 +299,36 @@ export default {
       return sums;
     },
     format(percentage) {
-      return parseFloat(percentage).toFixed(2)+"%";
+      return parseFloat(percentage).toFixed(2) + "%";
     }
     ,
     toHome: function () {
       this.$router.push("/home");
     },
-    ExportData() {
-      //TODO:导出数据
-      this.$notify({
-        title: '导出成功',
-        message: null,
-        position: 'bottom-left',
-        type: "success"
-      })
+    img(item) {
+      console.log(item);
+      let chars = "ABCDEFGHIJKLMNOPQRSTUVWSYZ";
+      var sort = [];
+      var pie = [];
+      var col = [];
+      for (let i = 0; i < item.option.length; i++) {
+          sort.push(chars[i]);
+          col.push(item.option[i].count)
+
+          pie.push({
+            key:chars[i],
+            value:item.option[i].count
+          })
+      }
+      console.log('pie')
+      console.log(pie)
+      this.$router.push({
+        path: "/resultForm", query: {
+          sorts: sort,
+          pies: pie ,
+          cols: col
+        }
+      });
     }
   }
 }
@@ -310,10 +339,16 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  height: 8%;
+  height: 62px;
+  min-height: 60px;
   width: 100%;
   background-color: #ffffff;
-  //border:2px solid #000000;
+}
+
+.demo-type {
+  position: absolute;
+  left: 90%;
+  top: 30%;
 }
 
 .body {
@@ -333,13 +368,6 @@ export default {
   left: 80%;
   top: 30%;
   height: 50%;
-}
-
-.demo-type {
-  position: absolute;
-  left: 86%;
-  top: 25%;
-  height: 40%;
 }
 
 .el-dropdown-link {
@@ -481,8 +509,9 @@ export default {
 
 .queLabel {
   margin-left: 5%;
-  margin-bottom: 8px;
+  margin-top: 50px;
   margin-right: 5%;
+  width: 300px;
   text-align: start;
 }
 

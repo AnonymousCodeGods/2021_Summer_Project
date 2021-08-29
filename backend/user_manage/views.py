@@ -3,6 +3,8 @@ from prototype.models import User,Questionnaire
 import simplejson
 from django.http import JsonResponse, HttpResponse, FileResponse
 import datetime
+import django.utils.timezone
+from prototype.base_option import get_ques_ins,des_decrypt,des_encrypt
 # Create your views here.
 
 def register(request):
@@ -48,14 +50,20 @@ def login(request):
 def get_quizs(quens):
     quizs = []
     for quen in quens:
+        now_time = django.utils.timezone.now() + datetime.timedelta(hours=8)
+        if quen.endTime is not None and now_time > quen.endTime:
+            quen.isPublished = False
+            quen.save()
         quiz = {}
         quiz['name'] = quen.title
-        quiz['ID'] = quen.id
+        quiz['ID'] = des_encrypt(quen.id)
         quiz['state'] = quen.isPublished
         quiz['createDate'] = quen.createTime+datetime.timedelta(hours=8)
         quiz['pubDate'] = quen.publishTime
         quiz['bin'] = quen.isDeleted
         quiz['num'] = quen.recoverNum
+        quiz['type'] = quen.type
+        quiz['Qsum'] = len(get_ques_ins(quen.pk))
         quizs.append(quiz)
     return quizs
 
@@ -71,7 +79,7 @@ def info(request):
         info['mail'] = user.mail
         info['sex'] = user.isMale
         print(info)
-        quens = Questionnaire.objects.filter(USER=user,isDeleted=False).order_by('createTime')
+        quens = Questionnaire.objects.filter(USER=user,isDeleted=False).order_by('-createTime')
         info['quizs'] = get_quizs(quens)
 
         return JsonResponse({'info': info})
@@ -84,3 +92,12 @@ def search(request):
         quizs= get_quizs(quens)
         return JsonResponse({'quizs': quizs})
 
+def set_endTime(request):
+    if request.method == 'POST':
+        r = simplejson.loads(request.body)
+        print(r)
+        qnid = des_decrypt(r['qnid'])
+        quen = Questionnaire.objects.get(pk=qnid)
+        quen.endTime = r['endTime']
+        quen.save()
+        return JsonResponse({'success': True})

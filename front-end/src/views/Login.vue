@@ -1,39 +1,47 @@
 <template>
-  <div style="display: flex;justify-content: center;margin-top: 150px">
-    <table style="border-spacing: 15px">
-      <tr>
-        <el-card style="width: 400px">
-          <div slot="header" class="clearfix">
-            <span>登录</span>
-          </div>
-          <table style="border-spacing: 20px" v-loading.fullscreen.lock="fullscreenLoading">
-            <tr>
-              <td>用户名</td>
-              <td>
-                <el-input v-model="username" placeholder="请输入用户名"></el-input>
-              </td>
-            </tr>
-            <tr>
-              <td>密码</td>
-              <td>
-                <el-input type="password" v-model="password" placeholder="请输入密码"
-                          @keydown.enter.native="doLogin"></el-input>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                <el-button style="width: 300px" type="primary" @click="doLogin">登录</el-button>
-              </td>
-            </tr>
-          </table>
-        </el-card>
-      </tr>
-      <tr>
-        <el-card style="width: 400px">
-          <el-link @click="$router.push('/Register')">没有账号？点我注册</el-link>
-        </el-card>
-      </tr>
-    </table>
+  <div style="background-image: url('../assets/left.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  height: 100%;
+  width: 100%;
+position: absolute">
+    <div style="display: flex;justify-content: center;margin-top: 150px;">
+      <table style="border-spacing: 15px">
+        <tr>
+          <el-card style="width: 400px">
+            <div slot="header" class="clearfix">
+              <span>登录</span>
+            </div>
+            <table style="border-spacing: 20px" v-loading.fullscreen.lock="fullscreenLoading">
+              <tr>
+                <td>用户名</td>
+                <td>
+                  <el-input v-model="username" placeholder="请输入用户名"></el-input>
+                </td>
+              </tr>
+              <tr>
+                <td>密码</td>
+                <td>
+                  <el-input type="password" v-model="password" placeholder="请输入密码"
+                            @keydown.enter.native="doLogin"></el-input>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <el-button style="width: 300px" type="primary" @click="doLogin">登录</el-button>
+                </td>
+              </tr>
+            </table>
+          </el-card>
+        </tr>
+        <tr>
+          <el-card style="width: 400px">
+            <el-link @click="$router.push('/Register')">没有账号？点我注册</el-link>
+          </el-card>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 <script>
@@ -90,7 +98,7 @@ export default {
                 });
                 this.$router.push({
                   path: "/home", query: {
-                    username:this.username
+                    username: this.username
                   }
                 })
               }
