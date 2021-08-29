@@ -64,6 +64,7 @@ def get_quizs(quens):
         quiz['num'] = quen.recoverNum
         quiz['type'] = quen.type
         quiz['Qsum'] = len(get_ques_ins(quen.pk))
+        quiz['hasBranch'] = quen.hasBranch
         quizs.append(quiz)
     return quizs
 
@@ -95,9 +96,19 @@ def search(request):
 def set_endTime(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
+        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
         print(r)
         qnid = des_decrypt(r['qnid'])
         quen = Questionnaire.objects.get(pk=qnid)
-        quen.endTime = r['endTime']
+        print(type(r['endTime']))
+        s = r['endTime']
+        print("ssssssssssssssss")
+        print(s)
+        quen.endTime = s
+        sl = s.split(' ')
+        print(sl)
+        s = sl[0]+'T'+sl[1]+'Z'
+        print(s)
+        quen.endTime = s
         quen.save()
         return JsonResponse({'success': True})

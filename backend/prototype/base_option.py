@@ -190,6 +190,20 @@ def questionnaire_create(dict):
 
         insList[i].save()
     quesn.save()
+
+    if 'hasBranch' in dict and dict['hasBranch'] == True:
+        quesn.hasBranch = True
+        quesn.save()
+        i = 0
+        for Ques in QList:
+            if 'belongTo' in Ques:
+                relation = Ques['belongTo']
+                qid = relation['qid']
+                option_id = relation['option']
+                if qid != -1:
+                    b = BelongTo(question=qid,option=option_id,QUEN=quesn,order=i)
+                    b.save()
+            i = i + 1
     return quesn
 
 
@@ -219,7 +233,7 @@ def get_questionnaire(QnId):
         que_dict['isSumLimit'] = True
     else:
         que_dict['isSumLimit'] = False
-    que_dict['sum'] = questionnaire.recoverNum
+    que_dict['limit'] = questionnaire.recoverNum
 
 
     QList = []
@@ -227,7 +241,6 @@ def get_questionnaire(QnId):
         while True:
             quei = {}
             quei['total'] = 0
-
             if re.match(r'CMP',que_id):
                comp = Complition.objects.get(CMPID=que_id)
                quei['qid'] = int(que_id.lstrip('CMP'))
@@ -260,7 +273,10 @@ def get_questionnaire(QnId):
                         op_dict['content'] = op.content
                         op_dict['count'] = 0
                         op_dict['percentage'] = 0
-                        op_dict['limit'] = op.limitNum
+                        if op.limitNum is not None:
+                            op_dict['limit'] = op.limitNum-op.selectedNum
+                        else:
+                            op_dict['limit'] = op.limitNum
                         option.append(op_dict)
                         if op.NOID:
                             op = Option.objects.get(pk=op.NOID)
@@ -282,6 +298,24 @@ def get_questionnaire(QnId):
                 break
             else:
                 que_id = next_id
+
+
+    for Ql in QList:
+        belongTo = {}
+        belongTo['qid'] = -1
+        belongTo['option'] = -1
+        Ql['belongTo'] = belongTo
+
+
+    if questionnaire.hasBranch == True:
+        belongs = BelongTo.objects.filter(QUEN=questionnaire)
+        for belong in belongs:
+            i = belong.order
+            belongTo = {}
+            belongTo['qid'] = belong.question
+            belongTo['option'] = belong.option
+            QList[i]['belongTo'] = belongTo
+
     que_dict['QList'] = QList
     return que_dict
 

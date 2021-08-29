@@ -178,78 +178,118 @@ def clear(request):
         FillRecord.objects.filter(QUEN=quen_ins).delete()
     return JsonResponse({'success': True})
 
+def get_result_list(r):
+    quen = Questionnaire.objects.get(pk=des_decrypt(r['qnid']))
+    ques_ins = get_ques_ins(qnid=quen.pk)
+    print(ques_ins)
+    records = FillRecord.objects.filter(QUEN=quen)
+    users = []
+    for record in records:
+        users.append(record.USER)
+    print(users)
+    resultList = []
+    for user in users:
+        AnswerList = []
+        for ques in ques_ins:
+            Answer = {}
+            if isinstance(ques, ChoiceQuestion):
+                if ques.isMulti == False:
+                    Answer['type'] = 0
+                    try:
+                        chanswer = CHAnswer.objects.get(USER=user, CH=ques)
+                        Answer['answer'] = chanswer.content
+                    except:
+                        Answer['answer'] = None
+
+                elif ques.isMulti == True:
+                    Answer['type'] = 1
+                    try:
+                        chanswer = CHAnswer.objects.filter(USER=user, CH=ques)
+                        answer = []
+                        for ans in chanswer:
+                            answer.append(ans.content)
+                        Answer['answer'] = answer
+                    except:
+                        Answer['answer'] = None
+
+                elif ques.isMulti is None:
+                    Answer['type'] = 3
+                    try:
+                        chanswer = CHAnswer.objects.get(USER=user, CH=ques)
+                        Answer['answer'] = chanswer.content
+                    except:
+                        Answer['answer'] = None
+
+            elif isinstance(ques, Complition):
+                Answer['type'] = 2
+                try:
+                    companswer = CMPAnswer.objects.get(USER=user, CMP=ques)
+                    Answer['answer'] = companswer.content
+                except:
+                    Answer['answer'] = None
+
+            elif isinstance(ques, LocationQuestion):
+                Answer['type'] = 4
+                try:
+                    locanswer = LOAnswer.objects.get(USER=user, LO=ques)
+                    Answer['answer'] = locanswer.content
+                except:
+                    Answer['answer'] = None
+
+            AnswerList.append(Answer)
+        result = {}
+        result['userName'] = user.name
+        result['AnswerList'] = AnswerList
+        resultList.append(result)
+    return resultList
 
 def independent_result(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
         print(r)
-        quen = Questionnaire.objects.get(pk=des_decrypt(r['qnid']))
-        ques_ins = get_ques_ins(qnid=quen.pk)
-        print(ques_ins)
-        records = FillRecord.objects.filter(QUEN=quen)
-        users = []
-        for record in records:
-            users.append(record.USER)
-        print(users)
-        resultList = []
-        for user in users:
-            AnswerList = []
-            for ques in ques_ins:
-                Answer = {}
-                if isinstance(ques,ChoiceQuestion):
-                    if ques.isMulti == False:
-                        Answer['type'] = 0
-                        try:
-                            chanswer = CHAnswer.objects.get(USER=user,CH=ques)
-                            Answer['answer'] = chanswer.content
-                        except :
-                            Answer['answer'] = None
-
-                    elif ques.isMulti == True:
-                        Answer['type'] = 1
-                        try:
-                            chanswer = CHAnswer.objects.filter(USER=user,CH=ques)
-                            answer = []
-                            for ans in chanswer:
-                                answer.append(ans.content)
-                            Answer['answer'] = answer
-                        except :
-                            Answer['answer'] = None
-
-                    elif ques.isMulti is None:
-                        Answer['type'] = 3
-                        try:
-                            chanswer = CHAnswer.objects.get(USER=user,CH=ques)
-                            Answer['answer'] = chanswer.content
-                        except :
-                            Answer['answer'] = None
-
-                elif isinstance(ques,Complition):
-                    Answer['type'] = 2
-                    try:
-                        companswer = CMPAnswer.objects.get(USER=user, CMP=ques)
-                        Answer['answer'] = companswer.content
-                    except :
-                        Answer['answer'] = None
-
-                elif isinstance(ques,LocationQuestion):
-                    Answer['type'] = 4
-                    try:
-                        locanswer = LOAnswer.objects.get(USER=user,LO=ques)
-                        Answer['answer'] = locanswer.content
-                    except :
-                        Answer['answer'] = None
-
-                AnswerList.append(Answer)
-            result = {}
-            result['userName'] = user.name
-            result['AnswerList'] = AnswerList
-            resultList.append(result)
-
+        resultList = get_result_list(r)
         return JsonResponse({'resultList':resultList})
 
 def score_stat(request):
     r = simplejson.loads(request.body)
     print(r)
-
-    return JsonResponse({'resultList': resultList})
+    qnid = r['qnid']
+    ques_ins = get_ques_ins(des_decrypt(qnid))
+    answerList = []
+    for ques in ques_ins:
+        answer = None
+        msg = {}
+        if isinstance(ques,ChoiceQuestion):
+            if ques.isMulti is not None:
+                answer = []
+                options = get_options(ques)
+                if ques.isMulti == True:
+                    msg['type'] = 1
+                    i = 0
+                    for op in options:
+                        if op.isCorrect == True:
+                            answer.append(i)
+                        i = i + 1
+                else:
+                    msg['type'] = 0
+                    i = 0
+                    for op in options:
+                        if op.isCorrect == True:
+                            answer = i
+                        i = i + 1
+            else:
+                msg['type'] = 3
+                pass
+        elif isinstance(ques,Complition):
+            msg['type'] = 2
+        elif isinstance(ques,LocationQuestion):
+            msg['type'] = 4
+        msg['answer'] = answer
+        answerList.append(msg)
+    re = None
+    resltList = get_result_list({'qnid':qnid})
+    for result in resltList:
+        if result['userName'] == r['userName']:
+            re = result
+            break
+    return JsonResponse({'correctAnswer': answerList,'userAnswer':re})

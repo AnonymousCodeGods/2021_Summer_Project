@@ -2,6 +2,7 @@ from prototype.base_option import get_ques_ins,get_op_ins,des_decrypt,des_encryp
 from prototype.models import *
 import django.utils.timezone
 import datetime
+
 def now_time():
     return django.utils.timezone.now()+datetime.timedelta(hours=8)
 
@@ -94,7 +95,7 @@ def ordi_submit(r):
     try:
         user = User.objects.get(name=r['userName'])
         f_record = FillRecord.objects.filter(QUEN=quesn_ins,USER=user)
-        if len(f_record) == 1:
+        if len(f_record) == 1 and ques_ins.type != 0:
             return False
     except:
         now = now_time()

@@ -26,4 +26,4 @@ python manage.py migrate
 python manage.py createsuperuser
 
 #启动程序
-python manage.py runserver  0.0.0.0:8000
+python manage.py runserver  0.0.0.0:8000 --nothreading
