@@ -259,6 +259,7 @@ def score_stat(request):
     for ques in ques_ins:
         answer = None
         msg = {}
+        msg['title'] = ques.content
         if isinstance(ques,ChoiceQuestion):
             if ques.isMulti is not None:
                 answer = []
@@ -292,4 +293,17 @@ def score_stat(request):
         if result['userName'] == r['userName']:
             re = result
             break
+    if re is None:
+        re = []
+        i = 0
+        for ai in answerList:
+            ri  ={}
+            ri['answer'] = None
+            ri['type'] = answerList[i]['type']
+            if ri['type'] == 1:
+                ri['answer'] = []
+            ri['title'] =  answerList[i]['title']
+            re.append(ri)
+            i = i + 1
+        pass
     return JsonResponse({'correctAnswer': answerList,'userAnswer':re})

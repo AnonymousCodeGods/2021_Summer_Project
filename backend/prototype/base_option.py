@@ -122,11 +122,11 @@ def choice_create(dict):
     choi.save()
     if 'hasAnswer' in dict and dict['hasAnswer'] == True:
         if dict['type'] == 0:
-            op = op_ins[dict['Answer']]
+            op = op_ins[dict['answer']]
             op.isCorrect = True
             op.save()
         elif dict['type'] == 1:
-            for a in dict['Answer']:
+            for a in dict['answer']:
                 op = op_ins[a]
                 op.isCorrect = True
                 op.save()
@@ -209,7 +209,7 @@ def questionnaire_create(dict):
 
 def get_questionnaire(QnId):
     questionnaire = Questionnaire.objects.get(pk=QnId)
-    now_time = django.utils.timezone.now()+datetime.timedelta(hours=8)
+    now_time = django.utils.timezone.now()-datetime.timedelta(hours=8)
     if questionnaire.endTime is not None and now_time > questionnaire.endTime:
         questionnaire.isPublished = False
         questionnaire.save()
@@ -227,7 +227,7 @@ def get_questionnaire(QnId):
     que_dict['showNumbers'] = questionnaire.showNumbers
     if questionnaire.type == 3 and questionnaire.endTime is not None:
         now_time = django.utils.timezone.now()+datetime.timedelta(hours=8)
-        que_dict['remainTime'] =  int((questionnaire.endTime - now_time).total_seconds())
+        que_dict['remainTime'] =  int((questionnaire.endTime - now_time).total_seconds())+3600*8
         pass
     if questionnaire.limitNum:
         que_dict['isSumLimit'] = True

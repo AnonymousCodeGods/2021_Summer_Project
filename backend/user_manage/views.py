@@ -50,7 +50,7 @@ def login(request):
 def get_quizs(quens):
     quizs = []
     for quen in quens:
-        now_time = django.utils.timezone.now() + datetime.timedelta(hours=8)
+        now_time = django.utils.timezone.now()
         if quen.endTime is not None and now_time > quen.endTime:
             quen.isPublished = False
             quen.save()
@@ -96,19 +96,10 @@ def search(request):
 def set_endTime(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
-        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
         print(r)
         qnid = des_decrypt(r['qnid'])
         quen = Questionnaire.objects.get(pk=qnid)
         print(type(r['endTime']))
-        s = r['endTime']
-        print("ssssssssssssssss")
-        print(s)
-        quen.endTime = s
-        sl = s.split(' ')
-        print(sl)
-        s = sl[0]+'T'+sl[1]+'Z'
-        print(s)
-        quen.endTime = s
+        quen.endTime = r['endTime']
         quen.save()
         return JsonResponse({'success': True})
