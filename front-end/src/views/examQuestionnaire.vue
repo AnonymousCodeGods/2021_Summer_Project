@@ -316,7 +316,13 @@ export default {
             this.fullscreenLoading = false
             this.$router.push('/');
           })
-      this.$router.push('/successResult');
+      this.$router.push({
+        path: '/judgeExamQuestionnaire',
+        query: {
+          'id': this.que.qnid,
+          'AnswerList': AnswerListTemp
+        }
+      });
     }
   },
   computed: {

@@ -87,6 +87,16 @@
       <el-button circle plain v-on:click="doneAnswerEdit" type="success" icon="el-icon-check"></el-button>
     </el-dialog>
 
+    <el-dialog :visible="inputAnswerEditDialog" :show-close="false">
+      <div slot="title">编辑答案</div>
+      <el-input v-model="editingAnswer"
+                style="margin-right: 20px;width: 80%"
+                placeholder="请输入答案">
+      </el-input>
+      <el-button circle plain v-on:click="doneAnswerEdit" type="success" icon="el-icon-check"></el-button>
+    </el-dialog>
+
+
 
     <div id="Qn" style="height: 100%;width: 100%;overflow-y:scroll;margin: auto">
       <el-card style="margin: 20px 20% ;" v-loading.fullscreen.lock="fullscreenLoading">
@@ -135,7 +145,7 @@
                   <div style="width:100%;margin: 5px;" v-if="que.qnType ==='2'&&(item.type===0||item.type===1)">
                     <el-checkbox v-model="item.isSumLimit">限制人数</el-checkbox>
                   </div>
-                  <div style="width:100%;margin: 5px;" v-if="que.qnType ==='3'&&(item.type===0||item.type===1)">
+                  <div style="width:100%;margin: 5px;" v-if="que.qnType ==='3'&&(item.type===0||item.type===1||item.type===2)">
                     <el-checkbox v-model="item.hasAnswer">正确答案</el-checkbox>
                     <el-link style="margin-left: 10px" icon="el-icon-edit" :underline="false"
                              :disabled="!item.hasAnswer" v-on:click="initialAnswerEdit(item)"></el-link>
@@ -543,7 +553,8 @@ export default {
       moreFunctionVisible: false,
       singleAnswerEditDialog: false,
       multiAnswerEditDialog: false,
-      editingAnswerOption: 0,
+      inputAnswerEditDialog: false,
+      editingAnswerOption: '',
       editingAnswers: [],
       editingAnswer: -1,
       editingAnswerQuestion: null,
@@ -646,13 +657,18 @@ export default {
     },
     initialAnswerEdit(question) {
       this.editingAnswerQuestion = question
-      this.editingAnswerOption = question.option
       if (question.type === 0) {
+        this.editingAnswerOption = question.option
         this.editingAnswer = question.answer
         this.singleAnswerEditDialog = true
       } else if (question.type === 1) {
+        this.editingAnswerOption = question.option
         this.editingAnswers = question.answer
         this.multiAnswerEditDialog = true
+      }
+      else if(question.type === 2){
+        this.editingAnswer = question.answer
+        this.inputAnswerEditDialog = true
       }
     },
     doneAnswerEdit() {
@@ -662,9 +678,13 @@ export default {
       } else if (this.editingAnswerQuestion.type === 1) {
         this.editingAnswerQuestion.answer = this.editingAnswers
         this.multiAnswerEditDialog = false
+      }else {
+        this.editingAnswerQuestion.answer = this.editingAnswer
+        this.inputAnswerEditDialog = false
       }
       this.singleAnswerEditDialog = false
       this.multiAnswerEditDialog = false
+      this.inputAnswerEditDialog = false
       this.editingAnswer = 0
       this.editingAnswers = []
     },
@@ -732,6 +752,8 @@ export default {
         necessary: false,
         belongTo: {qid: -1, option: -1},
         title: "请输入题干",
+        hasAnswer: false,
+        answer:''
       })
       this.reorder(this.que.QList, 0)
       this.roll();

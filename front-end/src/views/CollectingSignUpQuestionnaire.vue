@@ -67,7 +67,7 @@
                     style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
                   <div style="font-size: medium;">
                     {{ subItem.content }}
-                    <el-tag type="info" v-if="item.isSumLimit" style="margin-left: 20%">剩余:{{ subItem.limit }}</el-tag>
+                    <el-tag type="info" v-if="item.isSumLimit" style="margin-left: 20%;color: #ff7500;background-color: #f3f9f1">剩余:{{subItem.limit}}</el-tag>
                   </div>
                 </el-checkbox>
               </el-checkbox-group>

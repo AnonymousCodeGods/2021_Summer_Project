@@ -10,9 +10,9 @@ VueRouter.prototype.push = function push(location) {
 }
 const routes = [
     {
-        path: '/c',
+        path: '/judgeExamQuestionnaire',
         name: 'xx',
-        component: () => import(/* webpackChunkName: "about" */ '../components/HelloWorld')
+        component: () => import(/* webpackChunkName: "about" */ '../views/JudgeExamQuestionnaire.vue')
     },
     {
         path: '/',
