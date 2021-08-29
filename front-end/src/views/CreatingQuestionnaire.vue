@@ -307,6 +307,7 @@ export default {
             title: "请编辑投票题目",
             hasAnswer: false,
             necessary: true,
+            belongTo: {qid:-1,option:-1},
             isSumLimit: false,
             answer:[],
             option:[
@@ -333,17 +334,20 @@ export default {
             type: 2,
             title: "请输入姓名",
             necessary: true,
+            belongTo: {qid:-1,option:-1},
           }, {
             qid: 1,
             type: 2,
             title: "请输入手机号",
             necessary:  true,
+            belongTo: {qid:-1,option:-1},
           }, {
             qid: 2,
             type: 0,
             title: "请编辑报名题目",
             hasAnswer: false,
             necessary: true,
+            belongTo: {qid:-1,option:-1},
             isSumLimit:true,
             answer:[],
             option:[
@@ -370,11 +374,13 @@ export default {
             type: 2,
             title: "请输入姓名",
             necessary: true,
+            belongTo: {qid:-1,option:-1},
           }, {
             qid: 1,
             type: 2,
             title: "请输入学号",
             necessary: true,
+            belongTo: {qid:-1,option:-1},
           }
         ]
       }
@@ -392,16 +398,19 @@ export default {
             type: 2,
             title: "请输入姓名",
             necessary: true,
+            belongTo: {qid:-1,option:-1},
           }, {
             qid: 1,
             type: 2,
             title: "请输入学号",
             necessary: true,
+            belongTo: {qid:-1,option:-1},
           }, {
             qid: 2,
             type: 0,
             title: "请选择体温",
             necessary: true,
+            belongTo: {qid:-1,option:-1},
             isSumLimit: false,
             hasAnswer: false,
             option:[
@@ -423,6 +432,7 @@ export default {
             type: 0,
             title: "是否去过高风险地区",
             necessary: true,
+            belongTo: {qid:-1,option:-1},
             isSumLimit: false,
             hasAnswer: false,
             option:[
@@ -440,6 +450,7 @@ export default {
             type: 4,
             title: "请点击定位",
             necessary: true,
+            belongTo: {qid:-1,option:-1},
           }
         ]
       }
@@ -468,6 +479,7 @@ export default {
           hasAnswer: false,
           answer:0,
           necessary: true,
+          belongTo: {qid:-1,option:-1},
           option: [{
             oid: 0,
             content: "你好"
@@ -485,6 +497,7 @@ export default {
           hasAnswer: false,
           answer: [],
           necessary: false,
+          belongTo: {qid:-1,option:-1},
           option: [{
             oid: 0,
             content: "你好"
@@ -500,11 +513,13 @@ export default {
           type: 2,
           title: "我是一道填空题",
           necessary: false,
+          belongTo: {qid:-1,option:-1},
         }, {
           qid: 3,
           type: 3,
           title: "我是一道评分题",
           necessary: true,
+          belongTo: {qid:-1,option:-1},
         }]
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
@@ -552,6 +567,7 @@ export default {
                   type: temp1.type,
                   title: temp1.title,
                   necessary: temp1.necessary,
+                  belongTo: {qid:-1,option:-1},
                   hasAnswer: false,
                   answer: 0,
                   option: optionTemp
@@ -571,6 +587,7 @@ export default {
                   type: temp1.type,
                   title: temp1.title,
                   necessary: temp1.necessary,
+                  belongTo: {qid:-1,option:-1},
                   hasAnswer: false,
                   answer: [],
                   option: optionTemp
@@ -579,13 +596,17 @@ export default {
                 this.que.QList.push({
                   qid: i,
                   type: temp1.type,
-                  title: temp1.title
+                  belongTo: {qid:-1,option:-1},
+                  title: temp1.title,
+                  necessary: temp1.necessary,
                 })
               } else {
                 this.que.QList.push({
                   qid: i,
                   type: temp1.type,
-                  title: temp1.title
+                  belongTo: {qid:-1,option:-1},
+                  title: temp1.title,
+                  necessary: temp1.necessary,
                 })
               }
             }
@@ -665,13 +686,14 @@ export default {
         qid: i,
         type: 0,
         necessary: false,
+        belongTo: {qid:-1,option:-1},
         isSumLimit: false,
         hasAnswer: false,
         answer: 0,
         title: "请输入题干",
         option: []
       })
-      this.reorder()
+      this.reorder(this.que.QList,0)
       this.roll();
     },
     addMultiChoice() {
@@ -681,13 +703,14 @@ export default {
         qid: i,
         type: 1,
         necessary: false,
+        belongTo: {qid:-1,option:-1},
         isSumLimit: false,
         hasAnswer: false,
         answer: [],
         title: "请输入题干",
         option: []
       })
-      this.reorder()
+      this.reorder(this.que.QList,0)
       this.roll();
     },
     addSpaceFilling() {
@@ -697,9 +720,10 @@ export default {
         qid: i,
         type: 2,
         necessary: false,
+        belongTo: {qid:-1,option:-1},
         title: "请输入题干",
       })
-      this.reorder()
+      this.reorder(this.que.QList,0)
       this.roll();
     },
     addRating() {
@@ -709,9 +733,10 @@ export default {
         qid: i,
         type: 3,
         necessary: false,
+        belongTo: {qid:-1,option:-1},
         title: "请输入题干",
       })
-      this.reorder()
+      this.reorder(this.que.QList,0)
       this.roll();
     },
     addLocating() {
@@ -721,9 +746,10 @@ export default {
         qid: i,
         type: 4,
         necessary: false,
+        belongTo: {qid:-1,option:-1},
         title: "点击获取地理位置",
       })
-      this.reorder()
+      this.reorder(this.que.QList,0)
       this.roll();
     },
     addBranch() {
@@ -734,9 +760,10 @@ export default {
         type: 5,
         necessary: false,
         title: "分支名称",
+        belongTo: {qid:-1,option:-1},
         option:[]
       })
-      this.reorder()
+      this.reorder(this.que.QList,0)
       this.roll();
     },
     deleteQuestion(question) {
@@ -757,6 +784,7 @@ export default {
           hasAnswer: question.hasAnswer,
           answer: question.type===0?question.answer:[],
           necessary: question.necessary,
+          belongTo: {qid:-1,option:-1},
           option: []
         })
         for (let i = 0; i < question.option.length; i++) {
@@ -777,6 +805,7 @@ export default {
           type: question.type,
           title: question.title + "（副本）",
           isSumLimit: question.isSumLimit,
+          belongTo: {qid:-1,option:-1},
           necessary: question.necessary
         })
       }
@@ -786,7 +815,7 @@ export default {
     },
     uploadQn() {
       this.fullscreenLoading = true;
-      console.log(this.que.qnType);
+      this.connectQuestion(this.que.QList)
       this.$axios({
         method: "post", url: "/createQn/saveQn", data: {
           "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",
@@ -828,13 +857,49 @@ export default {
       for (let i = 0; i < QList.length; i++) {
         QList[i].qid = num;
         num++;
-        if(QList[i].type===5) {
+        if(QList[i].type === 5) {
           for(let j = 0; j < QList[i].option.length; j++) {
             num = this.reorder(QList[i].option[j].question,num)
           }
         }
       }
       return num
+    },
+    connectQuestion(QList){
+      for (let i = 0; i < QList.length; i++) {
+        if(QList[i].type === 5) {
+          let optionTemp = []
+          for(let j = QList[i].option.length-1; j >= 0 ; j--) {
+            let ql = QList[i].option[j].question
+            this.connectQuestion(ql)
+            for(let k = 0; k< ql.length;k++) {
+              QList.splice(i+k+1,0,ql[k])
+              QList[i+k+1].belongTo={
+                qid:i,
+                option:j
+              }
+            }
+            optionTemp.push({
+              oid: j,
+              content: QList[i].option[j].content,
+              limit: 0
+            })
+          }
+          optionTemp.reverse()
+          QList[i]={
+            qid: QList[i].qid,
+            type: 0,
+            belongTo: {qid:-1,option:-1},
+            necessary: QList[i].necessary,
+            title: QList[i].title,
+            isSumLimit: false,
+            hasAnswer: false,
+            answer: 0,
+            option: optionTemp
+          }
+        }
+      }
+      console.log(QList)
     }
   }
 }
