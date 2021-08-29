@@ -79,16 +79,9 @@
                           style="width: 100%">
                         <el-table-column
                             align="center"
-                            prop="index"
-                            label="序号"
-                            width="200%"
-                            sortable>
-                        </el-table-column>
-                        <el-table-column
-                            align="center"
                             prop="content"
                             mid-width="50%"
-                            label="内容">
+                            label="">
                         </el-table-column>
                       </el-table>
                     </el-col>
@@ -166,6 +159,8 @@ export default {
       data:{"QnId": this.que.qnid}
     })
         .then(res => {
+          console.log(res.data.que)
+
           this.que.title=res.data.que.title
           for (let i = 0; i < res.data.que.QList.length; i++) {
             if(res.data.que.QList[i].type===0||res.data.que.QList[i].type===1){
@@ -176,14 +171,13 @@ export default {
                 title:res.data.que.QList[i].title,
                 option:res.data.que.QList[i].option
               })
-            }else if(res.data.que.QList[i].type===2){
+            }else if(res.data.que.QList[i].type===2 || res.data.que.QList[i].type===4){
               this.que.QList.push({
                 qid:res.data.que.QList[i].qid,
                 type:res.data.que.QList[i].type,
                 title:res.data.que.QList[i].title,
-                Inputlist:[]
               })
-            }else{
+            }else if(res.data.que.QList[i].type===3){
               this.que.QList.push({
                 qid:res.data.que.QList[i].qid,
                 total:0,
@@ -200,6 +194,8 @@ export default {
         .catch(() => {
         })
 
+    console.log(this.que)
+
     this.$axios({
           method:"post",
           url:"/quiz/result",
@@ -214,14 +210,8 @@ export default {
               this.que.QList[i].option[j].count = this.AnswerList[i].selection[j];
               this.que.QList[i].total += this.AnswerList[i].selection[j]
             }
-          } else if (this.AnswerList[i].type === 2) {
-            for (let j = 0; j < this.AnswerList[i].input.length; j++)
-              this.que.QList[i].Inputlist.push({index:j+1,content:this.AnswerList[i].input[j]})
           }
         }
-
-        console.log(this.AnswerList)
-        console.log(this.que.QList)
         for (let i = 0; i < this.AnswerList.length; i++) {
           if(this.AnswerList[i].type===0||this.AnswerList[i].type===1||this.AnswerList[i].type===3){
             for (let j = 0; j <this.que.QList[i].option.length; j++) {

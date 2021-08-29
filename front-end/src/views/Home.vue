@@ -9,7 +9,6 @@
       <el-menu :default-active="activeIndex"
                class="el-menu-demo"
                mode="horizontal"
-               @select="handleSelect"
                text-color="black"
                active-text-color="#6060ff">
         <el-menu-item index="1" style="position: absolute;left: 36%;">我的问卷</el-menu-item>
@@ -139,25 +138,11 @@
       <el-dialog
         title="创建问卷"
         :visible.sync="dialog1"
-        width="45%"
+        width="800px"
         :before-close="handleClose"
         center
         style="margin-top: 5%">
         <el-form :model="form" style="" :label-position=" 'left' " >
-          <el-form-item
-              required
-              label="问卷标题"
-              :label-width="formLabelWidth"
-              style="text-align: left">
-            <el-input
-                v-model="form.title"
-                autocomplete="off"
-                placeholder="请输入标题"
-                maxlength="15"
-                show-word-limit
-                style="width: 450px"></el-input>
-          </el-form-item>
-
 
           <el-form-item
               required
@@ -215,6 +200,7 @@
               :id="it.ID.toString()"
               :num="it.num.toString()"
               :state="it.state"
+              :Qsum="it.Qsum.toString()"
           ></each-quiz>
         </div>
         <!--没有问卷-->
@@ -286,7 +272,6 @@ export default {
       page: 1,
       order: 0,
       form: {
-        title: '',
         type: 0,
       },
       formLabelWidth: '20%',
@@ -455,7 +440,6 @@ export default {
       this.$confirm('确认取消创建问卷？')
           .then(_ => {
             this.dialog1=false
-            this.form.title=''
             this.form.type=0
           })
           .catch(_ => {});
@@ -473,7 +457,6 @@ export default {
           path:"/creatingQuestionnaire",
           query:{
             id:0,
-            title:this.form.title,
             type:this.form.type,
           }});
       }

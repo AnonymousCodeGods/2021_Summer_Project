@@ -30,14 +30,14 @@
                   v-model="item.selection" style="width: 100%">
 
                 <el-radio
-                    :disabled="subItem.num===0"
+                    :disabled="subItem.limit===0"
                     v-for="subItem in item.option"
                     :key="subItem.oid"
                     :label="subItem.oid"
                     style="width: 100%;margin: 10px;display: flex;align-items: flex-start;" >
                   <div style="font-size: medium;">
                     {{ subItem.content }}
-                    <el-tag type="info" style="margin-left: 20%">剩余:{{subItem.num}}</el-tag>
+                    <el-tag type="info" v-if="item.isSumLimit" style="margin-left: 20%">剩余:{{subItem.limit}}</el-tag>
                   </div>
                 </el-radio>
 
@@ -58,14 +58,14 @@
               <el-checkbox-group
                   v-model="item.selections" style="width: 100%">
                 <el-checkbox
-                    :disabled="subItem.num===0"
+                    :disabled="subItem.limit===0"
                     v-for="subItem in item.option"
                     :key="subItem.oid"
                     :label="subItem.oid"
                     style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
                   <div style="font-size: medium;">
                     {{ subItem.content }}
-                    <el-tag type="info" style="margin-left: 20%">剩余:{{subItem.num}}</el-tag>
+                    <el-tag type="info" v-if="item.isSumLimit" style="margin-left: 20%">剩余:{{subItem.limit}}</el-tag>
                   </div>
                 </el-checkbox>
               </el-checkbox-group>
@@ -145,20 +145,25 @@ import AMap from 'AMap'
 export default {
   name: 'CQue',
   created() {
-    // this.userName=this.$route.query.userName
-    // if(this.userName === ''){
-    //   this.$router.push({
-    //     path: "/login2",
-    //     query: {
-    //       id: this.$route.query.id
-    //       }
-    //    });
-    // }
+    console.log(this.userName)
+    this.name=this.$cookies.get("username")
+    if(!this.$cookies.isKey("username")){
+      this.$router.push({
+        //todo:change path
+        path: "/login2",
+        query: {
+          id: this.$route.query.id
+        }
+      });
+    }
+    console.log(this.$cookies.get("username"))
+    console.log(this.$cookies.isKey("username"))
+
     this.fullscreenLoading = true;
     this.$axios({method: "post", url: "/getQn", data: {"QnId": this.$route.query.id}})
         .then(res => {
           console.log(res.data.que)
-          if (res.data.que.isSumLimit && res.data.que.sum === 0 ){
+          if (res.data.que.isSumLimit && res.data.que.limit === 0 ){
             this.isReachLimit = true
           }
           for (let i = 0; i < res.data.que.QList.length; i++) {
@@ -166,7 +171,7 @@ export default {
             if ( (temp1.type === 0 || temp1.type === 1) && temp1.isSumLimit ){
               let j
               for (j = 0; j < temp1.option.length; j++) {
-                if(temp1.option[j].num>0) break
+                if(temp1.option[j].limit>0) break
               }
               if (j === temp1.option.length)
                 this.isReachLimit = true
@@ -184,6 +189,7 @@ export default {
           this.que.qnId = res.data.que.qnid;
           this.que.showNumbers = res.data.showNumbers;
           this.que.title = res.data.que.title;
+          this.que.limit = res.data.que.limit;
           for (let i = 0; i < res.data.que.QList.length; i++) {
             let temp1 = res.data.que.QList[i];
             if (temp1.type === 0) {
@@ -194,7 +200,7 @@ export default {
                 optionTemp.push({
                   oid: j,
                   content: temp2.content,
-                  num: temp2.num
+                  limit: temp2.limit
                 })
               }
               this.que.QList.push({
@@ -212,7 +218,7 @@ export default {
                 optionTemp.push({
                   oid: j,
                   content: temp2.content,
-                  num: temp2.num
+                  limit: temp2.limit
                 })
               }
               this.que.QList.push({
@@ -277,10 +283,10 @@ export default {
         qnType: 0,
         showNumbers: true,
         title: "测试问卷",
-        sum:'',
+        limit:'',
         QList: []
       },
-      userName: 'wang',
+      userName: '',
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       fullscreenLoading: false,
       isReachLimit: false
@@ -375,10 +381,9 @@ export default {
       }
 
       this.$axios({method:"post",url: "/quiz/submitSignUpQn", data:{
-          "qnid": this.que.qnId,
+          "qnId": this.que.qnId,
           "qnType": this.que.qnType,
-          // "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",
-          "userName" : this.userName,
+          "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",
           "AnswerList":AnswerListTemp
       }})
           .then(res => {

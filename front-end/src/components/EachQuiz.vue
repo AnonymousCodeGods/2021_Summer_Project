@@ -1,7 +1,6 @@
 <template>
   <div class="quiz">
     <a style="float: left;padding-left: 45px;padding-top: 20px;width: 300px;text-align:left;">{{ type }}</a>
-    <a class="bas" style="float: left;padding-left: 50px;padding-top: 20px">ID：{{ id }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px;">状态：{{ state === true ? '已发布' : '未发布' }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">创建日期：{{ date.substring(0, 10) }}</a>
     <a class="bas" style="float: left;padding-left: 30px;padding-top: 20px">回收量：{{ num }}</a>

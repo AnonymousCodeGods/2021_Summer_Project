@@ -98,7 +98,7 @@
               inactive-text="开放填写" />
           <el-input
               v-if="form.isSumLimit"
-              v-model.number="form.sum"
+              v-model.number="form.limit"
               autocomplete="off"
               placeholder="请输入填写次数上限"
               style="width: 55%;margin-left: 5%"></el-input>
@@ -317,7 +317,7 @@ export default {
         qnId: '0',
         showNumbers: true,
         qnType: 2,
-        sum: 0,
+        limit: 0,
         isSumLimit: false,
         title: "报名问卷",
         QList: [
@@ -515,7 +515,7 @@ export default {
       SumEditDialog:false,
       form:{
         isSumLimit:false,
-        sum:0
+        limit:0
       },
       formLabelWidth: '20%',
     }
@@ -525,10 +525,11 @@ export default {
       this.fullscreenLoading = true
       this.$axios({method: "post", url: "/getQn", data: {"QnId": qnId}})
           .then(res => {
+            console.log(res.data.que)
             this.que.QList = [];
             this.que.qnType = res.data.que.qnType;
             this.que.showNumbers = res.data.que.showNumbers;
-            this.que.qnId = res.data.que.qnId;
+            this.que.qnId = res.data.que.qnid;
             this.que.title = res.data.que.title;
             for (let i = 0; i < res.data.que.QList.length; i++) {
               let temp1 = res.data.que.QList[i];
@@ -810,12 +811,12 @@ export default {
           .then(_ => {
             this.SumEditDialog=false
             this.form.isSumLimit=this.que.isSumLimit
-            this.form.sum=this.que.sum
+            this.form.limit=this.que.limit
           })
           .catch(_ => {});
     },
-    handleConfirm(done) {
-      if(this.form.isSumLimit && this.form.sum === 0){
+    handleConfirm() {
+      if(this.form.isSumLimit && this.form.limit === 0){
         this.$notify({
           title: '设置失败',
           message: '人数不能为0',
@@ -824,7 +825,7 @@ export default {
         });
       }else{
         this.que.isSumLimit=this.form.isSumLimit
-        this.que.sum = this.form.sum
+        this.que.limit = this.form.limit
         this.SumEditDialog=false
       }
     }

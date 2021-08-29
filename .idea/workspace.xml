@@ -5,15 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="changes in signup">
-      <change afterPath="$PROJECT_DIR$/front-end/vue.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/CollectingQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CollectingQuestionnaire.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/CollectingSignUpQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CollectingSignUpQuestionnaire.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Home.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Login_SignUp.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Login_SignUp.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Result.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Result.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/views/SentOut.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/SentOut.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/ShowVoteResult.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/ShowVoteResult.vue" afterDir="false" />
     </list>
     <list id="7a3cd647-e299-426e-8574-ee29d86c3a2e" name="Changes by zhang" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -71,6 +70,9 @@
       <recent name="D:\MyWorkSpace\ovsms-前端\src\assets" />
       <recent name="D:\MyWorkSpace\ovsms-前端\src\views" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\课件\软院大三上学习资料\小学期\2021_Summer_Project\front-end\src\views" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="serve" type="js.build_tools.npm" nameIsGenerated="true">
@@ -121,7 +123,7 @@
       <workItem from="1630026396369" duration="34037000" />
       <workItem from="1630112686136" duration="22448000" />
       <workItem from="1630164703552" duration="68000" />
-      <workItem from="1630199348780" duration="8340000" />
+      <workItem from="1630199348780" duration="20740000" />
     </task>
     <task id="LOCAL-00001" summary="new">
       <created>1630052035233</created>
@@ -165,7 +167,14 @@
       <option name="project" value="LOCAL" />
       <updated>1630207930091</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="changes in signup">
+      <created>1630216471212</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1630216471212</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
