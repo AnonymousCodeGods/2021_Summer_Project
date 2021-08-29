@@ -12,7 +12,7 @@
         <el-button plain type="info" size="mini"  @click="addSpaceFilling">填空</el-button>
         <el-button plain type="warning" size="mini" @click="addRating">评分</el-button>
         <el-button plain type="danger" size="mini" @click="addLocating">定位</el-button>
-        <el-button plain type="danger" size="mini" @click="addBranch">分支</el-button>
+        <el-button :disabled="this.que.qnType==='2'||this.que.qnType==='3'" plain type="danger" size="mini" @click="addBranch">分支</el-button>
       </div>
       <el-button circle plain type="success" class="hoverB" style="top:100px" icon="el-icon-plus" slot="reference"></el-button>
     </el-popover>
@@ -472,6 +472,7 @@ export default {
         limit: 0,
         qnType: '0',
         title: "普通问卷",
+        hasBranch:false,
         QList: [{
           qid: 0,
           type: 0,
@@ -814,6 +815,13 @@ export default {
       }
     },
     uploadQn() {
+      for(let i=0;i<this.que.QList.length;i++){
+        console.log(this.que.QList[i].type)
+        if(this.que.QList[i].type === 5){
+          this.que.hasBranch = true;
+          break;
+        }
+      }
       this.fullscreenLoading = true;
       this.connectQuestion(this.que.QList)
       this.$axios({
