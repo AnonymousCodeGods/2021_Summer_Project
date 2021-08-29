@@ -555,6 +555,7 @@ export default {
       this.fullscreenLoading = true
       this.$axios({method: "post", url: "/getQn", data: {"QnId": qnId}})
           .then(res => {
+            console.log(res.data.que)
             this.que.QList = [];
             this.que.qnType = res.data.que.qnType+'';
             this.que.showNumbers = res.data.que.showNumbers;

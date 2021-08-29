@@ -37,7 +37,7 @@
                     style="width: 100%;margin: 10px;display: flex;align-items: flex-start;" >
                   <div style="font-size: medium;">
                     {{ subItem.content }}
-                    <el-tag type="info" v-if="item.isSumLimit" style="margin-left: 20%">剩余:{{subItem.limit}}</el-tag>
+                    <el-tag type="info" v-if="item.isSumLimit" style="margin-left: 20%;color: #ff7500;background-color: #f3f9f1">剩余:{{subItem.limit}}</el-tag>
                   </div>
                 </el-radio>
 
@@ -150,7 +150,7 @@ export default {
     if(!this.$cookies.isKey("username")){
       this.$router.push({
         //todo:change path
-        path: "/login2",
+        path: "/loginSignUp",
         query: {
           id: this.$route.query.id
         }
@@ -209,7 +209,8 @@ export default {
                 title: temp1.title,
                 option: optionTemp,
                 necessary: temp1.necessary,
-                selection: -1
+                selection: -1,
+                isSumLimit:temp1.isSumLimit
               })
             } else if (temp1.type === 1) {
               let optionTemp = [];
@@ -227,7 +228,8 @@ export default {
                 title: temp1.title,
                 option: optionTemp,
                 necessary: temp1.necessary,
-                selections: []
+                selections: [],
+                isSumLimit:temp1.isSumLimit
               })
             } else if (temp1.type === 2) {
               this.que.QList.push({

@@ -98,7 +98,7 @@ export default {
                 });
                 this.$router.push({
                   //todo:change path
-                  path: "/collectingQuestionnaire2", query: {
+                  path: "/collectingSignUpQuestionnaire", query: {
                     id: this.$route.query.id
                   }
                 })
