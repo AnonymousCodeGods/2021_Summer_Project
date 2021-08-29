@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="changes in signup">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/CollectingSignUpQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CollectingSignUpQuestionnaire.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Home.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/Login_SignUp.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Login_SignUp.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/Result.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Result.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/SentOut.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/SentOut.vue" afterDir="false" />
-    </list>
+    <list default="true" id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="signup login" />
     <list id="7a3cd647-e299-426e-8574-ee29d86c3a2e" name="Changes by zhang" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +114,7 @@
       <workItem from="1630026396369" duration="34037000" />
       <workItem from="1630112686136" duration="22448000" />
       <workItem from="1630164703552" duration="68000" />
-      <workItem from="1630199348780" duration="20740000" />
+      <workItem from="1630199348780" duration="21039000" />
     </task>
     <task id="LOCAL-00001" summary="new">
       <created>1630052035233</created>
@@ -174,7 +165,14 @@
       <option name="project" value="LOCAL" />
       <updated>1630216471212</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="signup login">
+      <created>1630228908221</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1630228908221</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -199,7 +197,8 @@
     <MESSAGE value="collect changes" />
     <MESSAGE value="merge with djw" />
     <MESSAGE value="changes in signup" />
-    <option name="LAST_COMMIT_MESSAGE" value="changes in signup" />
+    <MESSAGE value="signup login" />
+    <option name="LAST_COMMIT_MESSAGE" value="signup login" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
