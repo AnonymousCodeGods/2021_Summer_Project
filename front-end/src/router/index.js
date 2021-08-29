@@ -19,7 +19,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/main')
     },
     {
-        path: '/test',
+        path: '/examQuestionnaire',
         name: 'Test',
         component: () => import(/* webpackChunkName: "about" */ '../views/examQuestionnaire')
     },
@@ -55,7 +55,7 @@ const routes = [
         component: () => import('../views/CollectingQuestionnaire')
     },
     {
-        path: '/collectingQuestionnaire2',
+        path: '/collectingSignUpQuestionnaire',
         name: 'CollectSignUp',
         component: () => import('../views/CollectingSignUpQuestionnaire')
     },

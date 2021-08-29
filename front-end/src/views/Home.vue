@@ -136,6 +136,60 @@
       <!--        个人信息-->
       <!--      </button>-->
 
+
+<!--      弹框-->
+      <el-dialog
+          title="创建问卷"
+          :visible.sync="dialog1"
+          width="800px"
+          :before-close="handleClose"
+          center
+          style="margin-top: 5%">
+        <el-form :model="form" style="" :label-position=" 'left' " >
+          <el-form-item
+              required
+              label="问卷类型"
+              :label-width="formLabelWidth"
+              style="text-align: left">
+            <el-radio-group
+                v-model="form.type"
+                style="width: 600px">
+              <el-radio :label=0>普通问卷</el-radio>
+              <el-radio :label=1>投票问卷</el-radio>
+              <el-radio :label=2>报名问卷</el-radio>
+              <el-radio :label=3>考试问卷</el-radio>
+              <el-radio :label=4>疫情打卡问卷</el-radio>
+            </el-radio-group>
+          </el-form-item>
+
+          <!--          <el-form-item-->
+          <!--              :required="form.isTimeLimit"-->
+          <!--              v-if="form.type===4"-->
+          <!--              label="问卷时间限制"-->
+          <!--              :label-width="formLabelWidth"-->
+          <!--              style="text-align: left">-->
+          <!--            <el-switch-->
+          <!--                v-model="form.isTimeLimit"-->
+          <!--                active-color="#3292ff"-->
+          <!--                inactive-color="#99a9bf"-->
+          <!--                active-text="有"-->
+          <!--                inactive-text="无" />-->
+          <!--            <el-input-->
+          <!--                v-if="form.isTimeLimit"-->
+          <!--                v-model.number="form.sum"-->
+          <!--                autocomplete="off"-->
+          <!--                placeholder="请输入时间上限(min)"-->
+          <!--                style="width: 55%;margin-left: 5%"></el-input>-->
+          <!--          </el-form-item>-->
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="handleClose(done)">取 消</el-button>
+          <el-button type="primary" @click="handleConfirm(done)">确 定</el-button>
+        </div>
+      </el-dialog>
+
+
       <!--           问卷信息-->
       <div style="margin-top: 10%; margin-left:20%;margin-right:20%;background: transparent; height: 75%">
         <div
@@ -144,7 +198,8 @@
             style="margin-top: 20px;"
         >
           <each-quiz
-              :type="it.name"
+              :name="it.name"
+              :type="it.type"
               :date="it.createDate"
               :id="it.ID.toString()"
               :num="it.num.toString()"
@@ -208,6 +263,7 @@ export default {
   },
   data() {
     return {
+      dialog1:false,
       sort: '创建时间',
       state: '状态',
       value: '正序',
@@ -219,7 +275,11 @@ export default {
       total: 1,
       page: 1,
       order: 0,
-      activeIndex: '1'
+      activeIndex: '1',
+      form: {
+        type: 0,
+      },
+      formLabelWidth: '20%',
     }
   },
   methods: {
@@ -378,13 +438,33 @@ export default {
 
     },
     createQuiz() {
-      this.$router.push({
-        path: "/creatingQuestionnaire",
-        query: {
-          id: 0
-        }
-      });
+      this.dialog1=true
     },
+    handleClose() {
+      this.$confirm('确认取消创建问卷？')
+          .then(_ => {
+            this.dialog1=false
+            this.form.type=0
+          })
+          .catch(_ => {});
+    },
+    handleConfirm() {
+      if(this.form.title===''){
+        this.$notify({
+          title: '创建失败',
+          message: '标题不能为空',
+          position: 'bottom-left',
+          type: "error"
+        });
+      }else{
+        this.$router.push({
+          path:"/creatingQuestionnaire",
+          query:{
+            id:0,
+            type:this.form.type,
+          }});
+      }
+    }
 
   }
 }

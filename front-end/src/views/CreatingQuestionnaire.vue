@@ -528,7 +528,7 @@ export default {
             this.que.QList = [];
             this.que.qnType = res.data.que.qnType;
             this.que.showNumbers = res.data.que.showNumbers;
-            this.que.qnId = res.data.que.qnId;
+            this.que.qnId = res.data.que.qnid;
             this.que.title = res.data.que.title;
             for (let i = 0; i < res.data.que.QList.length; i++) {
               let temp1 = res.data.que.QList[i];

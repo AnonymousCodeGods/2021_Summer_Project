@@ -1,6 +1,6 @@
 <template>
   <div class="quiz">
-    <a style="float: left;padding-left: 45px;padding-top: 20px;width: 400px;text-align:left;">{{ type }}</a>
+    <a style="float: left;padding-left: 45px;padding-top: 20px;width: 400px;text-align:left;">{{ name }}</a>
     <!--    <a class="bas" style="float: left;padding-left: 50px;padding-top: 20px">ID：{{ id }}</a>-->
     <a class="bas" style="float: left;padding-left: 40px;padding-top: 20px;">状态：{{
         state === true ? '已发布' : '未发布'
@@ -85,6 +85,7 @@
 export default {
   name: "EachQuiz",
   props: {
+    name: String,
     type: String,
     id: String,
     state: Boolean,
@@ -251,7 +252,8 @@ export default {
       this.$router.push({
         path: "/sentout",
         query: {
-          id: this.id}}
+          id: this.id,
+          type: this.type}}
       );
     }
   }
