@@ -30,51 +30,99 @@
 
 <script>
 export default {
-  name: 'CQue',
+  name: 'VoteResult',
   created() {
     this.fullscreenLoading=true
-    console.log( this.$route.query.id)
+    this.que.qnId = this.$route.query.id;
+    let qCount = 0;
     this.$axios({method:"post",url:"/quiz/result", data:{"ID": this.$route.query.id}})
         .then(res => {
-          console.log( res)
+          //console.log(res)
           this.que.QList=[]
-          this.que.qnid = res.data.que.qnid;
-          this.que.title = res.data.que.title;
-          for(let i=0;i<res.data.que.QList.length;i++){
-            let temp1=res.data.que.QList[i];
+          //this.que.title = res.data.que.title;
+          for(let i=0;i<res.data.AnswerList.length;i++){
+            let temp1=res.data.AnswerList[i];
+            //console.log(temp1)
+            let sumTemp = 0;
             if(temp1.type === 0){
               let optionTemp=[];
-              for(let j=0;j<temp1.option.length;j++){
-                let temp2=temp1.option[j];
+              for(let j=0;j<temp1.selection.length;j++){
+                let temp2=temp1.selection[j];
+                sumTemp+=temp2;
                 optionTemp.push({
                   oid:j,
-                  content:temp2.content
+                  content:'',
+                  count:temp2,
+                  percentage:0
                 })
               }
+              for(let j=0;j<temp1.option.length;j++){
+                let temp2=temp1.option[j];
+                optionTemp[j].content = temp2;
+                console.log(optionTemp[j].count)
+                console.log(sumTemp)
+                console.log('********')
+                optionTemp[j].percentage = (optionTemp[j].count/sumTemp)*100;
+                console.log(optionTemp[j].percentage)
+                console.log('********')
+              }
               this.que.QList.push({
-                qid:i,
+                qid:qCount,
                 type:temp1.type,
                 title: temp1.title,
                 option:optionTemp,
-                percentage:temp1.percentage
               })
+              qCount++;
             }
             else if(temp1.type === 1){
               let optionTemp=[];
-              for(let j=0;j<temp1.option.length;j++){
-                let temp2=temp1.option[j];
+              for(let j=0;j<temp1.selection.length;j++){
+                let temp2=temp1.selection[j];
+                sumTemp+=temp2;
                 optionTemp.push({
                   oid:j,
-                  content:temp2.content
+                  content:'',
+                  count:temp2,
+                  percentage:0
                 })
               }
+              for(let j=0;j<temp1.option.length;j++){
+                let temp2=temp1.option[j];
+                optionTemp[j].content = temp2;
+                optionTemp[j].percentage = optionTemp[j].count/sumTemp;
+              }
               this.que.QList.push({
-                qid:i,
+                qid:qCount,
                 type:temp1.type,
                 title: temp1.title,
                 option:optionTemp,
-                percentage:temp1.percentage
               })
+              qCount++;
+            }
+            else if(temp1.type === 3){
+              let optionTemp=[];
+              for(let j=0;j<temp1.selection.length;j++){
+                let temp2=temp1.selection[j];
+                sumTemp+=temp2;
+                optionTemp.push({
+                  oid:j,
+                  content:'',
+                  count:temp2,
+                  percentage:0
+                })
+              }
+              for(let j=0;j<temp1.option.length;j++){
+                let temp2=temp1.option[j];
+                optionTemp[j].content = temp2;
+                optionTemp[j].percentage = optionTemp[j].count/sumTemp;
+              }
+              this.que.QList.push({
+                qid:qCount,
+                type:temp1.type,
+                title: temp1.title,
+                option:optionTemp,
+              })
+              qCount++;
             }
           }
           this.fullscreenLoading=false
@@ -93,7 +141,7 @@ export default {
   data: function(){
     return {
       que: {
-        qnid: 0,
+        qnId: 0,
         title: "测试问卷",
         QList: [{
           qid: 0,

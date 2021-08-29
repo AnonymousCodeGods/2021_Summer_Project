@@ -4,10 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <link rel="icon">
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
-  <body style="margin: 0px; overflow: hidden;">
+  <body style="margin: 0; overflow: hidden;">
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=fd2e8b0b82214ae235561c3328f9f26b&plugin=AMap.Scale,AMap.OverView,AMap.ToolBar"></script>
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
