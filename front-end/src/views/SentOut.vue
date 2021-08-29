@@ -12,7 +12,7 @@
         <!--        </div>-->
       </div>
 
-      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%">
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%" @command="logout">
       <span class="el-dropdown-link">
         {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
@@ -101,6 +101,11 @@ export default {
     },
     toHome: function () {
       this.$router.push("/home");
+    },
+    logout(command) {
+      console.log(command);
+      this.$cookies.remove('username');
+      this.$router.push("/");
     },
     refresh() {
       let chars = 'ABCDEFGHIJKLMNOPQRSTUVWSYZabcdefghijklmnopqrstuvwsyz0123456789';//这里没有加其他字符，需要可自行添加

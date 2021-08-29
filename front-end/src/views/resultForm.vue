@@ -12,7 +12,7 @@
         <!--        </div>-->
       </div>
 
-      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%">
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%" @command="logout">
       <span class="el-dropdown-link">
         {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
@@ -69,6 +69,11 @@ export default {
   methods: {
     back: function () {
       this.$router.go(-1);
+    },
+    logout(command) {
+      console.log(command);
+      this.$cookies.remove('username');
+      this.$router.push("/");
     },
   },
   mounted() {
