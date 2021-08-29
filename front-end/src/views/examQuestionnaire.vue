@@ -5,10 +5,10 @@
     <!--      }}</span>-->
     <div style="position:fixed;font-size: 30px;font-weight:50;left: 80%;top: 40%;
         border: 1px solid #bbc1ce;border-radius: 10px;height: 100px;background-color: #dee0e3"
-    v-if="this.remainTime === ''">
+         v-if="this.remainTime !== ''">
 
 
-      <div class="time-card" data-type="hours" data-max="24">
+      <div class="time-card" data-type="hours" data-max="600">
         <div class="time-card-count">{{ hourString }}</div>
         <div class="time-card-label">时</div>
       </div>
@@ -101,14 +101,21 @@
 export default {
   name: 'CQue',
   created() {
+    this.remainTime = 1000
+    console.log('1')
+    console.log(this.remainTime)
     this.fullscreenLoading = true;
+    var self = this;
     this.$axios({method: "post", url: "/getQn", data: {"QnId": this.$route.query.id}})
         // data: {"QnId": this.$route.query.id}
         .then(res => {
+          console.log(res.data.que.state)
           if (res.data.que.state === false) {
             this.$router.push('/failedResult');
           }
           this.remainTime = res.data.que.remainTime
+          console.log('2')
+          console.log(this.remainTime)
           this.que.QList = []
           this.que.qnid = res.data.que.qnid;
           this.que.title = res.data.que.title;
@@ -161,6 +168,14 @@ export default {
                 rating: 0
               })
             }
+            if (this.remainTime > 0) {
+              this.hour = Math.floor((this.remainTime / 3600))
+              this.minute = Math.floor((this.remainTime / 60) % 60)
+              this.second = Math.floor(this.remainTime % 60)
+              this.countDowm()
+            } else {
+              this.$router.push('/failedResult5');
+            }
           }
           this.fullscreenLoading = false
         })
@@ -174,6 +189,8 @@ export default {
           this.fullscreenLoading = false
           this.$router.push('/');
         })
+    console.log('3')
+    console.log(this.remainTime)
   },
   data: function () {
     return {
@@ -197,18 +214,13 @@ export default {
       fullscreenLoading: false,
       remainTime: '',
       isFixed: false,
-      offsetTop: 0
+      offsetTop: 0,
     }
   },
   mounted() {
-    if (this.remainTime > 0) {
-      this.hour = Math.floor((this.remainTime / 3600) % 24)
-      this.minute = Math.floor((this.remainTime / 60) % 60)
-      this.second = Math.floor(this.remainTime % 60)
-      this.countDowm()
-    } else {
-      this.$router.push('/failedResult');
-    }
+    console.log('10')
+    console.log(this)
+    console.log(this.remainTime)
   },
   methods: {
     countDowm() {

@@ -7,7 +7,6 @@
       <el-menu :default-active="activeIndex"
                class="el-menu-demo"
                mode="horizontal"
-               @select="handleSelect"
                text-color="black"
                active-text-color="#6060ff">
         <el-menu-item index="1" style="position: absolute;left: 36%;" @click="toHome">我的问卷</el-menu-item>
@@ -39,6 +38,58 @@
       </el-dropdown>
     </div>
     <div class="body">
+      <el-dialog
+          title="创建问卷"
+          :visible.sync="dialog1"
+          width="800px"
+          :before-close="handleClose"
+          center
+          style="margin-top: 5%">
+        <el-form :model="form" style="" :label-position=" 'left' ">
+
+          <el-form-item
+              required
+              label="问卷类型"
+              :label-width="formLabelWidth"
+              style="text-align: left">
+            <el-radio-group
+                v-model="form.type"
+                style="width: 600px">
+              <el-radio :label=0>普通问卷</el-radio>
+              <el-radio :label=1>投票问卷</el-radio>
+              <el-radio :label=2>报名问卷</el-radio>
+              <el-radio :label=3>考试问卷</el-radio>
+              <el-radio :label=4>疫情打卡问卷</el-radio>
+            </el-radio-group>
+          </el-form-item>
+
+          <!--          <el-form-item-->
+          <!--              :required="form.isTimeLimit"-->
+          <!--              v-if="form.type===4"-->
+          <!--              label="问卷时间限制"-->
+          <!--              :label-width="formLabelWidth"-->
+          <!--              style="text-align: left">-->
+          <!--            <el-switch-->
+          <!--                v-model="form.isTimeLimit"-->
+          <!--                active-color="#3292ff"-->
+          <!--                inactive-color="#99a9bf"-->
+          <!--                active-text="有"-->
+          <!--                inactive-text="无" />-->
+          <!--            <el-input-->
+          <!--                v-if="form.isTimeLimit"-->
+          <!--                v-model.number="form.sum"-->
+          <!--                autocomplete="off"-->
+          <!--                placeholder="请输入时间上限(min)"-->
+          <!--                style="width: 55%;margin-left: 5%"></el-input>-->
+          <!--          </el-form-item>-->
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="handleClose(done)">取 消</el-button>
+          <el-button type="primary" @click="handleConfirm(done)">确 定</el-button>
+        </div>
+      </el-dialog>
+
       <a
           style="
         position: absolute;
@@ -63,7 +114,7 @@
               min-width="6">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
-              <span style="margin-left: 10px">{{ scope.row.date }}</span>
+              <span style="margin-left: 10px">{{ scope.row.date.substring(0, 10) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -209,8 +260,13 @@ export default {
   data() {
     return {
       tableData: [],
+      dialog1: false,
       username: '',
-      activeIndex: '3'
+      activeIndex: '3',
+      form: {
+        type: 0,
+      },
+      formLabelWidth: '20%',
     }
   },
   methods: {
@@ -244,12 +300,7 @@ export default {
       console.log(this.tableData)
     },
     createQuiz() {
-      this.$router.push({
-        path: "/creatingQuestionnaire",
-        query: {
-          id: 0
-        }
-      });
+      this.dialog1 = true
     },
     recoverR(index, row) {
       console.log(index)
@@ -281,6 +332,33 @@ export default {
             this.fullscreenLoading = false;
           });
       this.tableData.splice(this.tableData.indexOf(row), 1);
+    },
+    handleClose() {
+      this.$confirm('确认取消创建问卷？')
+          .then(_ => {
+            this.dialog1 = false
+            this.form.type = 0
+          })
+          .catch(_ => {
+          });
+    },
+    handleConfirm() {
+      if (this.form.title === '') {
+        this.$notify({
+          title: '创建失败',
+          message: '标题不能为空',
+          position: 'bottom-left',
+          type: "error"
+        });
+      } else {
+        this.$router.push({
+          path: "/creatingQuestionnaire",
+          query: {
+            id: 0,
+            type: this.form.type,
+          }
+        });
+      }
     },
     clearR(index, row) {
       this.fullscreenLoading = true;

@@ -5,7 +5,7 @@ Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
 
 VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
+    return originalPush.call(this, location).catch(err => err)
 
 }
 const routes = [
@@ -113,6 +113,16 @@ const routes = [
         path: '/failedResult3',
         name: 'FailedResult3',
         component: () => import('../views/failedResult_SignUpQ2')
+    },
+    {
+        path: '/failedResult4',
+        name: 'FailedResult4',
+        component: () => import('../views/failedResult_SignUpQ3')
+    },
+    {
+        path: '/failedResult5',
+        name: 'FailedResult5',
+        component: () => import('../views/failedResult_SignUpQ4')
     },
     {
         path: '/endResult',

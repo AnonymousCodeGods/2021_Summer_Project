@@ -80,7 +80,8 @@ export default {
           (window.innerWidth).toString() +
           'px;',
       address: '',
-      username: ''
+      username: '',
+      dialog1:false,
     }
   },
   created() {

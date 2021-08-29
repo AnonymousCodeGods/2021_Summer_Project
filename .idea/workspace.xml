@@ -2,15 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e9bcb146-4df3-4c5d-9d98-749325eda57f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/front-end/src/views/failedResult_SignUpQ3.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/views/failedResult_SignUpQ4.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/EachQuiz.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/CollectingQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CollectingQuestionnaire.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/Bin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Bin.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/views/CollectingSignUpQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CollectingSignUpQuestionnaire.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/CreatingQuestionnaire.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/Register.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Register.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/Result.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/Result.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/views/SentOut.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/SentOut.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/views/resultForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/resultForm.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/views/examQuestionnaire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/views/examQuestionnaire.vue" afterDir="false" />
     </list>
     <list id="7a3cd647-e299-426e-8574-ee29d86c3a2e" name="Changes by zhang" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -57,7 +57,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="codeWithMe.voiceChat.enabledByDefault" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/front-end/src/views" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -71,6 +71,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\jiaweiding\Desktop\问卷星球\2021_Summer_Project\front-end\src\views" />
       <recent name="D:\MyWorkSpace\ovsms-前端\src\assets" />
       <recent name="D:\MyWorkSpace\ovsms-前端\src\views" />
     </key>

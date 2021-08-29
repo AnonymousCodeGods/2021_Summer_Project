@@ -46,7 +46,7 @@
           default-time="12:00:00">
       </el-date-picker>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="pub">不 限</el-button>
+        <el-button v-if="this.type !== '3'" @click="pub">不 限</el-button>
         <el-button v-if="this.value !== ''" type="primary" @click="pub">提 交</el-button>
         <el-button v-else type="primary" disabled>提 交</el-button>
       </div>
@@ -59,7 +59,7 @@
     <!--    暂时先写成导出结果-->
 
     <a class="funx" style="float: right;padding-right: 130px;padding-top: 50px"
-        v-else>编辑问卷</a>
+       v-else>编辑问卷</a>
 
     <download-excel
         :data="json_data"
@@ -255,10 +255,12 @@ export default {
 
     links() {
       this.$router.push({
-        path: "/sentout",
-        query: {
-          id: this.id,
-          type: this.type}}
+            path: "/sentout",
+            query: {
+              id: this.id,
+              type: this.type
+            }
+          }
       );
     }
   }
