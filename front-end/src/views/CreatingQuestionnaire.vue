@@ -899,7 +899,6 @@ export default {
           }
         }
       }
-      console.log(QList)
     }
   }
 }

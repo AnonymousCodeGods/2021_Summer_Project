@@ -7,105 +7,107 @@
       </div>
       <div v-for="item in que.QList"
            :key="item.qid" style="margin: 15px">
-        <div style="float: left;margin-left: 12px">
-          <el-tag type="warning" size="small" v-if="(item.type===0||item.type===1)&&(item.necessary === true)">必选</el-tag>
-          <el-tag type="warning" size="small" v-if="(item.type === 2||item.type === 3)&&(item.necessary === true)">必填</el-tag>
-        </div>
-        <div v-if="item.type===0">
-          <div class="queLabel">
+        <div v-if="item.belongTo.qid===-1||que.QList[item.belongTo.qid].selection===item.belongTo.option">
+          <div style="float: left;margin-left: 12px">
+            <el-tag type="warning" size="small" v-if="(item.type===0||item.type===1)&&(item.necessary === true)">必选</el-tag>
+            <el-tag type="warning" size="small" v-if="(item.type === 2||item.type === 3)&&(item.necessary === true)">必填</el-tag>
+          </div>
+          <div v-if="item.type===0">
+            <div class="queLabel">
             <span v-if="que.showNumbers">
               {{item.qid+1}}.
             </span>
-            <span>
+              <span>
               {{item.title}}
             </span>
+            </div>
+            <div style="margin-left: 10%;margin-right: 10%">
+              <el-radio-group
+                  v-model="item.selection" style="width: 100%">
+                <el-radio
+                    v-for="subItem in item.option"
+                    :key="subItem.oid"
+                    :label="subItem.oid"
+                    style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
+                  <span style="font-size: medium;">{{subItem.content}}</span>
+                </el-radio>
+              </el-radio-group>
+            </div>
           </div>
-          <div style="margin-left: 10%;margin-right: 10%">
-            <el-radio-group
-                v-model="item.selection" style="width: 100%">
-              <el-radio
-                  v-for="subItem in item.option"
-                  :key="subItem.oid"
-                  :label="subItem.oid"
-                  style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
-                <span style="font-size: medium;">{{subItem.content}}</span>
-              </el-radio>
-            </el-radio-group>
-          </div>
-        </div>
-        <div v-if="item.type===1">
-          <div class="queLabel">
+          <div v-if="item.type===1">
+            <div class="queLabel">
             <span v-if="que.showNumbers">
               {{item.qid+1}}.
             </span>
-            <span>
+              <span>
               {{item.title}}
             </span>
+            </div>
+            <div style="margin-left: 10%;margin-right: 10%">
+              <el-checkbox-group
+                  v-model="item.selections" style="width: 100%">
+                <el-checkbox
+                    v-for="subItem in item.option"
+                    :key="subItem.oid"
+                    :label="subItem.oid"
+                    style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
+                  <span style="font-size: medium;">{{subItem.content}}</span>
+                </el-checkbox>
+              </el-checkbox-group>
+            </div>
           </div>
-          <div style="margin-left: 10%;margin-right: 10%">
-            <el-checkbox-group
-                v-model="item.selections" style="width: 100%">
-              <el-checkbox
-                  v-for="subItem in item.option"
-                  :key="subItem.oid"
-                  :label="subItem.oid"
-                  style="width: 100%;margin: 10px;display: flex;align-items: flex-start;">
-                <span style="font-size: medium;">{{subItem.content}}</span>
-              </el-checkbox>
-            </el-checkbox-group>
-          </div>
-        </div>
-        <div v-if="item.type===2">
-          <div class="queLabel">
+          <div v-if="item.type===2">
+            <div class="queLabel">
             <span v-if="que.showNumbers">
               {{item.qid+1}}.
             </span>
-            <span>
+              <span>
               {{item.title}}
             </span>
+            </div>
+            <div style="margin: 7px 10%;">
+              <el-input v-model="item.input"/>
+            </div>
           </div>
-          <div style="margin: 7px 10%;">
-            <el-input v-model="item.input"/>
-          </div>
-        </div>
-        <div v-if="item.type===3">
-          <div class="queLabel">
+          <div v-if="item.type===3">
+            <div class="queLabel">
             <span v-if="que.showNumbers">
               {{item.qid+1}}.
             </span>
-            <span>
+              <span>
               {{item.title}}
             </span>
+            </div>
+            <div class="queLabel">
+              <el-rate
+                  v-model="item.rating"
+                  :colors="colors">
+              </el-rate>
+            </div>
           </div>
-          <div class="queLabel">
-            <el-rate
-                v-model="item.rating"
-                :colors="colors">
-            </el-rate>
-          </div>
-        </div>
-        <div v-if="item.type===4">
-          <div class="queLabel">
+          <div v-if="item.type===4">
+            <div class="queLabel">
             <span v-if="que.showNumbers">
               {{item.qid+1}}.
             </span>
-            <span>
+              <span>
               {{item.title}}
             </span>
-          </div>
-          <div class="queLabel">
-            <el-input v-model="item.location" disabled style="width: 75%">
+            </div>
+            <div class="queLabel">
+              <el-input v-model="item.location" disabled style="width: 75%">
 
-            </el-input>
-            <el-popover placement="top"
-                        title="确定要获取您的当前位置吗"
-                        v-model="item.dialogVisible">
-              <el-button plain type="warning" icon="el-icon-map-location" slot="reference" style="margin-left: 5%;width: 20%">
-                定位
-              </el-button>
-              <el-button plain type="warning" icon="el-icon-check"  size="mini" style="margin-left:15%;width: 30%" v-on:click="getMapLocation(item)"/>
-              <el-button plain type="" icon="el-icon-close"  size="mini" style="margin-left:10%;width: 30%" v-on:click="item.dialogVisible=false"/>
-            </el-popover>
+              </el-input>
+              <el-popover placement="top"
+                          title="确定要获取您的当前位置吗"
+                          v-model="item.dialogVisible">
+                <el-button plain type="warning" icon="el-icon-map-location" slot="reference" style="margin-left: 5%;width: 20%">
+                  定位
+                </el-button>
+                <el-button plain type="warning" icon="el-icon-check"  size="mini" style="margin-left:15%;width: 30%" v-on:click="getMapLocation(item)"/>
+                <el-button plain type="" icon="el-icon-close"  size="mini" style="margin-left:10%;width: 30%" v-on:click="item.dialogVisible=false"/>
+              </el-popover>
+            </div>
           </div>
         </div>
       </div>
@@ -150,8 +152,9 @@ export default {
                 type:temp1.type,
                 title: temp1.title,
                 option:optionTemp,
-                necessary: false,
-                selection:-1
+                necessary: temp1.necessary,
+                selection:-1,
+                belongTo:temp1.belongTo
               })
             }
             else if(temp1.type === 1){
@@ -169,7 +172,8 @@ export default {
                 title: temp1.title,
                 option:optionTemp,
                 necessary: temp1.necessary,
-                selections: []
+                selections: [],
+                belongTo:temp1.belongTo
               })
             }
             else if(temp1.type === 2){
@@ -177,7 +181,9 @@ export default {
                 qid:i,
                 type:temp1.type,
                 title: temp1.title,
-                input : ""
+                input : "",
+                belongTo:temp1.belongTo,
+                necessary: temp1.necessary,
               })
             }
             else if(temp1.type === 3){
@@ -185,7 +191,9 @@ export default {
                 qid:i,
                 type:temp1.type,
                 title: temp1.title,
-                rating : 0
+                rating : 0,
+                belongTo:temp1.belongTo,
+                necessary: temp1.necessary,
               })
             } else {
               this.que.QList.push({
@@ -193,7 +201,9 @@ export default {
                 type:temp1.type,
                 title: temp1.title,
                 location : '',
-                dialogVisible: false
+                dialogVisible: false,
+                belongTo:temp1.belongTo,
+                necessary: temp1.necessary,
               })
             }
           }
