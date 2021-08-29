@@ -375,7 +375,7 @@ export default {
       }
 
       this.$axios({method:"post",url: "/quiz/submitSignUpQn", data:{
-          "qnid": this.que.qnId,
+          "qnId": this.que.qnId,
           "qnType": this.que.qnType,
           // "userName": this.$cookies.isKey("username") ? this.$cookies.get("username") : "unLogin",
           "userName" : this.userName,

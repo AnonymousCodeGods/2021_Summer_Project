@@ -306,10 +306,10 @@ export default {
       this.sort = command;
       if (command === "回收量") {
         this.allList.sort(function (a, b) {
-          return a.num - b.num;
+          return b.num - a.num;
         });
         this.myList.sort(function (a, b) {
-          return a.num - b.num;
+          return b.num - a.num;
         });
       } else if (command === "发布日期") {
         this.allList.sort(function (a, b) {

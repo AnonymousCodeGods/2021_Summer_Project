@@ -168,8 +168,8 @@ export default {
       this.$router.push({
         path: "/creatingQuestionnaire",
         query: {
-          isEdit: true,
           id: this.id,
+          type: this.type
         }
       });
     },

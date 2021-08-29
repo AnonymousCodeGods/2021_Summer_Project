@@ -556,7 +556,7 @@ export default {
       this.$axios({method: "post", url: "/getQn", data: {"QnId": qnId}})
           .then(res => {
             this.que.QList = [];
-            this.que.qnType = res.data.que.qnType;
+            this.que.qnType = res.data.que.qnType+'';
             this.que.showNumbers = res.data.que.showNumbers;
             this.que.qnId = res.data.que.qnid;
             this.que.title = res.data.que.title;
