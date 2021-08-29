@@ -1,92 +1,44 @@
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse, FileResponse
+from django.http import JsonResponse
 import simplejson
-from prototype.models import Questionnaire,User,ChoiceQuestion,Complition,Option,Answer,StarNum
-import django.utils.timezone as timezone
-from prototype.base_option import complition_create,get_questionnaire,choice_create,questionnaire_create,delete_questionnaire,get_options
+from prototype.models import Questionnaire,ChoiceQuestion,Complition,Option,CMPAnswer,StarNum,LocationQuestion,LOAnswer,User,CHAnswer,FillRecord
+from prototype.base_option import complition_create,get_questionnaire,choice_create,questionnaire_create,delete_questionnaire,get_options,get_ques_ins,des_decrypt,des_encrypt
 # Create your views here.
 import django.utils.timezone
-from django.db.models import F
-import os
 import datetime
-from collections import Counter
+
 # Create your views here.
+from .submit_option import ordi_submit,sign_submit
 
+def refresh(request):
+    if request.method == 'POST':
+        r = simplejson.loads(request.body)
+        print(r)
+        encodeId = r['qnid']
+        quen = Questionnaire.objects.get(code=encodeId)
+        quen.key =r['key']
+        quen.save()
+        newId = des_encrypt(quen.pk)
+    return JsonResponse({'newId':newId})
 
+def subTest(request):
+    if request.method == 'POST':
+        r = simplejson.loads(request.body)
+        ordi_submit(r)
+    return JsonResponse({'success':True})
 
 def submitQn(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
-        print("****************************************************************")
+        flag = ordi_submit(r)
+        return JsonResponse({'success':flag})
+
+def submitSignUpQn(request):
+    if request.method == 'POST':
+        r = simplejson.loads(request.body)
         print(r)
-        quen = get_questionnaire(r['qnid'])
-        print(quen)
-        QList = quen['QList']
-        i = 0
-        AnswerList = r['AnswerList']
-        for ans in AnswerList:
-            qid = QList[i]['qid']
-            i = i+1
-            type = ans['type']
-            answer = ans['answer']
-            choi = None
-            if type in [0,1,3]:
-                choi = ChoiceQuestion.objects.get(pk=qid)
-                options = get_options(choi)
-                print(options)
-                p = choi.participantsNum
-                choi.participantsNum = p+1
-                choi.save()
-            if type == 0:
-                opi = options[answer]
-                sNum = opi.selectedNum
-                opi.selectedNum = sNum+1
-                opi.save()
-            elif type == 1:
-                for a in answer:
-                    opi = options[a]
-                    sNum = opi.selectedNum
-                    opi.selectedNum = sNum + 1
-                    opi.save()
-                    pass
-            elif type == 2:
-                comp = Complition.objects.get(pk=qid)
-                p = comp.participantsNum
-                comp.participantsNum = p+1
-                comp.save()
-                ans_ins = Answer(content=answer,CMP=comp)
-                ans_ins.save()
-            elif type == 3:
-                try:
-                    starNum = StarNum.objects.get(CH=choi)
-                except :
-                    starNum = StarNum(CH=choi)
-                    starNum.save()
-                if answer == 0:
-                    sum = starNum.zero_star
-                    starNum.zero_star = sum + 1
-                elif answer == 1:
-                    sum = starNum.one_star
-                    starNum.one_star = sum + 1
-                elif answer == 2:
-                    sum = starNum.two_star
-                    starNum.two_star = sum + 1
-                elif answer == 3:
-                    sum = starNum.three_star
-                    starNum.three_star = sum + 1
-                elif answer == 4:
-                    sum = starNum.four_star
-                    starNum.four_star = sum + 1
-                elif answer == 5:
-                    sum = starNum.five_star
-                    starNum.five_star = sum + 1
-                starNum.save()
-        qnid = r['qnid']
-        qn = Questionnaire.objects.get(pk=qnid)
-        re = qn.recoverNum
-        qn.recoverNum = re+1
-        qn.save()
-        return JsonResponse({'success':True})
+        condition = sign_submit(r)
+    return JsonResponse({'success':condition['success'],'msg':condition['msg']})
 
 def result(request):
     if request.method == 'POST':
@@ -94,22 +46,26 @@ def result(request):
         print(r)
         resultList = {}
         AnswerList = []
-        qnid = r['ID']
+        qnid = des_decrypt(r['ID'])
         quen = get_questionnaire(qnid)
         QList = quen['QList']
         for q in QList:
             Answeri = {}
             Answeri['type'] = q['type']
+            Answeri['title'] = q['title']
+
             qid = q['qid']
             Answeri['Qnum'] = qid
             selection = None
             if q['type'] in [0,1,3]:
                 selection = []
+                op_title = []
                 if q['type'] != 3:
                     options = q['option']
                     for option in options:
                         op = Option.objects.get(id=option['oid'])
                         selection.append(op.selectedNum)
+                        op_title.append(op.content)
 
                 else:
                     star = StarNum.objects.get(CH=qid)
@@ -120,22 +76,31 @@ def result(request):
                     selection.append(star.four_star)
                     selection.append(star.five_star)
                 Answeri['selection'] = selection
-            else:
+                Answeri['option'] = op_title
+            elif q['type'] == 2:
                 input = []
                 comp = Complition.objects.get(pk=qid)
-                answers = Answer.objects.filter(CMP=comp)
+                answers = CMPAnswer.objects.filter(CMP=comp)
+                for answer in answers:
+                    input.append(answer.content)
+            elif q['type'] == 4:
+                input = []
+                loc = LocationQuestion.objects.get(pk=qid)
+                answers = LOAnswer.objects.filter(LO=loc)
                 for answer in answers:
                     input.append(answer.content)
 
                 Answeri['input'] = input
             AnswerList.append(Answeri)
-        return JsonResponse({'AnswerList':AnswerList})
+        quen_ins = Questionnaire.objects.get(pk=qnid)
+
+        return JsonResponse({'totalNum':quen_ins.recoverNum,'AnswerList':AnswerList})
 
 def publish(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
         print(r)
-        quen = Questionnaire.objects.get(id=r['ID'])
+        quen = Questionnaire.objects.get(id=des_decrypt(r['ID']))
         quen.isPublished = True
         quen.publishTime = django.utils.timezone.now()+datetime.timedelta(hours=8)
         quen.save()
@@ -145,47 +110,43 @@ def recycle(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
         print(r)
-        quen = Questionnaire.objects.get(id=r['ID'])
+        quen = Questionnaire.objects.get(id=des_decrypt(r['ID']))
         quen.isDeleted = True
-
         quen.save()
-        print(quen.isDeleted)
     return JsonResponse({'success': True})
 
 def recover(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
         print(r)
-        quen = Questionnaire.objects.get(id=r['ID'])
+        quen = Questionnaire.objects.get(id=des_decrypt(r['ID']))
         quen.isDeleted = False
         quen.save()
-        print(quen.isDeleted)
     return JsonResponse({'success': True})
 
 def suspend(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
         print(r)
-        quen = Questionnaire.objects.get(id=r['ID'])
+        quen = Questionnaire.objects.get(id=des_decrypt(r['ID']))
         quen.isPublished = False
         quen.save()
-        print(quen.isDeleted)
     return JsonResponse({'success': True})
 
 def clear(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
         print(r)
-        quen = get_questionnaire(r['qnid'])
-        quen_ins = Questionnaire.objects.get(pk=r['qnid'])
+        quen = get_questionnaire(des_decrypt(r['qnid']))
+        quen_ins = Questionnaire.objects.get(pk=des_decrypt(r['qnid']))
         quen_ins.recoverNum = 0
         quen_ins.save()
-        print(quen)
         QList = quen['QList']
         for q in QList:
             type = q['type']
             if type in[0,1,3]:
                 choi = ChoiceQuestion.objects.get(id=q['qid'])
+                CHAnswer.objects.filter(CH=choi).delete()
                 choi.participantsNum = 0
                 choi.save()
                 if type != 3:
@@ -204,10 +165,91 @@ def clear(request):
                     star.five_star = 0
                     star.save()
                     pass
-                pass
-            else:
+            elif type == 2:
                 comp = Complition.objects.get(pk=q['qid'])
-                Answer.objects.filter(CMP=comp).delete()
+                CMPAnswer.objects.filter(CMP=comp).delete()
                 comp.participantsNum = 0
                 comp.save()
+            elif type == 4:
+                loc = LocationQuestion.objects.get(pk=q['qid'])
+                LOAnswer.objects.filter(LO=loc).delete()
+                loc.participantsNum = 0
+                loc.save()
+        FillRecord.objects.filter(QUEN=quen_ins).delete()
     return JsonResponse({'success': True})
+
+
+def independent_result(request):
+    if request.method == 'POST':
+        r = simplejson.loads(request.body)
+        print(r)
+        quen = Questionnaire.objects.get(pk=des_decrypt(r['qnid']))
+        ques_ins = get_ques_ins(qnid=quen.pk)
+        print(ques_ins)
+        records = FillRecord.objects.filter(QUEN=quen)
+        users = []
+        for record in records:
+            users.append(record.USER)
+        print(users)
+        resultList = []
+        for user in users:
+            AnswerList = []
+            for ques in ques_ins:
+                Answer = {}
+                if isinstance(ques,ChoiceQuestion):
+                    if ques.isMulti == False:
+                        Answer['type'] = 0
+                        try:
+                            chanswer = CHAnswer.objects.get(USER=user,CH=ques)
+                            Answer['answer'] = chanswer.content
+                        except :
+                            Answer['answer'] = None
+
+                    elif ques.isMulti == True:
+                        Answer['type'] = 1
+                        try:
+                            chanswer = CHAnswer.objects.filter(USER=user,CH=ques)
+                            answer = []
+                            for ans in chanswer:
+                                answer.append(ans.content)
+                            Answer['answer'] = answer
+                        except :
+                            Answer['answer'] = None
+
+                    elif ques.isMulti is None:
+                        Answer['type'] = 3
+                        try:
+                            chanswer = CHAnswer.objects.get(USER=user,CH=ques)
+                            Answer['answer'] = chanswer.content
+                        except :
+                            Answer['answer'] = None
+
+                elif isinstance(ques,Complition):
+                    Answer['type'] = 2
+                    try:
+                        companswer = CMPAnswer.objects.get(USER=user, CMP=ques)
+                        Answer['answer'] = companswer.content
+                    except :
+                        Answer['answer'] = None
+
+                elif isinstance(ques,LocationQuestion):
+                    Answer['type'] = 4
+                    try:
+                        locanswer = LOAnswer.objects.get(USER=user,LO=ques)
+                        Answer['answer'] = locanswer.content
+                    except :
+                        Answer['answer'] = None
+
+                AnswerList.append(Answer)
+            result = {}
+            result['userName'] = user.name
+            result['AnswerList'] = AnswerList
+            resultList.append(result)
+
+        return JsonResponse({'resultList':resultList})
+
+def score_stat(request):
+    r = simplejson.loads(request.body)
+    print(r)
+
+    return JsonResponse({'resultList': resultList})

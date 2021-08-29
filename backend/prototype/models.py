@@ -1,5 +1,4 @@
 from django.db import models
-
 # Create your models here.
 class User(models.Model):
     name = models.CharField(max_length=64,unique=True)
@@ -17,18 +16,20 @@ class Questionnaire(models.Model):
 
     publishTime = models.DateTimeField(null=True)
     endTime = models.DateTimeField(null=True)
-    answerTime = models.TimeField(null=True)
-    createTime = models.DateTimeField(auto_now=True)
+    createTime = models.DateTimeField(auto_now_add=True)
 
     isClose = models.BooleanField(default=False,null=True)
     isDeleted = models.BooleanField(default=False,null=True)
     isPublished = models.BooleanField(default=False,null=True)
+    showNumbers = models.BooleanField(default=True,null=True)
 
     recoverNum = models.IntegerField(default=0,null=True)
     limitNum = models.IntegerField(null=True)
 
     title = models.CharField(max_length=64,null=True)
     FQID = models.CharField(max_length=64,null=True)
+    key = models.CharField(max_length=64,default='panzhita')
+    code = models.CharField(max_length=64,null=True,default=None)
 
     def __str__(self):
         return self.title
@@ -36,10 +37,11 @@ class Questionnaire(models.Model):
 class Question(models.Model):
     content = models.TextField()
 
-    quesNum = models.IntegerField(null=True)
     participantsNum = models.IntegerField(default=0)
-    limitNum = models.IntegerField(null=True)
+    hasLimitNum = models.BooleanField(default=False,null=True)
+    score = models.IntegerField(null=True,default=0)
 
+    isRequired = models.BooleanField(null=True,default=True)
     class Meta:
         abstract = True
 
@@ -56,6 +58,13 @@ class ChoiceQuestion(Question):
     isMulti = models.BooleanField(default=False,null=True)
     def __str__(self):
         return self.CHID
+
+class LocationQuestion(Question):
+    LOID = models.CharField(max_length=64,unique=True)
+    NQID = models.CharField(max_length=64)
+    def __str__(self):
+        return self.LOID
+
 class Option(models.Model):
     NOID = models.IntegerField(null=True)
 
@@ -63,19 +72,33 @@ class Option(models.Model):
 
     selectedNum = models.IntegerField(default=0,null=True)
     score = models.IntegerField(null=True)
-    limitNum = models.ImageField(null=True)
+    limitNum = models.IntegerField(null=True)
 
     isCorrect = models.BooleanField(null=True)
 
     def __str__(self):
         return 'OP'+str(self.id)
 
-class Answer(models.Model):
-    content = models.TextField()
+class CMPAnswer(models.Model):
+    content = models.TextField(null=True)
     CMP = models.ForeignKey('Complition',on_delete=models.CASCADE,null=True)
+    USER = models.ForeignKey('User',on_delete=models.CASCADE,null=True)
+
 
     def __str__(self):
         return self.content
+
+class CHAnswer(models.Model):
+    content = models.IntegerField(null=True)
+    CH = models.ForeignKey('ChoiceQuestion',on_delete=models.CASCADE,null=True)
+    USER = models.ForeignKey('User',on_delete=models.CASCADE,null=True)
+    def __str__(self):
+        return self.content
+
+class LOAnswer(models.Model):
+    content = models.TextField(null=True)
+    LO = models.ForeignKey('LocationQuestion',on_delete=models.CASCADE,null=True)
+    USER = models.ForeignKey('User',on_delete=models.CASCADE,null=True)
 
 class StarNum(models.Model):
     CH = models.ForeignKey('ChoiceQuestion',on_delete=models.CASCADE,null=True)
@@ -86,3 +109,10 @@ class StarNum(models.Model):
     three_star = models.IntegerField(null=True,default=0)
     four_star = models.IntegerField(null=True,default=0)
     five_star = models.IntegerField(null=True,default=0)
+
+class FillRecord(models.Model):
+    USER = models.ForeignKey('User',on_delete=models.CASCADE)
+    QUEN = models.ForeignKey('Questionnaire',on_delete=models.CASCADE)
+
+    fillTime = models.DateTimeField()
+
