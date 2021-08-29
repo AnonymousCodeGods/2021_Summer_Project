@@ -307,7 +307,28 @@ export default {
     },
     img(item) {
       console.log(item);
-      this.$router.push("/resultForm");
+      let chars = "ABCDEFGHIJKLMNOPQRSTUVWSYZ";
+      var sort = [];
+      var pie = [];
+      var col = [];
+      for (let i = 0; i < item.option.length; i++) {
+          sort.push(chars[i]);
+          col.push(item.option[i].count)
+
+          pie.push({
+            key:chars[i],
+            value:item.option[i].count
+          })
+      }
+      console.log('pie')
+      console.log(pie)
+      this.$router.push({
+        path: "/resultForm", query: {
+          sorts: sort,
+          pies: pie ,
+          cols: col
+        }
+      });
     }
   }
 }

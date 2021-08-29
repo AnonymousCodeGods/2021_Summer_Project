@@ -1,5 +1,5 @@
 <template>
-  <div id="sentout" :style="heightAndWidth">
+  <div id="sentout" >
     <div class="head">
       <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:5%;height: 75%;left: 5%">
 
@@ -51,12 +51,20 @@ export default {
   name: "SentOut",
   data() {
     return {
-      username: ''
+      username: '',
+      sorts:[],
+      pieData:[],
+      colData:[]
     }
   },
   created() {
-    this.usename = this.$cookies.get('username')
-
+    this.username = this.$cookies.get('username')
+    this.sorts = this.$route.query.sorts
+    this.pieData = this.$route.query.pies
+    this.colData = this.$route.query.cols
+    console.log('aaaaaa')
+    console.log(this.pieData)
+    console.log(this.colData)
   },
   methods: {
     back: function () {
@@ -74,13 +82,13 @@ export default {
       },
       xAxis: {
         type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: this.sorts
       },
       yAxis: {
         type: 'value'
       },
       series: [{
-        data: [120, 200, 150, 80, 70, 110, 130],
+        data: this.colData,
         type: 'bar',
         showBackground: true,
         backgroundStyle: {
@@ -125,13 +133,7 @@ export default {
           labelLine: {
             show: false
           },
-          data: [
-            {value: 1048, name: '搜索引擎'},
-            {value: 735, name: '直接访问'},
-            {value: 580, name: '邮件营销'},
-            {value: 484, name: '联盟广告'},
-            {value: 300, name: '视频广告'}
-          ]
+          data: this.pieData
         }
       ]
     })
