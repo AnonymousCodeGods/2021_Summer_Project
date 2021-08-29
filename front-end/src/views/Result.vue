@@ -11,8 +11,7 @@
         <!--          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
         <!--        </div>-->
       </div>
-
-      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%" @command="logout">
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%">
       <span class="el-dropdown-link">
         {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
@@ -21,6 +20,8 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+
+
     <div class="body" style="overflow-y:scroll">
       <el-col :span="6" style="height: 100%">
       </el-col>
@@ -87,16 +88,28 @@
                           style="width: 100%">
                         <el-table-column
                             align="center"
-                            prop="index"
-                            label="序号"
-                            width="200%"
-                            sortable>
+                            prop="content"
+                            mid-width="50%"
+                            label="">
                         </el-table-column>
+                      </el-table>
+                    </el-col>
+                  </el-row>
+                </div>
+                <div v-else-if="item.type===4" style="margin-left: 5%;margin-right: 5%;text-align: center">
+                  <el-row style="margin-top:1%">
+                    <el-col :span="24" style="height: 100%;width: 100%;margin-top:2%">
+                      <el-table
+                          margin-left: fill
+                          border
+                          stripe
+                          :data="item.Inputlist"
+                          style="width: 100%">
                         <el-table-column
                             align="center"
                             prop="content"
                             mid-width="50%"
-                            label="内容">
+                            label="">
                         </el-table-column>
                       </el-table>
                     </el-col>
@@ -165,16 +178,18 @@ export default {
     msg: String
   },
   created() {
-    this.que.qid = this.$route.query.id
+    this.que.qnid = this.$route.query.id
     this.username = this.$cookies.get('username')
+    // console.log(this.$route.query.id)
+    // console.log(this.que.qnid)
     this.$axios({
       method: "post",
-      //todo: url
       url: "/getQn",
-      data: {"QnId": this.que.qid}
-
+      data: {"QnId": this.que.qnid}
     })
         .then(res => {
+          console.log(res.data.que)
+
           this.que.title = res.data.que.title
           for (let i = 0; i < res.data.que.QList.length; i++) {
             if (res.data.que.QList[i].type === 0 || res.data.que.QList[i].type === 1) {
@@ -185,14 +200,13 @@ export default {
                 title: res.data.que.QList[i].title,
                 option: res.data.que.QList[i].option
               })
-            } else if (res.data.que.QList[i].type === 2) {
+            } else if (res.data.que.QList[i].type === 2 || res.data.que.QList[i].type === 4) {
               this.que.QList.push({
                 qid: res.data.que.QList[i].qid,
                 type: res.data.que.QList[i].type,
                 title: res.data.que.QList[i].title,
-                Inputlist: []
               })
-            } else {
+            } else if (res.data.que.QList[i].type === 3) {
               this.que.QList.push({
                 qid: res.data.que.QList[i].qid,
                 total: 0,
@@ -201,7 +215,7 @@ export default {
                 option: []
               })
               for (let j = 0; j < 6; j++) {
-                this.que.QList[i].option.push({content:j,count:0,percentage:0})
+                this.que.QList[i].option.push({content: j, count: 0, percentage: 0})
               }
             }
           }
@@ -209,11 +223,12 @@ export default {
         .catch(() => {
         })
 
-    this.$axios({
+    console.log(this.que)
 
-          method:"post",
-          url:"/quiz/result",
-          data:{"ID": this.que.qnid}
+    this.$axios({
+      method: "post",
+      url: "/quiz/result",
+      data: {"ID": this.que.qnid}
     })
         .then(res => {
           this.AnswerList = JSON.parse(JSON.stringify(res.data.AnswerList))
@@ -224,14 +239,8 @@ export default {
                 this.que.QList[i].option[j].count = this.AnswerList[i].selection[j];
                 this.que.QList[i].total += this.AnswerList[i].selection[j]
               }
-            } else if (this.AnswerList[i].type === 2) {
-              for (let j = 0; j < this.AnswerList[i].input.length; j++)
-                this.que.QList[i].Inputlist.push({index: j + 1, content: this.AnswerList[i].input[j]})
             }
           }
-
-          console.log(this.AnswerList)
-          console.log(this.que.QList)
           for (let i = 0; i < this.AnswerList.length; i++) {
             if (this.AnswerList[i].type === 0 || this.AnswerList[i].type === 1 || this.AnswerList[i].type === 3) {
               for (let j = 0; j < this.que.QList[i].option.length; j++) {
@@ -239,9 +248,9 @@ export default {
               }
             }
           }
-      })
-      .catch(() => {
-      })
+        })
+        .catch(() => {
+        })
   },
   data() {
     return {
@@ -251,14 +260,10 @@ export default {
         QList: []
       },
       AnswerList: [],
+      username: ''
     }
   },
   methods: {
-    logout(command) {
-      console.log(command);
-      this.$cookies.remove('username');
-      this.$router.push("/");
-    },
     getSummaries(param) {
       const {columns, data} = param;
       const sums = [];
@@ -307,7 +312,6 @@ export default {
   min-height: 60px;
   width: 100%;
   background-color: #ffffff;
-  //background-color:#545c64
 }
 
 .demo-type {
@@ -334,7 +338,6 @@ export default {
   top: 30%;
   height: 50%;
 }
-
 
 .el-dropdown-link {
   cursor: pointer;

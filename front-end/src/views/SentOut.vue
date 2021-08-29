@@ -86,6 +86,7 @@ export default {
   created() {
     this.id = this.$route.query.id;
     this.type = this.$route.query.type;
+    this.username = this.$cookies.get('username')
     if(this.type === '2')
     this.address = 'http://localhost:8080/#/collectingSignUpQuestionnaire?id=' + this.id;
     else if(this.type === '3'){
