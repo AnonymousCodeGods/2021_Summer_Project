@@ -131,15 +131,17 @@ export default {
           if(res.data.que.state === false){
             this.$router.push('/failedResult');
           }
+          console.log(res)
           this.que.QList=[]
           this.que.qnType = res.data.que.qnType
           this.que.qnId = res.data.que.qnid;
-          this.que.showNumbers = res.data.showNumbers;
+          this.que.showNumbers = res.data.que.showNumbers;
           this.que.title = res.data.que.title;
           for(let i=0;i<res.data.que.QList.length;i++){
             let temp1=res.data.que.QList[i];
             if(temp1.type === 0){
               let optionTemp=[];
+              console.log(temp1.option.length)
               for(let j=0;j<temp1.option.length;j++){
                 let temp2=temp1.option[j];
                 optionTemp.push({
@@ -156,6 +158,7 @@ export default {
                 selection:-1,
                 belongTo:temp1.belongTo
               })
+
             }
             else if(temp1.type === 1){
               let optionTemp=[];
@@ -175,6 +178,7 @@ export default {
                 selections: [],
                 belongTo:temp1.belongTo
               })
+
             }
             else if(temp1.type === 2){
               this.que.QList.push({
@@ -185,6 +189,7 @@ export default {
                 belongTo:temp1.belongTo,
                 necessary: temp1.necessary,
               })
+
             }
             else if(temp1.type === 3){
               this.que.QList.push({
@@ -195,6 +200,8 @@ export default {
                 belongTo:temp1.belongTo,
                 necessary: temp1.necessary,
               })
+
+
             } else {
               this.que.QList.push({
                 qid:i,
@@ -205,8 +212,10 @@ export default {
                 belongTo:temp1.belongTo,
                 necessary: temp1.necessary,
               })
+
             }
           }
+          console.log(this.que)
           this.fullscreenLoading=false
         })
         .catch(() => {
@@ -336,18 +345,21 @@ export default {
       this.fullscreenLoading = true
       for(let i=0;i<this.que.QList.length;i++){
         if(this.que.QList[i].necessary) {
-          if((this.que.QList[i].type === 0 && this.que.QList[i].selection===-1)
-              ||(this.que.QList[i].type === 1 && this.que.QList[i].selections.length===0)
-              ||(this.que.QList[i].type===2&&this.que.QList[i].input==='')
-              ||(this.que.QList[i].type===3&&this.que.QList[i].rating===0)
-              ||(this.que.QList[i].type===4&&this.que.QList[i].location==='') ) {
-            this.$message({
-              message: '请填写所有必填项',
-              type: 'warning'
-            });
-            this.fullscreenLoading = false
-            return
+          if(this.que.QList[i].belongTo.qid===-1||this.que.QList[this.que.QList[i].belongTo.qid].selection===this.que.QList[i].belongTo.option){
+            if((this.que.QList[i].type === 0 && this.que.QList[i].selection===-1)
+                ||(this.que.QList[i].type === 1 && this.que.QList[i].selections.length===0)
+                ||(this.que.QList[i].type===2&&this.que.QList[i].input==='')
+                ||(this.que.QList[i].type===3&&this.que.QList[i].rating===0)
+                ||(this.que.QList[i].type===4&&this.que.QList[i].location==='')) {
+              this.$message({
+                message: '请填写所有必填项',
+                type: 'warning'
+              });
+              this.fullscreenLoading = false
+              return
+            }
           }
+
         }
       }
       let AnswerListTemp = [];
