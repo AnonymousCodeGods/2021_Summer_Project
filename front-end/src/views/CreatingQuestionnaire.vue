@@ -440,32 +440,6 @@ export default {
             type: 4,
             title: "请点击定位",
             necessary: true,
-          },{
-            qid: 5,
-            type: 5,
-            title: "请点击定位",
-            necessary: true,
-            option:[
-              {
-                oid:0,
-                content: '分支一',
-                question:[
-                  {
-                    qid: 6,
-                    type: 2,
-                    title: "请输入姓名",
-                    necessary: true,
-                  },
-                ]
-              },
-              {
-                oid:1,
-                content: '分支二',
-                question:[
-
-                ]
-              }
-            ]
           }
         ]
       }
