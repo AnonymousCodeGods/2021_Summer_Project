@@ -3,7 +3,7 @@ from prototype.models import User,Questionnaire
 import simplejson
 from django.http import JsonResponse, HttpResponse, FileResponse
 from user_manage.views import get_quizs
-from prototype.base_option import delete_questionnaire
+from prototype.base_option import delete_questionnaire,des_decrypt,des_encrypt
 # Create your views here.
 
 def info(request):
@@ -26,7 +26,7 @@ def info(request):
 def recover(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
-        quen = Questionnaire.objects.get(pk=r['ID'])
+        quen = Questionnaire.objects.get(pk=decrypt(r['ID']))
         quen.isDeleted = False
         quen.save()
         return JsonResponse({'success':True})
@@ -34,6 +34,6 @@ def recover(request):
 def delete(request):
     if request.method == 'POST':
         r = simplejson.loads(request.body)
-        QnId = r['qnid']
-        s = delete_questionnaire(r)
+        QnId = des_decrypt(r['qnid'])
+        s = delete_questionnaire({'qnid':QnId})
         return JsonResponse({'success':True})

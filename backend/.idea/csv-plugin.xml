@@ -38,6 +38,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\prototype\des_coding.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\prototype\ptext.py">
           <value>
             <Attribute>
@@ -56,6 +63,13 @@
           <value>
             <Attribute>
               <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\quiz\submit_option.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
