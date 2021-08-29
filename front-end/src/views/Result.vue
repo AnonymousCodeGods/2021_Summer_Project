@@ -1,4 +1,4 @@
-<template>
+<template xmlns:margin-left="">
   <div>
     <div class="head">
       <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:5%;height: 75%;left: 5%">
@@ -239,7 +239,6 @@ export default {
               }
             }
           }
-        }
       })
       .catch(() => {
       })
