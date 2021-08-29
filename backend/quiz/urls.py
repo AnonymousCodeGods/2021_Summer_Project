@@ -14,4 +14,5 @@ urlpatterns = [
     path('idp_result', views.independent_result, name='idp_recover'),
     path('submitSignUpQn', views.submitSignUpQn, name='submitSignUpQn'),
     path('refresh', views.refresh, name='refresh'),
+    path('score_stat', views.score_stat, name='score_stat'),
 ]

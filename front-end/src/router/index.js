@@ -5,14 +5,14 @@ Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
 
 VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
+    return originalPush.call(this, location).catch(err => err)
 
 }
 const routes = [
     {
-        path: '/c',
+        path: '/judgeExamQuestionnaire',
         name: 'xx',
-        component: () => import(/* webpackChunkName: "about" */ '../components/HelloWorld')
+        component: () => import(/* webpackChunkName: "about" */ '../views/JudgeExamQuestionnaire.vue')
     },
     {
         path: '/',
@@ -42,8 +42,8 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
     },
     {
-        path: '/login2',
-        name: 'Login2',
+        path: '/loginSignUp',
+        name: 'LoginSignUp',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -113,6 +113,16 @@ const routes = [
         path: '/failedResult3',
         name: 'FailedResult3',
         component: () => import('../views/failedResult_SignUpQ2')
+    },
+    {
+        path: '/failedResult4',
+        name: 'FailedResult4',
+        component: () => import('../views/failedResult_SignUpQ3')
+    },
+    {
+        path: '/failedResult5',
+        name: 'FailedResult5',
+        component: () => import('../views/failedResult_SignUpQ4')
     },
     {
         path: '/endResult',

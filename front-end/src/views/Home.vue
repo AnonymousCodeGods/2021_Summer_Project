@@ -139,13 +139,14 @@
 
 <!--      弹框-->
       <el-dialog
-          title="创建问卷"
-          :visible.sync="dialog1"
-          width="800px"
-          :before-close="handleClose"
-          center
-          style="margin-top: 5%">
+        title="创建问卷"
+        :visible.sync="dialog1"
+        width="800px"
+        :before-close="handleClose"
+        center
+        style="margin-top: 5%">
         <el-form :model="form" style="" :label-position=" 'left' " >
+
           <el-form-item
               required
               label="问卷类型"
@@ -184,8 +185,8 @@
 
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="handleClose(done)">取 消</el-button>
-          <el-button type="primary" @click="handleConfirm(done)">确 定</el-button>
+          <el-button @click="handleClose()">取 消</el-button>
+          <el-button type="primary" @click="handleConfirm()">确 定</el-button>
         </div>
       </el-dialog>
 

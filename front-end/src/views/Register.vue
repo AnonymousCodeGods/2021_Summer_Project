@@ -26,18 +26,6 @@
             </td>
           </tr>
           <tr>
-            <td>手机号</td>
-            <td>
-              <el-input type="password" v-model="phone" placeholder="请输入手机号"></el-input>
-            </td>
-          </tr>
-          <tr>
-            <td>邮箱</td>
-            <td>
-              <el-input type="password" v-model="mail" placeholder="请输入邮箱"></el-input>
-            </td>
-          </tr>
-          <tr>
             <td colspan="2">
               <el-button style="width: 300px" type="primary" @click="doRegister"
                          v-loading.fullscreen.lock="fullscreenLoading">注册

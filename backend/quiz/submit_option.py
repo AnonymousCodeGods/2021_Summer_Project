@@ -2,6 +2,7 @@ from prototype.base_option import get_ques_ins,get_op_ins,des_decrypt,des_encryp
 from prototype.models import *
 import django.utils.timezone
 import datetime
+
 def now_time():
     return django.utils.timezone.now()+datetime.timedelta(hours=8)
 
@@ -86,15 +87,14 @@ def fill_loc(loc,answer,user):
 def ordi_submit(r):
     qnid = des_decrypt(r['qnId'])
     quesn_ins = Questionnaire.objects.get(pk=qnid)
-    if quesn_ins.endTime is not None and now_time() > quesn_ins.endTime:
-        return False
+
     ques_ins = get_ques_ins(qnid)
     AnswerList = r['AnswerList']
     user = None
     try:
         user = User.objects.get(name=r['userName'])
         f_record = FillRecord.objects.filter(QUEN=quesn_ins,USER=user)
-        if len(f_record) == 1:
+        if len(f_record) == 1 and ques_ins.type not in[0,3]:
             return False
     except:
         now = now_time()
