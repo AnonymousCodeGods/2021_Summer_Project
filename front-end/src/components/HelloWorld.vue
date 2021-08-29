@@ -1,74 +1,79 @@
 <template>
-    <span>{{hour? hourString+':'+minuteString+':'+secondString : minuteString+':'+secondString}}</span>
+<div class="box">
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <div class="box_fixed" id="boxFixed" :class="{'is_fixed' : isFixed}">
+      我是来测试的、哇咔咔
+    </div>
+    <h3>快下来</h3>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+    <h4>吸顶测试</h4>
+  </div>
 </template>
-
 <script>
-  export default {
-    data () {
+ export default {
+    data(){
       return {
-        hour: '',
-        minute: '',
-        second: '',
-        timer: ''
+        isFixed: false,
+        offsetTop:0
       }
     },
-    props: {
-      remainTime: {    // 倒计时间总秒数
-        default: '1000'
-      }
+    mounted(){
+      window.addEventListener('scroll',this.initHeight);
+      this.$nextTick( () => {
+        this.offsetTop = document.querySelector('#boxFixed').offsetTop;
+      })
     },
-    mounted () {
-      if (this.remainTime > 0) {
-        this.hour = Math.floor((this.remainTime / 3600) % 24)
-        this.minute = Math.floor((this.remainTime / 60) % 60)
-        this.second = Math.floor(this.remainTime % 60)
-        this.countDowm()
-      }
-    },
-    methods: {
-      countDowm () {
-        var self = this
-        clearInterval(this.timer)
-        this.timer = setInterval(function () {
-          if (self.hour === 0) {
-            if (self.minute !== 0 && self.second === 0) {
-              self.second = 59
-              self.minute -= 1
-            } else if (self.minute === 0 && self.second === 0) {
-              self.second = 0
-              self.$emit('countDowmEnd', true)
-              clearInterval(self.timer)
-            } else {
-              self.second -= 1
-            }
-          } else {
-            if (self.minute !== 0 && self.second === 0) {
-              self.second = 59
-              self.minute -= 1
-            } else if (self.minute === 0 && self.second === 0) {
-              self.hour -= 1
-              self.minute = 59
-              self.second = 59
-            } else {
-              self.second -= 1
-            }
-          }
-        }, 1000)
+    methods:{
+      initHeight () {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        this.isFixed = scrollTop > this.offsetTop ? true : false;
       },
-      formatNum (num) {
-        return num < 10 ? '0' + num : '' + num
-      }
     },
-    computed: {
-      hourString () {
-        return this.formatNum(this.hour)
-      },
-      minuteString () {
-        return this.formatNum(this.minute)
-      },
-      secondString () {
-        return this.formatNum(this.second)
-      }
-    }
+    destroyed () {
+      window.removeEventListener('scroll', this.handleScroll)
+    },
   }
 </script>
+
+<style>
+  .box_fixed{
+    width: 500px;
+    height: 40px;
+    border: 2px dashed pink;
+    border-radius: 20px;
+    margin: 0 auto;
+    line-height: 40px;
+    background: #eee;
+  }
+  .is_fixed{
+    position: fixed;
+    top: 0;
+    left: 50%;
+    margin-left: -250px;
+    z-index: 999;
+  }
+</style>

@@ -25,7 +25,7 @@
 
       <div class="demo-type" >
         <div>
-          <el-avatar icon="el-icon-user-solid" size="small"></el-avatar>
+          <el-avatar icon="el-icon-user-solid" size="small" ></el-avatar>
         </div>
         <!--        <div>-->
         <!--          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
@@ -135,6 +135,9 @@
       <!--      >-->
       <!--        个人信息-->
       <!--      </button>-->
+
+
+<!--      弹框-->
       <el-dialog
         title="创建问卷"
         :visible.sync="dialog1"
@@ -160,25 +163,25 @@
             </el-radio-group>
           </el-form-item>
 
-<!--          <el-form-item-->
-<!--              :required="form.isTimeLimit"-->
-<!--              v-if="form.type===4"-->
-<!--              label="问卷时间限制"-->
-<!--              :label-width="formLabelWidth"-->
-<!--              style="text-align: left">-->
-<!--            <el-switch-->
-<!--                v-model="form.isTimeLimit"-->
-<!--                active-color="#3292ff"-->
-<!--                inactive-color="#99a9bf"-->
-<!--                active-text="有"-->
-<!--                inactive-text="无" />-->
-<!--            <el-input-->
-<!--                v-if="form.isTimeLimit"-->
-<!--                v-model.number="form.sum"-->
-<!--                autocomplete="off"-->
-<!--                placeholder="请输入时间上限(min)"-->
-<!--                style="width: 55%;margin-left: 5%"></el-input>-->
-<!--          </el-form-item>-->
+          <!--          <el-form-item-->
+          <!--              :required="form.isTimeLimit"-->
+          <!--              v-if="form.type===4"-->
+          <!--              label="问卷时间限制"-->
+          <!--              :label-width="formLabelWidth"-->
+          <!--              style="text-align: left">-->
+          <!--            <el-switch-->
+          <!--                v-model="form.isTimeLimit"-->
+          <!--                active-color="#3292ff"-->
+          <!--                inactive-color="#99a9bf"-->
+          <!--                active-text="有"-->
+          <!--                inactive-text="无" />-->
+          <!--            <el-input-->
+          <!--                v-if="form.isTimeLimit"-->
+          <!--                v-model.number="form.sum"-->
+          <!--                autocomplete="off"-->
+          <!--                placeholder="请输入时间上限(min)"-->
+          <!--                style="width: 55%;margin-left: 5%"></el-input>-->
+          <!--          </el-form-item>-->
 
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -186,6 +189,7 @@
           <el-button type="primary" @click="handleConfirm(done)">确 定</el-button>
         </div>
       </el-dialog>
+
 
       <!--           问卷信息-->
       <div style="margin-top: 10%; margin-left:20%;margin-right:20%;background: transparent; height: 75%">
@@ -195,7 +199,8 @@
             style="margin-top: 20px;"
         >
           <each-quiz
-              :type="it.name"
+              :name="it.name"
+              :type="it.type"
               :date="it.createDate"
               :id="it.ID.toString()"
               :num="it.num.toString()"
@@ -234,7 +239,7 @@ export default {
     msg: String
   },
   created() {
-    // console.log(this.$route.query)
+    console.log(this.$route.query)
     this.username = this.$cookies.get('username')
     this.$axios.post('/user/info', {"userName": this.username})
         .then(result => {
@@ -271,11 +276,11 @@ export default {
       total: 1,
       page: 1,
       order: 0,
+      activeIndex: '1',
       form: {
         type: 0,
       },
       formLabelWidth: '20%',
-      activeIndex: '1'
     }
   },
   methods: {
@@ -302,10 +307,10 @@ export default {
       this.sort = command;
       if (command === "回收量") {
         this.allList.sort(function (a, b) {
-          return a.num - b.num;
+          return b.num - a.num;
         });
         this.myList.sort(function (a, b) {
-          return a.num - b.num;
+          return b.num - a.num;
         });
       } else if (command === "发布日期") {
         this.allList.sort(function (a, b) {
@@ -461,6 +466,7 @@ export default {
           }});
       }
     }
+
   }
 }
 </script>
@@ -476,6 +482,12 @@ export default {
   width: 100%;
   background-color: #ffffff;
   //background-color:#545c64
+}
+
+.demo-type {
+  position: absolute;
+  left: 90%;
+  top: 30%;
 }
 
 .body {
@@ -502,12 +514,6 @@ export default {
   left: 80%;
   top: 30%;
   height: 50%;
-}
-
-.demo-type {
-  position: absolute;
-  left: 90%;
-  top: 30%;
 }
 
 .el-dropdown-link {

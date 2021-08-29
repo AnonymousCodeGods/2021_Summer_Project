@@ -1,8 +1,30 @@
 <template>
-  <div>
-    <span style="font-size: 20px">考试结束倒计时:{{
-        hour ? hourString + ':' + minuteString + ':' + secondString : minuteString + ':' + secondString
-      }}</span>
+  <div :style="heightAndWidth">
+    <!--    <span style="position:fixed;font-size: 40px;font-weight:50;left: 82%;top: 40%">{{-->
+    <!--        hour ? hourString + ':' + minuteString + ':' + secondString : minuteString + ':' + secondString-->
+    <!--      }}</span>-->
+    <div style="position:fixed;font-size: 30px;font-weight:50;left: 80%;top: 40%;
+        border: 1px solid #bbc1ce;border-radius: 10px;height: 100px;background-color: #dee0e3"
+    v-if="this.remainTime === ''">
+
+
+      <div class="time-card" data-type="hours" data-max="24">
+        <div class="time-card-count">{{ hourString }}</div>
+        <div class="time-card-label">时</div>
+      </div>
+      <span class="colon">:</span>
+      <div class="time-card" data-type="minutes" data-max="60">
+        <div class="time-card-count">{{ minuteString }}</div>
+        <div class="time-card-label">分</div>
+      </div>
+      <span class="colon">:</span>
+      <div class="time-card" data-type="seconds" data-max="60">
+        <div class="time-card-count">{{ secondString }}</div>
+        <div class="time-card-label">秒</div>
+      </div>
+    </div>
+
+
     <el-card style="width: 800px; margin: auto" v-loading.fullscreen.lock="fullscreenLoading">
       <div class="row" id="pdfDom">
         <div slot="header" class="clearfix">
@@ -80,12 +102,13 @@ export default {
   name: 'CQue',
   created() {
     this.fullscreenLoading = true;
-    this.$axios({method: "post", url: "/getQn", data: {"QnId": 4}})
+    this.$axios({method: "post", url: "/getQn", data: {"QnId": this.$route.query.id}})
         // data: {"QnId": this.$route.query.id}
         .then(res => {
           if (res.data.que.state === false) {
             this.$router.push('/failedResult');
           }
+          this.remainTime = res.data.que.remainTime
           this.que.QList = []
           this.que.qnid = res.data.que.qnid;
           this.que.title = res.data.que.title;
@@ -154,6 +177,13 @@ export default {
   },
   data: function () {
     return {
+      heightAndWidth: 'margin:0; height:' +
+          (window.innerHeight).toString() +
+          'px; width:' +
+          (window.innerWidth).toString() +
+          'px;' +
+          'background-color: #fafafa;' +
+          'position:fixed;overflow:scroll',
       que: {
         qnid: 0,
         title: "测试问卷",
@@ -165,7 +195,9 @@ export default {
       timer: '',
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       fullscreenLoading: false,
-      remainTime: '15'
+      remainTime: '',
+      isFixed: false,
+      offsetTop: 0
     }
   },
   mounted() {
@@ -240,7 +272,7 @@ export default {
       }
       this.$axios({
         method: "post", url: "/quiz/submitQn", data: {
-          "qnid": this.que.qnid,
+          "qnId": this.que.qnid,
           "AnswerList": AnswerListTemp
         }
       })
@@ -278,10 +310,12 @@ export default {
   computed: {
     hourString() {
       return this.formatNum(this.hour)
-    },
+    }
+    ,
     minuteString() {
       return this.formatNum(this.minute)
-    },
+    }
+    ,
     secondString() {
       return this.formatNum(this.second)
     }
@@ -295,5 +329,30 @@ export default {
   margin-bottom: 8px;
   margin-right: 10%;
   text-align: start;
+}
+
+.time-card {
+  margin: 0 2px;
+  text-align: center;
+  float: left;
+}
+
+.time-card-count {
+  width: 70px;
+  height: 64px;
+  line-height: 77px;
+  overflow: hidden;
+}
+
+.time-card-label {
+  font-size: 0.625em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.colon {
+  font-size: 1em;
+  float: left;
+  margin-top: 20px;
 }
 </style>

@@ -1,19 +1,25 @@
 <template>
   <div id="sentout" :style="heightAndWidth">
     <div class="head">
-      <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:10%;height: 80%;left: 5%">
-
-      <el-badge :value="12" class="item">
-        <el-button size="small">消息</el-button>
-      </el-badge>
+      <img alt="Vue logo" src="../assets/logo.png" style="position:absolute;top:5%;height: 75%;left: 5%">
 
       <div class="demo-type">
         <div>
-          <el-avatar icon="el-icon-user-solid"></el-avatar>
+          <el-avatar icon="el-icon-user-solid" size="small"></el-avatar>
         </div>
+        <!--        <div>-->
+        <!--          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
+        <!--        </div>-->
       </div>
 
-      <a style="position:absolute;top:25%;height: 80%;left: 90%">{{ this.$store.state.username }}</a>
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%">
+      <span class="el-dropdown-link">
+        {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="退出">退出</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
     <div class="body">
       <el-col :span="24">
@@ -34,11 +40,15 @@
               <el-col :span="14">
                 <div style="width:370px;height: 300px;display: table-cell;vertical-align: middle;text-align: center;">
                   <el-input
-                      placeholder="请输入内容"
+                      placeholder="无"
                       v-model="address"
                       :readonly="true"
                       style="width: 320px;">
                   </el-input>
+
+                  <el-button style="margin-top: 30px" @click="refresh">
+                    刷新
+                  </el-button>
                 </div>
               </el-col>
             </el-row>
@@ -70,11 +80,19 @@ export default {
           (window.innerWidth).toString() +
           'px;',
       address: '',
+      username: ''
     }
   },
   created() {
     this.id = this.$route.query.id;
-    this.address = 'http://192.168.3.28:8080//#/collectingQuestionnaire2?id=' + this.id;
+    this.type = this.$route.query.type;
+    if(this.type === '2')
+    this.address = 'http://localhost:8080/#/collectingSignUpQuestionnaire?id=' + this.id;
+    else if(this.type === '3'){
+      this.address = 'http://localhost:8080/#/examQuestionnaire?id=' + this.id;
+    }else{
+      this.address = 'http://localhost:8080/#/collectingQuestionnaire?type='+this.type+'&id=' + this.id;
+    }
   },
   methods: {
     toInfo: function () {
@@ -83,8 +101,20 @@ export default {
     toHome: function () {
       this.$router.push("/home");
     },
-    toBin: function () {
-      this.$router.push("/bin");
+    refresh() {
+      let chars = 'ABCDEFGHIJKLMNOPQRSTUVWSYZabcdefghijklmnopqrstuvwsyz0123456789';//这里没有加其他字符，需要可自行添加
+      let tempLen = chars.length;
+      let tempStr = '';
+      for (let i = 0; i < 8; ++i) {
+        tempStr += chars.charAt(Math.floor(Math.random() * tempLen));
+      }
+      console.log(this.id)
+      this.$axios.post('/quiz/refresh', {"qnid": this.id, "key": tempStr})
+          .then(result => {
+            this.id = result.data.newId;
+            this.$router.push('/home');
+            // this.$router.go(0)
+          })
     },
     creatQrCode() {
       const qrcode = new QRCode(this.$refs.qrCodeUrl, {
@@ -104,15 +134,8 @@ export default {
 </script>
 
 <style scoped>
-.bg-purple {
-  background: #d3dce6;
-}
 
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-}
-.qrcode{
+.qrcode {
   margin-left: 18%;
 }
 
@@ -120,9 +143,16 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  height: 8%;
+  height: 62px;
+  min-height: 60px;
   width: 100%;
   background-color: #ffffff;
+}
+
+.demo-type {
+  position: absolute;
+  left: 90%;
+  top: 30%;
 }
 
 .body {
@@ -135,20 +165,6 @@ export default {
   border-top: 1px transparent solid;
   box-shadow: #c6c5c5;
   border-image: linear-gradient(0deg, #979696, #e7e7e7) 1 10;
-}
-
-.item {
-  position: absolute;
-  left: 80%;
-  top: 30%;
-  height: 50%;
-}
-
-.demo-type {
-  position: absolute;
-  left: 86%;
-  top: 25%;
-  height: 40%;
 }
 
 .button {
@@ -180,9 +196,6 @@ export default {
 
 }
 
-.button--size-x {
-  font-size: 15px;
-}
 
 /* Typography and Roundedness */
 .button--text-thick {
@@ -193,9 +206,6 @@ export default {
   border-radius: 2px;
 }
 
-.button--round-x {
-  border-radius: 0px;
-}
 
 /* Wapasha */
 .button.button--login {
@@ -205,12 +215,6 @@ export default {
   transition: background-color 0.3s, color 0.3s;
 }
 
-.button.button--join {
-  background: #d2d1d1;
-  color: #000000;
-  -webkit-transition: background-color 0.3s, color 0.3s;
-  transition: background-color 0.3s, color 0.3s;
-}
 
 .button--login.button--inverted {
   background: #0b92e8;
@@ -245,39 +249,5 @@ export default {
   color: #fcfcfd;
 }
 
-/*  加入按钮*/
-.button--join.button--inverted {
-  background: #adadad;
-  border: 1px solid #adadad;
-  color: #000000;
-}
-
-.button--join::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  border-radius: inherit;
-  opacity: 0;
-  -webkit-transform: scale3d(0.6, 0.6, 1);
-  transform: scale3d(0.6, 0.6, 1);
-  -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
-  transition: transform 0.3s, opacity 0.3s;
-  -webkit-transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
-  transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
-}
-
-.button--join:hover {
-  background-color: #dcd8d8;
-  color: #000000;
-}
-
-.button--join.button--inverted:hover {
-  background-color: #55646d;
-  color: #fcfcfd;
-}
 
 </style>

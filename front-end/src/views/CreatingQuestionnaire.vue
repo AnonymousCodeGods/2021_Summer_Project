@@ -17,7 +17,7 @@
     </el-popover>
     <el-popover
         placement="right"
-        width="185"
+        width="200"
         v-model="moreFunctionVisible">
       <div style="text-align: center; margin: 0">
         <el-switch
@@ -25,14 +25,18 @@
             inactive-text="隐藏题号"
             v-model="que.showNumbers">
         </el-switch>
+        <el-switch
+            v-if="que.qnType==='2'"
+            style="margin: 10px"
+            active-text="限制人数"
+            inactive-text="自由填写"
+            v-model="que.isSumLimit">
+        </el-switch>
+        <el-input style="width: 80%" v-if="que.qnType==='2'" v-model="que.limit" :disabled="!que.isSumLimit"/>
       </div>
       <el-button circle plain type="info" class="hoverB" style="top:150px" icon="el-icon-s-tools" slot="reference"></el-button>
     </el-popover>
     <el-button circle plain type="warning" class="hoverB" style="top:200px;margin-left: 0" icon="el-icon-check" @click="uploadQn"></el-button>
-
-    <el-tooltip v-if="que.qnType===2 " effect="dark" content="设置问卷次数限制" placement="right">
-      <el-button circle plain type="primary" class="hoverB" style="top:250px;margin-left: 0;" icon="el-icon-setting" @click="setQnSum"></el-button>
-    </el-tooltip>
 
 
     <el-dialog :visible="titleEditDialog" :show-close="false">
@@ -77,50 +81,16 @@
     </el-dialog>
 
 
-    <el-dialog
-        title="设置问卷填写上限"
-        :visible.sync="SumEditDialog"
-        width="45%"
-        :before-close="handleClose"
-        center
-        style="margin-top: 5%">
-      <el-form :model="form" style="" :label-position=" 'left' " >
-        <el-form-item
-            :required="form.isSumLimit"
-            label="问卷填写次数设置"
-            :label-width="formLabelWidth"
-            style="text-align: left">
-          <el-switch
-              v-model="form.isSumLimit"
-              active-color="#3292ff"
-              inactive-color="#99a9bf"
-              active-text="限制人数"
-              inactive-text="开放填写" />
-          <el-input
-              v-if="form.isSumLimit"
-              v-model.number="form.limit"
-              autocomplete="off"
-              placeholder="请输入填写次数上限"
-              style="width: 55%;margin-left: 5%"></el-input>
-        </el-form-item>
-
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="handleClose(done)">取 消</el-button>
-        <el-button type="primary" @click="handleConfirm(done)">确 定</el-button>
-      </div>
-    </el-dialog>
-
     <div id="Qn" style="height: 100%;width: 100%;overflow-y:scroll;margin: auto">
       <el-card style="margin: 20px 20% ;" v-loading.fullscreen.lock="fullscreenLoading">
         <div slot="header" class="clearfix">
           <el-input style="font-size: larger" v-model="que.title"></el-input>
         </div>
-        <vuedraggable v-model="que.QList"
+        <vuedraggable group='001'
+                      v-model="que.QList"
                       chosenClass="ghost"
                       handle=".drag"
                       :scroll-sensitivity="150"
-                      force-fallback="true"
                       animation="400"
                       @start="onStart"
                       @end="onEnd"
@@ -133,8 +103,9 @@
               <el-button type="text" icon="el-icon-rank" class="drag"></el-button>
 
 
-              <div style="float: right;margin-right: 0;width: 180px  ">
-                <el-button type="text"
+              <div style="float: right;margin-right: 0;width: 180px">
+                <el-button :disabled="item.type===5"
+                           type="text"
                            icon="el-icon-document-copy"
                            v-on:click="copyQuestion(item)">复制
                 </el-button>
@@ -154,7 +125,7 @@
                   <div style="width:100%;margin: 5px;">
                     <el-checkbox v-model="item.necessary">必填</el-checkbox>
                   </div>
-                  <div style="width:100%;margin: 5px;" v-if="que.qnType ===2 &&(item.type===0||item.type===1)">
+                  <div style="width:100%;margin: 5px;" v-if="que.qnType ==='2'&&(item.type===0||item.type===1)">
                     <el-checkbox v-model="item.isSumLimit">限制人数</el-checkbox>
                   </div>
                   <div style="width:100%;margin: 5px;" v-if="que.qnType ==='3'&&(item.type===0||item.type===1)">
@@ -168,9 +139,9 @@
               <div v-if="item.type===0" class="queLabel" id="singleChoice">
                 <div>
                     <span style="line-height: 30px;">
-                    <el-tag size="small">单选</el-tag>
+                      <el-tag size="small">单选</el-tag>
                       {{ item.qid + 1 }}.{{ item.title }}
-                    <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+                      <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
                     </span>
                   <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
                     <div v-for="subItem in item.option" :key="subItem.oid">
@@ -207,14 +178,6 @@
                         <el-tag size="small" type="success">多选</el-tag>
                         {{ item.qid + 1 }}.{{ item.title }}
                         <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
-                      <el-switch
-                          v-model="item.isSumLimit"
-                          active-color="#3292ff"
-                          inactive-color="#99a9bf"
-                          style="margin-left: 5%"
-                          active-text="限制人数"
-                          v-if="que.qnType ==='2'"
-                          inactive-text="开放填写"/>
                     </span>
                   <div style="margin-left: 5%;margin-right: 5%;margin-top:15px">
 
@@ -267,6 +230,47 @@
                   <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
                 </div>
               </div>
+
+              <div v-if="item.type===5" class="queLabel" id="branch">
+                <div style="margin-top: 10px">
+                  <el-tag size="small" type="danger">分支</el-tag>
+                  {{ item.qid + 1 }}.{{ item.title }}
+                  <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
+                  <div v-for="subItem in item.option" :key="subItem.oid" style="margin: 20px 0 0 0 ">
+                    <div style="width: 100%;border-radius: 0;padding: 0">
+                      <el-tag style="margin-left: 5px;" size="small" type="info">分支{{subItem.oid+1}}</el-tag>
+                      <el-input v-model="subItem.content"
+                                maxlength="28"
+                                style="margin-left:10px;width: 90%">
+                        <el-button slot="append" icon="el-icon-close"
+                                   v-on:click="deleteOption(item,subItem)"></el-button>
+                      </el-input>
+                      <vuedraggable v-model="subItem.question"
+                                    group='001'
+                                    style="margin:0;min-height: 100px"
+                                    animation="300"
+                                    @start="onStart"
+                                    @end="onEnd">
+                        <span slot="header" style="max-height: 100px">
+
+                        </span>
+                        <div v-for="subQuestion in subItem.question" :key="subQuestion.qid" class="unDrag">
+                          <el-card style="margin: 10px"  class="unDrag" shadow="hover">
+                            <el-tag v-if="subQuestion.type===0" size="small" type="primary">单选</el-tag>
+                            <el-tag v-if="subQuestion.type===1" size="small" type="success">多选</el-tag>
+                            <el-tag v-if="subQuestion.type===2" size="small" type="info">填空</el-tag>
+                            <el-tag v-if="subQuestion.type===3" size="small" type="warning">评分</el-tag>
+                            <el-tag v-if="subQuestion.type===4" size="small" type="danger">定位</el-tag>
+                            <el-tag v-if="subQuestion.type===5" size="small" type="danger">分支</el-tag>
+                            <span style="margin-left: 20px">{{subQuestion.qid+1}}.{{subQuestion.title}}</span>
+                          </el-card>
+                        </div>
+                      </vuedraggable>
+                    </div>
+                  </div>
+                  <el-button style="width: 100%;margin-top:20px" icon="el-icon-plus" v-on:click="addBranch(item)"></el-button>
+                </div>
+              </div>
             </el-card>
           </div>
           </tbody>
@@ -291,10 +295,12 @@ export default {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        qnType: 1,
+        isSumLimit: false,
+        limit: 0,
+        qnType: '1',
         title: "投票问卷",
         QList: [
-            {
+          {
             qid: 0,
             type: 0,
             title: "请编辑投票题目",
@@ -316,9 +322,9 @@ export default {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        qnType: 2,
-        limit: 0,
         isSumLimit: false,
+        limit: 0,
+        qnType: '2',
         title: "报名问卷",
         QList: [
           {
@@ -353,7 +359,9 @@ export default {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        qnType: 3,
+        isSumLimit:false,
+        limit: 0,
+        qnType: '3',
         title: "考试问卷",
         QList: [
           {
@@ -373,7 +381,9 @@ export default {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        qnType: 4,
+        isSumLimit:false,
+        limit: 0,
+        qnType: '4',
         title: "疫情上报问卷",
         QList: [
           {
@@ -429,6 +439,32 @@ export default {
             type: 4,
             title: "请点击定位",
             necessary: true,
+          },{
+            qid: 5,
+            type: 5,
+            title: "请点击定位",
+            necessary: true,
+            option:[
+              {
+                oid:0,
+                content: '分支一',
+                question:[
+                  {
+                    qid: 6,
+                    type: 2,
+                    title: "请输入姓名",
+                    necessary: true,
+                  },
+                ]
+              },
+              {
+                oid:1,
+                content: '分支二',
+                question:[
+
+                ]
+              }
+            ]
           }
         ]
       }
@@ -446,10 +482,10 @@ export default {
       que: {
         qnId: '0',
         showNumbers: true,
-        qnType: 0,
-        title: "普通问卷",
-        sum: 0,
         isSumLimit:false,
+        limit: 0,
+        qnType: '0',
+        title: "普通问卷",
         QList: [{
           qid: 0,
           type: 0,
@@ -512,12 +548,6 @@ export default {
       editingAnswers:[],
       editingAnswer:-1,
       editingAnswerQuestion:null,
-      SumEditDialog:false,
-      form:{
-        isSumLimit:false,
-        limit:0
-      },
-      formLabelWidth: '20%',
     }
   },
   methods: {
@@ -525,9 +555,8 @@ export default {
       this.fullscreenLoading = true
       this.$axios({method: "post", url: "/getQn", data: {"QnId": qnId}})
           .then(res => {
-            console.log(res.data.que)
             this.que.QList = [];
-            this.que.qnType = res.data.que.qnType;
+            this.que.qnType = res.data.que.qnType+'';
             this.que.showNumbers = res.data.que.showNumbers;
             this.que.qnId = res.data.que.qnid;
             this.que.title = res.data.que.title;
@@ -587,9 +616,7 @@ export default {
                 })
               }
             }
-            for (let i = 0; i < this.que.QList.length; i++) {
-              this.que.QList[i].qid = i;
-            }
+            this.reorder(this.que.QList,0)
             this.fullscreenLoading = false
           })
           .catch(() => {
@@ -649,6 +676,13 @@ export default {
         oid: question.option.length,
         content: "",
         limit: 0
+      })
+    },
+    addBranch(question) {
+      question.option.push({
+        oid: question.option.length,
+        content: "",
+        question:[]
       })
     },
     addSingleChoice() {
@@ -792,42 +826,24 @@ export default {
       this.drag = true;
     },
     onEnd() {
-      for (let i = 0; i < this.que.QList.length; i++) {
-        this.que.QList[i].qid = i;
-      }
+      this.reorder(this.que.QList,0)
       this.drag = false;
     },
     roll() {
       let temp = document.getElementById("Qn");
       temp.scrollTop = temp.scrollHeight + 1000;
     },
-    setQnSum(){
-      this.form.isSumLimit=this.que.isSumLimit
-      this.form.sum=this.que.sum
-      this.SumEditDialog=true
-    },
-    handleClose() {
-      this.$confirm('确认取消设置？')
-          .then(_ => {
-            this.SumEditDialog=false
-            this.form.isSumLimit=this.que.isSumLimit
-            this.form.limit=this.que.limit
-          })
-          .catch(_ => {});
-    },
-    handleConfirm() {
-      if(this.form.isSumLimit && this.form.limit === 0){
-        this.$notify({
-          title: '设置失败',
-          message: '人数不能为0',
-          position: 'bottom-left',
-          type: "error"
-        });
-      }else{
-        this.que.isSumLimit=this.form.isSumLimit
-        this.que.limit = this.form.limit
-        this.SumEditDialog=false
+    reorder(QList,num) {
+      for (let i = 0; i < QList.length; i++) {
+        QList[i].qid = num;
+        num++;
+        if(QList[i].type===5) {
+          for(let j = 0; j < QList[i].option.length; j++) {
+            num = this.reorder(QList[i].option[j].question,num)
+          }
+        }
       }
+      return num
     }
   }
 }
@@ -882,5 +898,9 @@ export default {
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
   animation-play-state: paused;
+}
+
+.unDrag {
+
 }
 </style>

@@ -2,7 +2,12 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
+const originalPush = VueRouter.prototype.push
 
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+
+}
 const routes = [
     {
         path: '/c',
@@ -14,7 +19,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/main')
     },
     {
-        path: '/test',
+        path: '/examQuestionnaire',
         name: 'Test',
         component: () => import(/* webpackChunkName: "about" */ '../views/examQuestionnaire')
     },
@@ -50,7 +55,7 @@ const routes = [
         component: () => import('../views/CollectingQuestionnaire')
     },
     {
-        path: '/collectingQuestionnaire2',
+        path: '/collectingSignUpQuestionnaire',
         name: 'CollectSignUp',
         component: () => import('../views/CollectingSignUpQuestionnaire')
     },
