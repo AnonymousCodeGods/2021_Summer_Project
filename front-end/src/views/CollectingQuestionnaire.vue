@@ -1,24 +1,25 @@
 <template>
   <div :style="heightAndWidth">
     <el-card style="width: 800px; margin: auto"  v-loading.fullscreen.lock="fullscreenLoading">
-      <div class="row" id="pdfDom">
-        <div slot="header" class="clearfix">
-          <span style="font-size: larger">{{que.title}}</span>
-        </div>
-        <div v-for="item in que.QList"
-             :key="item.qid" style="margin: 15px">
+    <div class="row" id="pdfDom">
+      <div slot="header" class="clearfix">
+        <span style="font-size: larger">{{que.title}}</span>
+      </div>
+      <div v-for="item in que.QList"
+           :key="item.qid" style="margin: 15px">
+        <div v-if="item.belongTo.qid===-1||que.QList[item.belongTo.qid].selection===item.belongTo.option">
           <div style="float: left;margin-left: 12px">
             <el-tag type="warning" size="small" v-if="(item.type===0||item.type===1)&&(item.necessary === true)">必选</el-tag>
             <el-tag type="warning" size="small" v-if="(item.type === 2||item.type === 3)&&(item.necessary === true)">必填</el-tag>
           </div>
           <div v-if="item.type===0">
             <div class="queLabel">
-              <span v-if="que.showNumbers">
-                {{item.qid+1}}.
-              </span>
+            <span v-if="que.showNumbers">
+              {{item.qid+1}}.
+            </span>
               <span>
-                {{item.title}}
-              </span>
+              {{item.title}}
+            </span>
             </div>
             <div style="margin-left: 10%;margin-right: 10%">
               <el-radio-group
@@ -35,12 +36,12 @@
           </div>
           <div v-if="item.type===1">
             <div class="queLabel">
-              <span v-if="que.showNumbers">
-                {{item.qid+1}}.
-              </span>
+            <span v-if="que.showNumbers">
+              {{item.qid+1}}.
+            </span>
               <span>
-                {{item.title}}
-              </span>
+              {{item.title}}
+            </span>
             </div>
             <div style="margin-left: 10%;margin-right: 10%">
               <el-checkbox-group
@@ -57,12 +58,12 @@
           </div>
           <div v-if="item.type===2">
             <div class="queLabel">
-              <span v-if="que.showNumbers">
-                {{item.qid+1}}.
-              </span>
+            <span v-if="que.showNumbers">
+              {{item.qid+1}}.
+            </span>
               <span>
-                {{item.title}}
-              </span>
+              {{item.title}}
+            </span>
             </div>
             <div style="margin: 7px 10%;">
               <el-input v-model="item.input"/>
@@ -70,12 +71,12 @@
           </div>
           <div v-if="item.type===3">
             <div class="queLabel">
-              <span v-if="que.showNumbers">
-                {{item.qid+1}}.
-              </span>
+            <span v-if="que.showNumbers">
+              {{item.qid+1}}.
+            </span>
               <span>
-                {{item.title}}
-              </span>
+              {{item.title}}
+            </span>
             </div>
             <div class="queLabel">
               <el-rate
@@ -86,12 +87,12 @@
           </div>
           <div v-if="item.type===4">
             <div class="queLabel">
-              <span v-if="que.showNumbers">
-                {{item.qid+1}}.
-              </span>
+            <span v-if="que.showNumbers">
+              {{item.qid+1}}.
+            </span>
               <span>
-                {{item.title}}
-              </span>
+              {{item.title}}
+            </span>
             </div>
             <div class="queLabel">
               <el-input v-model="item.location" disabled style="width: 75%">
@@ -109,6 +110,7 @@
             </div>
           </div>
         </div>
+      </div>
       </div>
       <div style="margin-top: 30px">
         <el-button type="primary" style="width: 15%" plain icon="el-icon-circle-check" v-on:click="submitQn">提交</el-button>
@@ -150,8 +152,9 @@ export default {
                 type:temp1.type,
                 title: temp1.title,
                 option:optionTemp,
-                necessary: false,
-                selection:-1
+                necessary: temp1.necessary,
+                selection:-1,
+                belongTo:temp1.belongTo
               })
             }
             else if(temp1.type === 1){
@@ -169,7 +172,8 @@ export default {
                 title: temp1.title,
                 option:optionTemp,
                 necessary: temp1.necessary,
-                selections: []
+                selections: [],
+                belongTo:temp1.belongTo
               })
             }
             else if(temp1.type === 2){
@@ -177,7 +181,9 @@ export default {
                 qid:i,
                 type:temp1.type,
                 title: temp1.title,
-                input : ""
+                input : "",
+                belongTo:temp1.belongTo,
+                necessary: temp1.necessary,
               })
             }
             else if(temp1.type === 3){
@@ -185,7 +191,9 @@ export default {
                 qid:i,
                 type:temp1.type,
                 title: temp1.title,
-                rating : 0
+                rating : 0,
+                belongTo:temp1.belongTo,
+                necessary: temp1.necessary,
               })
             } else {
               this.que.QList.push({
@@ -193,7 +201,9 @@ export default {
                 type:temp1.type,
                 title: temp1.title,
                 location : '',
-                dialogVisible: false
+                dialogVisible: false,
+                belongTo:temp1.belongTo,
+                necessary: temp1.necessary,
               })
             }
           }
@@ -373,7 +383,6 @@ export default {
           })
         }
       }
-
       this.$axios({method:"post",url:"/quiz/submitQn", data:{
           "qnId": this.que.qnId,
           "qnType": this.que.qnType,
