@@ -283,6 +283,7 @@ def score_stat(request):
                 pass
         elif isinstance(ques,Complition):
             msg['type'] = 2
+            answer = ques.correct
         elif isinstance(ques,LocationQuestion):
             msg['type'] = 4
         msg['answer'] = answer
