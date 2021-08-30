@@ -59,6 +59,9 @@ def complition_create(dict):
     comp.CMPID = 'CMP'+str(comp.id)
     if 'limitNum' in dict:
         comp.limitNum = dict['limitNum']
+    if 'hasAnswer' in dict and dict['hasAnswer'] == True:
+        comp.correct = dict['answer']
+        comp.save()
     comp.save()
     return comp
 
@@ -219,6 +222,7 @@ def get_questionnaire(QnId):
     next_id = None
     que_dict = {}
     que_dict['qnid'] = des_encrypt(QnId)
+    que_dict['state'] = questionnaire.isClose
     que_dict['title'] = questionnaire.title
     que_dict['state'] = questionnaire.isPublished
     que_dict['pubTime'] = questionnaire.publishTime

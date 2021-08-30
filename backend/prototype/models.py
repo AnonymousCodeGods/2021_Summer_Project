@@ -57,6 +57,7 @@ class Question(models.Model):
 class Complition(Question):
     CMPID = models.CharField(max_length=64,unique=True)
     NQID = models.CharField(max_length=64)
+    correct = models.TextField(null=True)
     def __str__(self):
         return self.CMPID
 
