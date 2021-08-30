@@ -50,7 +50,7 @@ def login(request):
 def get_quizs(quens):
     quizs = []
     for quen in quens:
-        now_time = django.utils.timezone.now() + datetime.timedelta(hours=8)
+        now_time = django.utils.timezone.now()
         if quen.endTime is not None and now_time > quen.endTime:
             quen.isPublished = False
             quen.save()
@@ -64,6 +64,7 @@ def get_quizs(quens):
         quiz['num'] = quen.recoverNum
         quiz['type'] = quen.type
         quiz['Qsum'] = len(get_ques_ins(quen.pk))
+        quiz['hasBranch'] = quen.hasBranch
         quizs.append(quiz)
     return quizs
 
@@ -98,6 +99,7 @@ def set_endTime(request):
         print(r)
         qnid = des_decrypt(r['qnid'])
         quen = Questionnaire.objects.get(pk=qnid)
+        print(type(r['endTime']))
         quen.endTime = r['endTime']
         quen.save()
         return JsonResponse({'success': True})

@@ -1,20 +1,24 @@
 <template>
   <div :style="heightAndWidth">
 
-    <el-button circle plain type="primary" class="hoverB" style="top:50px" icon="el-icon-back" v-on:click="$router.push('/home')"></el-button>
+    <el-button circle plain type="primary" class="hoverB" style="top:50px" icon="el-icon-back"
+               v-on:click="$router.push('/home')"></el-button>
     <el-popover
         placement="right"
         width="390"
         v-model="addQuestionVisible">
       <div style="text-align: right; margin: 0">
-        <el-button plain type="primary" size="mini"  @click="addSingleChoice">单选</el-button>
+        <el-button plain type="primary" size="mini" @click="addSingleChoice">单选</el-button>
         <el-button plain type="success" size="mini" @click="addMultiChoice">多选</el-button>
-        <el-button plain type="info" size="mini"  @click="addSpaceFilling">填空</el-button>
+        <el-button plain type="info" size="mini" @click="addSpaceFilling">填空</el-button>
         <el-button plain type="warning" size="mini" @click="addRating">评分</el-button>
         <el-button plain type="danger" size="mini" @click="addLocating">定位</el-button>
-        <el-button :disabled="this.que.qnType==='2'||this.que.qnType==='3'" plain type="danger" size="mini" @click="addBranch">分支</el-button>
+        <el-button :disabled="this.que.qnType==='2'||this.que.qnType==='3'" plain type="danger" size="mini"
+                   @click="addBranch">分支
+        </el-button>
       </div>
-      <el-button circle plain type="success" class="hoverB" style="top:100px" icon="el-icon-plus" slot="reference"></el-button>
+      <el-button circle plain type="success" class="hoverB" style="top:100px" icon="el-icon-plus"
+                 slot="reference"></el-button>
     </el-popover>
     <el-popover
         placement="right"
@@ -35,9 +39,11 @@
         </el-switch>
         <el-input style="width: 80%" v-if="que.qnType==='2'" v-model="que.limit" :disabled="!que.isSumLimit"/>
       </div>
-      <el-button circle plain type="info" class="hoverB" style="top:150px" icon="el-icon-s-tools" slot="reference"></el-button>
+      <el-button circle plain type="info" class="hoverB" style="top:150px" icon="el-icon-s-tools"
+                 slot="reference"></el-button>
     </el-popover>
-    <el-button circle plain type="warning" class="hoverB" style="top:200px;margin-left: 0" icon="el-icon-check" @click="uploadQn"></el-button>
+    <el-button circle plain type="warning" class="hoverB" style="top:200px;margin-left: 0" icon="el-icon-check"
+               @click="uploadQn"></el-button>
 
 
     <el-dialog :visible="titleEditDialog" :show-close="false">
@@ -80,6 +86,16 @@
       </el-select>
       <el-button circle plain v-on:click="doneAnswerEdit" type="success" icon="el-icon-check"></el-button>
     </el-dialog>
+
+    <el-dialog :visible="inputAnswerEditDialog" :show-close="false">
+      <div slot="title">编辑答案</div>
+      <el-input v-model="editingAnswer"
+                style="margin-right: 20px;width: 80%"
+                placeholder="请输入答案">
+      </el-input>
+      <el-button circle plain v-on:click="doneAnswerEdit" type="success" icon="el-icon-check"></el-button>
+    </el-dialog>
+
 
 
     <div id="Qn" style="height: 100%;width: 100%;overflow-y:scroll;margin: auto">
@@ -129,9 +145,10 @@
                   <div style="width:100%;margin: 5px;" v-if="que.qnType ==='2'&&(item.type===0||item.type===1)">
                     <el-checkbox v-model="item.isSumLimit">限制人数</el-checkbox>
                   </div>
-                  <div style="width:100%;margin: 5px;" v-if="que.qnType ==='3'&&(item.type===0||item.type===1)">
+                  <div style="width:100%;margin: 5px;" v-if="que.qnType ==='3'&&(item.type===0||item.type===1||item.type===2)">
                     <el-checkbox v-model="item.hasAnswer">正确答案</el-checkbox>
-                    <el-link style="margin-left: 10px" icon="el-icon-edit" :underline="false" :disabled="!item.hasAnswer" v-on:click="initialAnswerEdit(item)"></el-link>
+                    <el-link style="margin-left: 10px" icon="el-icon-edit" :underline="false"
+                             :disabled="!item.hasAnswer" v-on:click="initialAnswerEdit(item)"></el-link>
                   </div>
                 </el-popover>
               </div>
@@ -201,7 +218,7 @@
                           v-if="item.isSumLimit"
                           v-model="subItem.limit"
                           style="width: 19%;margin-bottom: 10px;margin-left: 3%"
-                          placeholder=""  suffix-icon="el-icon-s-custom">
+                          placeholder="" suffix-icon="el-icon-s-custom">
                       </el-input>
                     </div>
                     <el-button style="width: 100%" icon="el-icon-plus" v-on:click="addOption(item)"></el-button>
@@ -239,7 +256,7 @@
                   <el-link icon="el-icon-edit" :underline="false" v-on:click="initialTitleEdit(item)"></el-link>
                   <div v-for="subItem in item.option" :key="subItem.oid" style="margin: 20px 0 0 0 ">
                     <div style="width: 100%;border-radius: 0;padding: 0">
-                      <el-tag style="margin-left: 5px;" size="small" type="info">分支{{subItem.oid+1}}</el-tag>
+                      <el-tag style="margin-left: 5px;" size="small" type="info">分支{{ subItem.oid + 1 }}</el-tag>
                       <el-input v-model="subItem.content"
                                 maxlength="28"
                                 style="margin-left:10px;width: 90%">
@@ -256,20 +273,21 @@
 
                         </span>
                         <div v-for="subQuestion in subItem.question" :key="subQuestion.qid" class="unDrag">
-                          <el-card style="margin: 10px"  class="unDrag" shadow="hover">
+                          <el-card style="margin: 10px" class="unDrag" shadow="hover">
                             <el-tag v-if="subQuestion.type===0" size="small" type="primary">单选</el-tag>
                             <el-tag v-if="subQuestion.type===1" size="small" type="success">多选</el-tag>
                             <el-tag v-if="subQuestion.type===2" size="small" type="info">填空</el-tag>
                             <el-tag v-if="subQuestion.type===3" size="small" type="warning">评分</el-tag>
                             <el-tag v-if="subQuestion.type===4" size="small" type="danger">定位</el-tag>
                             <el-tag v-if="subQuestion.type===5" size="small" type="danger">分支</el-tag>
-                            <span style="margin-left: 20px">{{subQuestion.qid+1}}.{{subQuestion.title}}</span>
+                            <span style="margin-left: 20px">{{ subQuestion.qid + 1 }}.{{ subQuestion.title }}</span>
                           </el-card>
                         </div>
                       </vuedraggable>
                     </div>
                   </div>
-                  <el-button style="width: 100%;margin-top:20px" icon="el-icon-plus" v-on:click="addABranch(item)"></el-button>
+                  <el-button style="width: 100%;margin-top:20px" icon="el-icon-plus"
+                             v-on:click="addABranch(item)"></el-button>
                 </div>
               </div>
             </el-card>
@@ -292,7 +310,7 @@ export default {
     this.que.qnType = this.$route.query.type;
     if (this.$route.query.id !== '0') {
       this.getQn(this.$route.query.id)
-    } else if(this.$route.query.type === '1') {
+    } else if (this.$route.query.type === '1') {
       this.que = {
         qnId: '0',
         showNumbers: true,
@@ -307,20 +325,20 @@ export default {
             title: "请编辑投票题目",
             hasAnswer: false,
             necessary: true,
-            belongTo: {qid:-1,option:-1},
+            belongTo: {qid: -1, option: -1},
             isSumLimit: false,
-            answer:[],
-            option:[
+            answer: [],
+            option: [
               {
-                oid:0,
-                content:'请输入选项内容',
-                limit:0
+                oid: 0,
+                content: '请输入选项内容',
+                limit: 0
               }
             ]
           }
         ]
       }
-    } else if(this.$route.query.type === '2') {
+    } else if (this.$route.query.type === '2') {
       this.que = {
         qnId: '0',
         showNumbers: true,
@@ -334,37 +352,37 @@ export default {
             type: 2,
             title: "请输入姓名",
             necessary: true,
-            belongTo: {qid:-1,option:-1},
+            belongTo: {qid: -1, option: -1},
           }, {
             qid: 1,
             type: 2,
             title: "请输入手机号",
-            necessary:  true,
-            belongTo: {qid:-1,option:-1},
+            necessary: true,
+            belongTo: {qid: -1, option: -1},
           }, {
             qid: 2,
             type: 0,
             title: "请编辑报名题目",
             hasAnswer: false,
             necessary: true,
-            belongTo: {qid:-1,option:-1},
-            isSumLimit:true,
-            answer:[],
-            option:[
+            belongTo: {qid: -1, option: -1},
+            isSumLimit: true,
+            answer: [],
+            option: [
               {
-                oid:0,
-                content:'请输入选项内容',
-                limit:10
+                oid: 0,
+                content: '请输入选项内容',
+                limit: 10
               }
             ]
           }
         ]
       }
-    } else if(this.$route.query.type === '3') {
+    } else if (this.$route.query.type === '3') {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        isSumLimit:false,
+        isSumLimit: false,
         limit: 0,
         qnType: '3',
         title: "考试问卷",
@@ -374,21 +392,21 @@ export default {
             type: 2,
             title: "请输入姓名",
             necessary: true,
-            belongTo: {qid:-1,option:-1},
+            belongTo: {qid: -1, option: -1},
           }, {
             qid: 1,
             type: 2,
             title: "请输入学号",
             necessary: true,
-            belongTo: {qid:-1,option:-1},
+            belongTo: {qid: -1, option: -1},
           }
         ]
       }
-    } else if(this.$route.query.type === '4') {
+    } else if (this.$route.query.type === '4') {
       this.que = {
         qnId: '0',
         showNumbers: true,
-        isSumLimit:false,
+        isSumLimit: false,
         limit: 0,
         qnType: '4',
         title: "疫情上报问卷",
@@ -398,32 +416,32 @@ export default {
             type: 2,
             title: "请输入姓名",
             necessary: true,
-            belongTo: {qid:-1,option:-1},
+            belongTo: {qid: -1, option: -1},
           }, {
             qid: 1,
             type: 2,
             title: "请输入学号",
             necessary: true,
-            belongTo: {qid:-1,option:-1},
+            belongTo: {qid: -1, option: -1},
           }, {
             qid: 2,
             type: 0,
             title: "请选择体温",
             necessary: true,
-            belongTo: {qid:-1,option:-1},
+            belongTo: {qid: -1, option: -1},
             isSumLimit: false,
             hasAnswer: false,
-            option:[
+            option: [
               {
-                oid:0,
+                oid: 0,
                 content: "36°以下"
               },
               {
-                oid:1,
+                oid: 1,
                 content: "36°~37.3°"
               },
               {
-                oid:2,
+                oid: 2,
                 content: "37.3°以上"
               }
             ]
@@ -432,25 +450,25 @@ export default {
             type: 0,
             title: "是否去过高风险地区",
             necessary: true,
-            belongTo: {qid:-1,option:-1},
+            belongTo: {qid: -1, option: -1},
             isSumLimit: false,
             hasAnswer: false,
-            option:[
+            option: [
               {
-                oid:0,
+                oid: 0,
                 content: "否"
               },
               {
-                oid:1,
+                oid: 1,
                 content: "是"
               }
             ]
-          },{
+          }, {
             qid: 4,
             type: 4,
             title: "请点击定位",
             necessary: true,
-            belongTo: {qid:-1,option:-1},
+            belongTo: {qid: -1, option: -1},
           }
         ]
       }
@@ -459,28 +477,28 @@ export default {
   name: 'NewQue',
   data: function () {
     return {
-      heightAndWidth: 'margin:0; height:'+
-          (window.innerHeight).toString()+
-          'px; width:'+
-          (window.innerWidth).toString()+
-          'px;'+
+      heightAndWidth: 'margin:0; height:' +
+          (window.innerHeight).toString() +
+          'px; width:' +
+          (window.innerWidth).toString() +
+          'px;' +
           'background-color: #fafafa;',
       que: {
         qnId: '0',
         showNumbers: true,
-        isSumLimit:false,
+        isSumLimit: false,
         limit: 0,
         qnType: '0',
         title: "普通问卷",
-        hasBranch:false,
+        hasBranch: false,
         QList: [{
           qid: 0,
           type: 0,
           title: "这是一道单选题，点击右边的按钮可以更改题目",
           hasAnswer: false,
-          answer:0,
+          answer: 0,
           necessary: true,
-          belongTo: {qid:-1,option:-1},
+          belongTo: {qid: -1, option: -1},
           option: [{
             oid: 0,
             content: "你好"
@@ -498,7 +516,7 @@ export default {
           hasAnswer: false,
           answer: [],
           necessary: false,
-          belongTo: {qid:-1,option:-1},
+          belongTo: {qid: -1, option: -1},
           option: [{
             oid: 0,
             content: "你好"
@@ -514,13 +532,13 @@ export default {
           type: 2,
           title: "我是一道填空题",
           necessary: false,
-          belongTo: {qid:-1,option:-1},
+          belongTo: {qid: -1, option: -1},
         }, {
           qid: 3,
           type: 3,
           title: "我是一道评分题",
           necessary: true,
-          belongTo: {qid:-1,option:-1},
+          belongTo: {qid: -1, option: -1},
         }]
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
@@ -528,17 +546,18 @@ export default {
       editingTitleQuestion: null,
       editingTitle: '',
       addQuestionVisible: false,
-      uploadQnVisible:false,
+      uploadQnVisible: false,
       drag: false,
       titleEditDialog: false,
       queLabelWidth: '20%',
       moreFunctionVisible: false,
-      singleAnswerEditDialog:false,
-      multiAnswerEditDialog:false,
-      editingAnswerOption:0,
-      editingAnswers:[],
-      editingAnswer:-1,
-      editingAnswerQuestion:null,
+      singleAnswerEditDialog: false,
+      multiAnswerEditDialog: false,
+      inputAnswerEditDialog: false,
+      editingAnswerOption: '',
+      editingAnswers: [],
+      editingAnswer: -1,
+      editingAnswerQuestion: null,
     }
   },
   methods: {
@@ -546,8 +565,9 @@ export default {
       this.fullscreenLoading = true
       this.$axios({method: "post", url: "/getQn", data: {"QnId": qnId}})
           .then(res => {
+            console.log(res.data.que)
             this.que.QList = [];
-            this.que.qnType = res.data.que.qnType+'';
+            this.que.qnType = res.data.que.qnType + '';
             this.que.showNumbers = res.data.que.showNumbers;
             this.que.qnId = res.data.que.qnid;
             this.que.title = res.data.que.title;
@@ -560,7 +580,7 @@ export default {
                   optionTemp.push({
                     oid: j,
                     content: temp2.content,
-                    limit: 0,
+                    limit: temp2.limit,
                   })
                 }
                 this.que.QList.push({
@@ -568,10 +588,11 @@ export default {
                   type: temp1.type,
                   title: temp1.title,
                   necessary: temp1.necessary,
-                  belongTo: {qid:-1,option:-1},
+                  belongTo: {qid: -1, option: -1},
                   hasAnswer: false,
                   answer: 0,
-                  option: optionTemp
+                  option: optionTemp,
+                  isSumLimit:temp1.isSumLimit,
                 })
               } else if (temp1.type === 1) {
                 let optionTemp = [];
@@ -580,7 +601,7 @@ export default {
                   optionTemp.push({
                     oid: j,
                     content: temp2.content,
-                    limit: 0,
+                    limit: temp2.limit,
                   })
                 }
                 this.que.QList.push({
@@ -588,16 +609,17 @@ export default {
                   type: temp1.type,
                   title: temp1.title,
                   necessary: temp1.necessary,
-                  belongTo: {qid:-1,option:-1},
+                  belongTo: {qid: -1, option: -1},
                   hasAnswer: false,
                   answer: [],
-                  option: optionTemp
+                  option: optionTemp,
+                  isSumLimit:temp1.isSumLimit,
                 })
               } else if (temp1.type === 2) {
                 this.que.QList.push({
                   qid: i,
                   type: temp1.type,
-                  belongTo: {qid:-1,option:-1},
+                  belongTo: {qid: -1, option: -1},
                   title: temp1.title,
                   necessary: temp1.necessary,
                 })
@@ -605,13 +627,13 @@ export default {
                 this.que.QList.push({
                   qid: i,
                   type: temp1.type,
-                  belongTo: {qid:-1,option:-1},
+                  belongTo: {qid: -1, option: -1},
                   title: temp1.title,
                   necessary: temp1.necessary,
                 })
               }
             }
-            this.reorder(this.que.QList,0)
+            this.reorder(this.que.QList, 0)
             this.fullscreenLoading = false
           })
           .catch(() => {
@@ -635,27 +657,34 @@ export default {
     },
     initialAnswerEdit(question) {
       this.editingAnswerQuestion = question
-      this.editingAnswerOption = question.option
-      if(question.type === 0){
+      if (question.type === 0) {
+        this.editingAnswerOption = question.option
         this.editingAnswer = question.answer
         this.singleAnswerEditDialog = true
-      }
-      else if(question.type === 1){
+      } else if (question.type === 1) {
+        this.editingAnswerOption = question.option
         this.editingAnswers = question.answer
         this.multiAnswerEditDialog = true
       }
+      else if(question.type === 2){
+        this.editingAnswer = question.answer
+        this.inputAnswerEditDialog = true
+      }
     },
     doneAnswerEdit() {
-      if(this.editingAnswerQuestion.type === 0){
+      if (this.editingAnswerQuestion.type === 0) {
         this.editingAnswerQuestion.answer = this.editingAnswer
         this.singleAnswerEditDialog = false
-      }
-      else if(this.editingAnswerQuestion.type === 1){
+      } else if (this.editingAnswerQuestion.type === 1) {
         this.editingAnswerQuestion.answer = this.editingAnswers
         this.multiAnswerEditDialog = false
+      }else {
+        this.editingAnswerQuestion.answer = this.editingAnswer
+        this.inputAnswerEditDialog = false
       }
       this.singleAnswerEditDialog = false
       this.multiAnswerEditDialog = false
+      this.inputAnswerEditDialog = false
       this.editingAnswer = 0
       this.editingAnswers = []
     },
@@ -677,7 +706,7 @@ export default {
       question.option.push({
         oid: question.option.length,
         content: "",
-        question:[]
+        question: []
       })
     },
     addSingleChoice() {
@@ -687,14 +716,14 @@ export default {
         qid: i,
         type: 0,
         necessary: false,
-        belongTo: {qid:-1,option:-1},
+        belongTo: {qid: -1, option: -1},
         isSumLimit: false,
         hasAnswer: false,
         answer: 0,
         title: "请输入题干",
         option: []
       })
-      this.reorder(this.que.QList,0)
+      this.reorder(this.que.QList, 0)
       this.roll();
     },
     addMultiChoice() {
@@ -704,14 +733,14 @@ export default {
         qid: i,
         type: 1,
         necessary: false,
-        belongTo: {qid:-1,option:-1},
+        belongTo: {qid: -1, option: -1},
         isSumLimit: false,
         hasAnswer: false,
         answer: [],
         title: "请输入题干",
         option: []
       })
-      this.reorder(this.que.QList,0)
+      this.reorder(this.que.QList, 0)
       this.roll();
     },
     addSpaceFilling() {
@@ -721,10 +750,12 @@ export default {
         qid: i,
         type: 2,
         necessary: false,
-        belongTo: {qid:-1,option:-1},
+        belongTo: {qid: -1, option: -1},
         title: "请输入题干",
+        hasAnswer: false,
+        answer:''
       })
-      this.reorder(this.que.QList,0)
+      this.reorder(this.que.QList, 0)
       this.roll();
     },
     addRating() {
@@ -734,10 +765,10 @@ export default {
         qid: i,
         type: 3,
         necessary: false,
-        belongTo: {qid:-1,option:-1},
+        belongTo: {qid: -1, option: -1},
         title: "请输入题干",
       })
-      this.reorder(this.que.QList,0)
+      this.reorder(this.que.QList, 0)
       this.roll();
     },
     addLocating() {
@@ -747,10 +778,10 @@ export default {
         qid: i,
         type: 4,
         necessary: false,
-        belongTo: {qid:-1,option:-1},
+        belongTo: {qid: -1, option: -1},
         title: "点击获取地理位置",
       })
-      this.reorder(this.que.QList,0)
+      this.reorder(this.que.QList, 0)
       this.roll();
     },
     addBranch() {
@@ -761,10 +792,15 @@ export default {
         type: 5,
         necessary: false,
         title: "分支名称",
-        belongTo: {qid:-1,option:-1},
-        option:[]
+        belongTo: {qid: -1, option: -1},
+        option: []
       })
-      this.reorder(this.que.QList,0)
+      this.$notify.warning(
+          {
+            message: '含有分支题的问卷创建后将无法修改'
+          }
+      )
+      this.reorder(this.que.QList, 0)
       this.roll();
     },
     deleteQuestion(question) {
@@ -783,9 +819,9 @@ export default {
           title: question.title + "（副本）",
           isSumLimit: question.isSumLimit,
           hasAnswer: question.hasAnswer,
-          answer: question.type===0?question.answer:[],
+          answer: question.type === 0 ? question.answer : [],
           necessary: question.necessary,
-          belongTo: {qid:-1,option:-1},
+          belongTo: {qid: -1, option: -1},
           option: []
         })
         for (let i = 0; i < question.option.length; i++) {
@@ -795,7 +831,7 @@ export default {
             limit: question.option[i].limit
           })
         }
-        if (question.type===1) {
+        if (question.type === 1) {
           for (let i = 0; i < question.option.length; i++) {
             this.que.QList[num + 1].answer.push(question.answer[i])
           }
@@ -806,7 +842,7 @@ export default {
           type: question.type,
           title: question.title + "（副本）",
           isSumLimit: question.isSumLimit,
-          belongTo: {qid:-1,option:-1},
+          belongTo: {qid: -1, option: -1},
           necessary: question.necessary
         })
       }
@@ -815,11 +851,25 @@ export default {
       }
     },
     uploadQn() {
-      for(let i=0;i<this.que.QList.length;i++){
+      for (let i = 0; i < this.que.QList.length; i++) {
+
         console.log(this.que.QList[i].type)
-        if(this.que.QList[i].type === 5){
+        if (this.que.QList[i].type === 5) {
           this.que.hasBranch = true;
           break;
+        }
+      }
+      for (let i = 0; i < this.que.QList.length; i++) {
+        if (this.que.QList[i].type === 0 || this.que.QList[i].type === 1 || this.que.QList[i].type === 5) {
+          if (this.que.QList[i].option.length === 0) {
+            this.$notify({
+              title: '失败',
+              message: '不能存在没有选项的选择题或分支',
+              type: 'error',
+              position: 'bottom-left'
+            })
+            return;
+          }
         }
       }
       this.fullscreenLoading = true;
@@ -854,37 +904,37 @@ export default {
       this.drag = true;
     },
     onEnd() {
-      this.reorder(this.que.QList,0)
+      this.reorder(this.que.QList, 0)
       this.drag = false;
     },
     roll() {
       let temp = document.getElementById("Qn");
       temp.scrollTop = temp.scrollHeight + 1000;
     },
-    reorder(QList,num) {
+    reorder(QList, num) {
       for (let i = 0; i < QList.length; i++) {
         QList[i].qid = num;
         num++;
-        if(QList[i].type === 5) {
-          for(let j = 0; j < QList[i].option.length; j++) {
-            num = this.reorder(QList[i].option[j].question,num)
+        if (QList[i].type === 5) {
+          for (let j = 0; j < QList[i].option.length; j++) {
+            num = this.reorder(QList[i].option[j].question, num)
           }
         }
       }
       return num
     },
-    connectQuestion(QList){
+    connectQuestion(QList) {
       for (let i = 0; i < QList.length; i++) {
-        if(QList[i].type === 5) {
+        if (QList[i].type === 5) {
           let optionTemp = []
-          for(let j = QList[i].option.length-1; j >= 0 ; j--) {
+          for (let j = QList[i].option.length - 1; j >= 0; j--) {
             let ql = QList[i].option[j].question
             this.connectQuestion(ql)
-            for(let k = 0; k< ql.length;k++) {
-              QList.splice(i+k+1,0,ql[k])
-              QList[i+k+1].belongTo={
-                qid:i,
-                option:j
+            for (let k = 0; k < ql.length; k++) {
+              QList.splice(i + k + 1, 0, ql[k])
+              QList[i + k + 1].belongTo = {
+                qid: i,
+                option: j
               }
             }
             optionTemp.push({
@@ -894,10 +944,10 @@ export default {
             })
           }
           optionTemp.reverse()
-          QList[i]={
+          QList[i] = {
             qid: QList[i].qid,
             type: 0,
-            belongTo: {qid:-1,option:-1},
+            belongTo: {qid: -1, option: -1},
             necessary: QList[i].necessary,
             title: QList[i].title,
             isSumLimit: false,
@@ -933,29 +983,39 @@ export default {
 .ghost {
   opacity: 1;
 }
+
 .hoverB {
   position: fixed;
-  left:15%;
-  margin-left:0;
+  left: 15%;
+  margin-left: 0;
 }
 
-@keyframes scale{
-  0%{transform:scale(1)}
-  100%{transform:scale(1.2)}
+@keyframes scale {
+  0% {
+    transform: scale(1)
+  }
+  100% {
+    transform: scale(1.2)
+  }
 }
 
-.hoverB:hover{
-  animation-name:scale;
-  animation-duration:0.3s;
-  animation-iteration-count:1;
+.hoverB:hover {
+  animation-name: scale;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
 
-@keyframes inputScale{
-  0%{width: 100%}
-  100%{width: 78%}
+@keyframes inputScale {
+  0% {
+    width: 100%
+  }
+  100% {
+    width: 78%
+  }
 }
-.inputOptionPlay{
+
+.inputOptionPlay {
   animation-name: inputScale;
   animation-duration: 0.3s;
   animation-iteration-count: 1;

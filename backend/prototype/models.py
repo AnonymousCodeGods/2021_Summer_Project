@@ -22,6 +22,7 @@ class Questionnaire(models.Model):
     isDeleted = models.BooleanField(default=False,null=True)
     isPublished = models.BooleanField(default=False,null=True)
     showNumbers = models.BooleanField(default=True,null=True)
+    hasBranch = models.BooleanField(default=False,null=True)
 
     recoverNum = models.IntegerField(default=0,null=True)
     limitNum = models.IntegerField(null=True)
@@ -31,8 +32,16 @@ class Questionnaire(models.Model):
     key = models.CharField(max_length=64,default='panzhita')
     code = models.CharField(max_length=64,null=True,default=None)
 
+
     def __str__(self):
         return self.title
+
+class BelongTo(models.Model):
+    option = models.IntegerField(default=-1,null=True)
+    question = models.IntegerField(default=-1,null=True)
+    order = models.IntegerField(default=-1,null=True)
+
+    QUEN = models.ForeignKey('Questionnaire',on_delete=models.CASCADE,null=True)
 
 class Question(models.Model):
     content = models.TextField()
@@ -48,6 +57,7 @@ class Question(models.Model):
 class Complition(Question):
     CMPID = models.CharField(max_length=64,unique=True)
     NQID = models.CharField(max_length=64)
+    correct = models.TextField(null=True)
     def __str__(self):
         return self.CMPID
 

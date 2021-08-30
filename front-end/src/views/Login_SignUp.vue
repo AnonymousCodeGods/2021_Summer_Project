@@ -97,8 +97,8 @@ export default {
                   type: "success"
                 });
                 this.$router.push({
-                  path: "/collectingQuestionnaire2", query: {
-                    userName: this.username,
+                  //todo:change path
+                  path: "/collectingSignUpQuestionnaire", query: {
                     id: this.$route.query.id
                   }
                 })

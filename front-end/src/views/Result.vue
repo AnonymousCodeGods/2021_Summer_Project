@@ -11,7 +11,7 @@
         <!--          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
         <!--        </div>-->
       </div>
-      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%">
+      <el-dropdown style="position:absolute;top:40%;height: 80%;left: 93%" @command="logout">
       <span class="el-dropdown-link">
         {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
@@ -250,7 +250,10 @@ export default {
           for (let i = 0; i < this.AnswerList.length; i++) {
             if (this.AnswerList[i].type === 0 || this.AnswerList[i].type === 1 || this.AnswerList[i].type === 3) {
               for (let j = 0; j < this.que.QList[i].option.length; j++) {
-                this.que.QList[i].option[j].percentage = this.que.QList[i].option[j].count * 100.0 / this.que.QList[i].total
+                if(this.que.QList[i].total === 0){
+                  this.que.QList[i].option[j].percentage = 0
+                }else
+                  this.que.QList[i].option[j].percentage = this.que.QList[i].option[j].count * 100.0 / this.que.QList[i].total
               }
             }
           }
@@ -270,6 +273,11 @@ export default {
     }
   },
   methods: {
+    logout(command) {
+      console.log(command);
+      this.$cookies.remove('username');
+      this.$router.push("/");
+    },
     getSummaries(param) {
       const {columns, data} = param;
       const sums = [];

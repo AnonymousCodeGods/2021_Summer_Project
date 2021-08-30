@@ -59,6 +59,9 @@ def complition_create(dict):
     comp.CMPID = 'CMP'+str(comp.id)
     if 'limitNum' in dict:
         comp.limitNum = dict['limitNum']
+    if 'hasAnswer' in dict and dict['hasAnswer'] == True:
+        comp.correct = dict['answer']
+        comp.save()
     comp.save()
     return comp
 
@@ -122,11 +125,11 @@ def choice_create(dict):
     choi.save()
     if 'hasAnswer' in dict and dict['hasAnswer'] == True:
         if dict['type'] == 0:
-            op = op_ins[dict['Answer']]
+            op = op_ins[dict['answer']]
             op.isCorrect = True
             op.save()
         elif dict['type'] == 1:
-            for a in dict['Answer']:
+            for a in dict['answer']:
                 op = op_ins[a]
                 op.isCorrect = True
                 op.save()
@@ -190,12 +193,26 @@ def questionnaire_create(dict):
 
         insList[i].save()
     quesn.save()
+
+    if 'hasBranch' in dict and dict['hasBranch'] == True:
+        quesn.hasBranch = True
+        quesn.save()
+        i = 0
+        for Ques in QList:
+            if 'belongTo' in Ques:
+                relation = Ques['belongTo']
+                qid = relation['qid']
+                option_id = relation['option']
+                if qid != -1:
+                    b = BelongTo(question=qid,option=option_id,QUEN=quesn,order=i)
+                    b.save()
+            i = i + 1
     return quesn
 
 
 def get_questionnaire(QnId):
     questionnaire = Questionnaire.objects.get(pk=QnId)
-    now_time = django.utils.timezone.now()+datetime.timedelta(hours=8)
+    now_time = django.utils.timezone.now()-datetime.timedelta(hours=8)
     if questionnaire.endTime is not None and now_time > questionnaire.endTime:
         questionnaire.isPublished = False
         questionnaire.save()
@@ -205,6 +222,7 @@ def get_questionnaire(QnId):
     next_id = None
     que_dict = {}
     que_dict['qnid'] = des_encrypt(QnId)
+    que_dict['state'] = questionnaire.isClose
     que_dict['title'] = questionnaire.title
     que_dict['state'] = questionnaire.isPublished
     que_dict['pubTime'] = questionnaire.publishTime
@@ -213,13 +231,13 @@ def get_questionnaire(QnId):
     que_dict['showNumbers'] = questionnaire.showNumbers
     if questionnaire.type == 3 and questionnaire.endTime is not None:
         now_time = django.utils.timezone.now()+datetime.timedelta(hours=8)
-        que_dict['remainTime'] =  int((questionnaire.endTime - now_time).total_seconds())
+        que_dict['remainTime'] =  int((questionnaire.endTime - now_time).total_seconds())+3600*8
         pass
     if questionnaire.limitNum:
         que_dict['isSumLimit'] = True
     else:
         que_dict['isSumLimit'] = False
-    que_dict['sum'] = questionnaire.recoverNum
+    que_dict['limit'] = questionnaire.recoverNum
 
 
     QList = []
@@ -227,7 +245,6 @@ def get_questionnaire(QnId):
         while True:
             quei = {}
             quei['total'] = 0
-
             if re.match(r'CMP',que_id):
                comp = Complition.objects.get(CMPID=que_id)
                quei['qid'] = int(que_id.lstrip('CMP'))
@@ -260,7 +277,10 @@ def get_questionnaire(QnId):
                         op_dict['content'] = op.content
                         op_dict['count'] = 0
                         op_dict['percentage'] = 0
-                        op_dict['limit'] = op.limitNum
+                        if op.limitNum is not None:
+                            op_dict['limit'] = op.limitNum-op.selectedNum
+                        else:
+                            op_dict['limit'] = op.limitNum
                         option.append(op_dict)
                         if op.NOID:
                             op = Option.objects.get(pk=op.NOID)
@@ -282,6 +302,24 @@ def get_questionnaire(QnId):
                 break
             else:
                 que_id = next_id
+
+
+    for Ql in QList:
+        belongTo = {}
+        belongTo['qid'] = -1
+        belongTo['option'] = -1
+        Ql['belongTo'] = belongTo
+
+
+    if questionnaire.hasBranch == True:
+        belongs = BelongTo.objects.filter(QUEN=questionnaire)
+        for belong in belongs:
+            i = belong.order
+            belongTo = {}
+            belongTo['qid'] = belong.question
+            belongTo['option'] = belong.option
+            QList[i]['belongTo'] = belongTo
+
     que_dict['QList'] = QList
     return que_dict
 
