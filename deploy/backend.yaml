@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: backend
 spec:
+  replicas: 5
   selector:
     matchLabels:
       name: backend
@@ -13,6 +14,6 @@ spec:
     spec:
       containers:
         - name: app
-          image: codekoeni/full-stack:b2.5
+          image: codekoeni/full-stack:b2.6
           ports:
             - containerPort: 8000

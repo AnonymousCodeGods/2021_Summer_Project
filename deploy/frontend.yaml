@@ -13,6 +13,6 @@ spec:
     spec:
       containers:
         - name: app
-          image: codekoeni/full-stack:f2.6
+          image: codekoeni/full-stack:f2.7
           ports:
             - containerPort: 8080
